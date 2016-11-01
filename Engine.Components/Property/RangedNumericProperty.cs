@@ -1,14 +1,15 @@
 ﻿using System;
+using Engine.Core.Components;
 
-namespace PlayGen.Engine.Components.Property
+namespace Engine.Components.Property
 {
-	public abstract class RangedNumericPropertyComponent<TValue> : PropertyComponentBase<TValue>
+	public abstract class RangedNumericProperty<TValue> : Property<TValue>
 		where TValue : struct
 	{
 		public TValue MaxValue { get; private set; }
 		public TValue MinValue { get; private set; }
 
-		protected RangedNumericPropertyComponent(IComponentContainer container, 
+		protected RangedNumericProperty(IComponentContainer container, 
 			string propertyName, 
 			bool includeInState,
 			TValue value,
@@ -21,9 +22,9 @@ namespace PlayGen.Engine.Components.Property
 		}
 	}
 
-	public abstract class RangedIntegerPropertyComponent : RangedNumericPropertyComponent<int>
+	public abstract class RangedIntegerProperty : RangedNumericProperty<int>
 	{
-		protected RangedIntegerPropertyComponent(IComponentContainer container, 
+		protected RangedIntegerProperty(IComponentContainer container, 
 			string propertyName, 
 			bool includeInState,
 			int value, 
@@ -40,9 +41,9 @@ namespace PlayGen.Engine.Components.Property
 		}
 	}
 
-	public abstract class RangedDoublePropertyComponent : RangedNumericPropertyComponent<double>
+	public abstract class RangedDoubleProperty : RangedNumericProperty<double>
 	{
-		protected RangedDoublePropertyComponent(IComponentContainer container,
+		protected RangedDoubleProperty(IComponentContainer container,
 			string propertyName, 
 			bool includeInState,
 			double value,
