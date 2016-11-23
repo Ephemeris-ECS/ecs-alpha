@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Engine.Archetypes
+namespace Engine.Systems
 {
-    public class Class1
+    public class System
     {
     }
 }

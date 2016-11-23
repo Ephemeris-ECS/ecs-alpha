@@ -5,7 +5,7 @@ using Engine.Core.Serialization;
 
 namespace Engine.Entities
 {
-	public class EntityRegistryBase<TGameEntity> : IEntityRegistry<TGameEntity>
+	public class EntityRegistry<TGameEntity> : IEntityRegistry<TGameEntity>
 		where TGameEntity : class, IEntity
 	{
 		[SyncState(StateLevel.Differential, 0)]
