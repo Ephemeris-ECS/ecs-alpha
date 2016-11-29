@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Engine.Systems
 {
-	public interface ISystem
+	public interface ISystemRegistry
 	{
-		void Tick(int currentTick);
+		void RegisterSystem(ISystem system);
 
+		void Tick();
 	}
 }

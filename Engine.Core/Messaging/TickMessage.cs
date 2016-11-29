@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Engine.Core.Messaging;
 
-namespace Engine.Components.Messaging
+namespace Engine.Messaging
 {
 	public class TickMessage : Message
 	{

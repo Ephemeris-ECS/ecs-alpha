@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Core.Components;
-using Engine.Core.Entities;
-using Engine.Core.Systems;
+using Engine.Components;
+using Engine.Entities;
 
-namespace Engine.Components
+namespace Engine.Systems
 {
 	public class System : ISystem
 	{

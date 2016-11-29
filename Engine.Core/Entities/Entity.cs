@@ -1,10 +1,8 @@
 ﻿using System;
-using Engine.Core.Entities;
 using Engine.Core.Messaging;
-using Engine.Core.Serialization;
-using Engine.Core.Util;
-using Engine.Entities.Messages;
-using Engine.Entities.Messaging;
+using Engine.Messaging;
+using Engine.Serialization;
+using Engine.Util;
 
 namespace Engine.Entities
 {

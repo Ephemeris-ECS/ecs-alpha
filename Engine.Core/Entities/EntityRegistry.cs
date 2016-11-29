@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using Engine.Core.Entities;
-using Engine.Core.Serialization;
+using Engine.Serialization;
 
 namespace Engine.Entities
 {
-	public class EntityRegistry : EntityRegistry<IEntity>
-	{
-		
-	}
-
-	public class EntityRegistry<TGameEntity> : IEntityRegistry<TGameEntity>
-		where TGameEntity : class, IEntity
+	public class EntityRegistry : IEntityRegistry
 	{
 		[SyncState(StateLevel.Differential, 0)]
 		private int _entitySeed;
 
 		[SyncState(StateLevel.Differential, 1)]
-		protected Dictionary<int, TGameEntity> Entities = new Dictionary<int, TGameEntity>();
+		protected Dictionary<int, IEntity> Entities = new Dictionary<int, IEntity>();
 
 		public int EntitySeed => ++_entitySeed;
 
-		public void AddEntity(TGameEntity entity)
+		public IEntity CreateEntity()
+		{
+			return new Entity(this);
+		}
+
+		public void AddEntity(IEntity entity)
 		{
 			if (Entities.ContainsKey(entity.Id))
 			{
@@ -34,14 +32,14 @@ namespace Engine.Entities
 			OnEntityAdded(entity);
 		}
 
-		protected virtual void OnEntityAdded(TGameEntity entity)
+		protected virtual void OnEntityAdded(IEntity entity)
 		{
 			
 		}
 
 		private void Entity_EntityDestroyed(object sender, EventArgs e)
 		{
-			var destroyedEntity = sender as TGameEntity;
+			var destroyedEntity = sender as IEntity;
 			if (destroyedEntity == null)
 			{
 				throw new Exception("A non-entity raised the entity destroyed event; this should be impossible!");
@@ -58,32 +56,27 @@ namespace Engine.Entities
 			OnEntityDestroyed(destroyedEntity);
 		}
 
-		protected virtual void OnEntityDestroyed(TGameEntity entity)
+		protected virtual void OnEntityDestroyed(IEntity entity)
 		{
 			
 		}
 
 		public bool TryGetEntityById(int id, out IEntity entity)
 		{
-			TGameEntity gameEntity;
+			IEntity gameEntity;
 			var found = Entities.TryGetValue(id, out gameEntity);
 			entity = gameEntity;
 			return found;
 		}
 
-		public TEntity GetEntityById<TEntity>(int id)
-			where TEntity : class, TGameEntity
+		public IEntity GetEntityById(int id)
 		{
-			TGameEntity entity;
+			IEntity entity;
 			if (Entities.TryGetValue(id, out entity))
 			{
-				var typedEntity = entity as TEntity;
-				if (typedEntity != null)
-				{
-					return typedEntity;
-				}
+				return entity;
 			}
-			throw new EntityRegistryException($"Entity not of expected type {typeof(TEntity)}");
+			throw new EntityRegistryException($"Entity not found with Id: {id}");
 		}
 
 		/// <summary>

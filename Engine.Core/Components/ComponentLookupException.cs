@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Engine.Core.Exceptions;
+using Engine.Exceptions;
 
 namespace Engine.Components
 {
 	public class ComponentLookupException : EngineException
 	{
 		public Type ComponentType { get; }
+
+		public ComponentLookupException(string message) : base(message)
+		{
+		}
 
 		public ComponentLookupException(string message, Type componentType) : base(message)
 		{

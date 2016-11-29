@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Disposables;
-using System.Reactive.Subjects;
 using System.Threading;
-using Engine.Core.Components;
-using Engine.Core.Messaging;
-using Engine.Core.Messaging.Extensions;
+using Engine.Components;
+using Engine.Entities;
+using Engine.Messaging.Extensions;
 
-namespace Engine.Entities.Messaging
+namespace Engine.Messaging
 {
 	public abstract class MessageHub : ComponentContainer, IMessageHub, IDisposable
 	{

@@ -1,7 +1,6 @@
-﻿using Engine.Core.Components;
-using Engine.Core.Messaging;
+﻿using Engine.Components;
 
-namespace Engine.Components.Messaging
+namespace Engine.Messaging
 {
 	public interface IMessageComponent : IComponent
 	{

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Engine.Core.Messaging;
 
-namespace Engine.Components.Messaging
+namespace Engine.Messaging
 {
 
 	public class DelegatingObserver : IObserver<IMessage>

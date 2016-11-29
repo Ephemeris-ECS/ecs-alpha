@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Core.Components;
-using Engine.Core.Entities;
 
 namespace Engine.Components
 {

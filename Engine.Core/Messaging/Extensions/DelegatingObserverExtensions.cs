@@ -1,7 +1,6 @@
 ﻿using System;
-using Engine.Components.Messaging;
 
-namespace Engine.Core.Messaging.Extensions
+namespace Engine.Messaging.Extensions
 {
 	public static class DelegatingObserverExtensions
 	{

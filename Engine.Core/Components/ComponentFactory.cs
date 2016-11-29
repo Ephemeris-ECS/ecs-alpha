@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Core.Components;
-using Engine.Core.Entities;
+using Engine.Entities;
 
 namespace Engine.Components
 {
 	public delegate IComponent ComponentFactoryDelegate(IEntity container);
 
-	public class ComponentConfiguration
+	public class ComponentFactory
 	{
 		private readonly Dictionary<string, HashSet<Type>> _componentTypes;
 
 		private readonly Dictionary<string, List<ComponentFactoryDelegate>> _componentFactories;
 
-
-
 		#region constructor
 
-		public ComponentConfiguration()
+		public ComponentFactory()
 		{
 			_componentTypes = new Dictionary<string, HashSet<Type>>();
 			_componentFactories = new Dictionary<string, List<ComponentFactoryDelegate>>();
@@ -48,24 +45,6 @@ namespace Engine.Components
 				_componentFactories.Add(archetype, factoryDelegates);
 			}
 			factoryDelegates.Add(factoryDelegate);
-		}
-
-		//public IComponentContainer GenerateContainerForType(Type entityType)
-		//{
-		//	if (_componentFactories.ContainsKey(entityType))
-		//	{
-		//		var componentContainer = new ComponentContainer();
-		//		PopulateContainerForType(entityType, componentContainer);
-		//		return componentContainer;
-		//	}
-		//	return ComponentContainer.Default;
-		//}
-
-			[Obsolete("This has been replaced with archetype initialization")]
-		public void PopulateContainerOfType<TEntity>(TEntity entity)
-			where TEntity : IEntity, IComponentContainer
-		{
-			PopulateContainerForArchetype(typeof(TEntity).Name, entity);
 		}
 
 		public void PopulateContainerForArchetype(string archetype, IEntity componentContainer)

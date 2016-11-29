@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Engine.Core.Entities;
-using Engine.Core.Messaging;
+using Engine.Messaging;
 
-namespace Engine.Entities.Messages
+namespace Engine.Entities
 {
 	public class EntityDestroyedMessage : Message
 	{

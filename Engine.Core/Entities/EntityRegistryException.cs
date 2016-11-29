@@ -1,5 +1,5 @@
 ﻿using System;
-using Engine.Core.Exceptions;
+using Engine.Exceptions;
 
 namespace Engine.Entities
 {

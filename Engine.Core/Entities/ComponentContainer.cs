@@ -2,28 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Components;
-using Engine.Core.Components;
 
 namespace Engine.Entities
 {
-	public class ComponentContainer : ComponentContainer<IComponent>, IComponentContainer
+	public class ComponentContainer
 	{
 		public static ComponentContainer Default => new ComponentContainer();
-	}
 
-	public class ComponentContainer<TComponent> : IComponentContainer<TComponent>
-		where TComponent : IComponent
-	{
-		// ReSharper disable FieldCanBeMadeReadOnly.Local
-		private HashSet<TComponent> _components;
+		private HashSet<IComponent> _components;
+		protected IList<IComponent> Components => _components.ToList();
 
-		private Dictionary<Type, IEnumerable<TComponent>> _componentsByImplementation = new Dictionary<Type, IEnumerable<TComponent>>();
+		private Dictionary<Type, IEnumerable<IComponent>> _componentsByImplementation = new Dictionary<Type, IEnumerable<IComponent>>();
 		// ReSharper restore FieldCanBeMadeReadOnly.Local
 
 		private bool _disposed;
-
-		protected IList<TComponent> Components => _components.ToList();
-
+		
 		#region constructors
 
 		public ComponentContainer()

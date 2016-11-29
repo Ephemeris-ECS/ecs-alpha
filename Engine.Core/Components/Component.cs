@@ -1,9 +1,7 @@
 ﻿using System;
-using Engine.Components.Messaging;
-using Engine.Core.Components;
-using Engine.Core.Entities;
-using Engine.Core.Messaging;
-using Engine.Core.Util;
+using Engine.Entities;
+using Engine.Messaging;
+using Engine.Util;
 
 namespace Engine.Components
 {
