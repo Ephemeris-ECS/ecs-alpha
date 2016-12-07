@@ -3,9 +3,9 @@ using Newtonsoft.Json.Serialization;
 
 namespace Engine.Serialization.Newtonsoft.Json
 {
-	internal class EntityRegistryJsonReader : JsonSerializerInternalReader
+	internal class ECSJsonReader : JsonSerializerInternalReader
 	{
-		public EntityRegistryJsonReader(JsonSerializer serializer) 
+		public ECSJsonReader(JsonSerializer serializer) 
 			: base(serializer)
 		{
 		}

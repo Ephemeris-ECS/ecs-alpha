@@ -7,7 +7,7 @@ using Newtonsoft.Json.Utilities;
 
 namespace Engine.Serialization.Newtonsoft.Json
 {
-	internal class EntityRegistryJsonSerializer : JsonSerializer
+	internal class ECSJsonSerializer : JsonSerializer
 	{
 		internal override object DeserializeInternal(JsonReader reader, Type objectType)
 		{
@@ -30,7 +30,7 @@ namespace Engine.Serialization.Newtonsoft.Json
 				? new TraceJsonReader(reader)
 				: null;
 
-			var serializerReader = new EntityRegistryJsonReader(this);
+			var serializerReader = new ECSJsonReader(this);
 			var value = serializerReader.Deserialize(traceJsonReader ?? reader, objectType, CheckAdditionalContent);
 
 			if (traceJsonReader != null)

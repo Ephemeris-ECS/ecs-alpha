@@ -10,7 +10,7 @@ using Newtonsoft.Json.Utilities;
 
 namespace Engine.Serialization
 {
-	public class EntityRegistrySerializer
+	public class ECSSerializer
 	{
 		private static JsonSerializerSettings GetDefaultSettings()
 		{
@@ -55,7 +55,7 @@ namespace Engine.Serialization
 		{
 			ValidationUtils.ArgumentNotNull(value, nameof(value));
 
-			var jsonSerializer = new EntityRegistryJsonSerializer();
+			var jsonSerializer = new ECSJsonSerializer();
 
 			JsonSerializer.ApplySerializerSettings(jsonSerializer, settings);
 
@@ -73,8 +73,7 @@ namespace Engine.Serialization
 
 		#endregion
 
-		public static byte[] Serialize<T>(T obj)
-			where T : ISerializable, EntityRegistry
+		public static byte[] Serialize(ECS obj)
 		{
 			var serializerSettings = GetDefaultSettings();
 			serializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
@@ -84,43 +83,40 @@ namespace Engine.Serialization
 			return Encoding.UTF8.GetBytes(serializedString);
 		}
 
-		public byte[] SerializeDifferential<T>(T obj)
-			where T : ISerializable, EntityRegistry
+		public byte[] SerializeDifferential(ECS obj)
 		{
 			var serializerSettings = GetDefaultSettings();
 
-			var contractResolver = new EntityRegistryContractResolver(StateLevel.Differential, obj);
+			var contractResolver = new ECSContractResolver(StateLevel.Differential, obj);
 			serializerSettings.ContractResolver = contractResolver;
 
-			//serializerSettings.ReferenceResolverProvider = () => new EntityRegistryReferenceResolver(obj);
+			//serializerSettings.ReferenceResolverProvider = () => new ECSReferenceResolver(obj);
 
 			var serializedString = SerializeObject(obj, serializerSettings);
 
 			return Encoding.UTF8.GetBytes(serializedString);
 		}
 
-		public static T Deserialize<T>(byte[] simulationBytes)
-			where T : ISerializable
+		public static ECS Deserialize(byte[] simulationBytes)
 		{
 			var serializerSettings = GetDefaultSettings();
 
 			var objString = Encoding.UTF8.GetString(simulationBytes);
-			var obj = JsonConvert.DeserializeObject<T>(objString, serializerSettings);
+			var obj = JsonConvert.DeserializeObject<ECS>(objString, serializerSettings);
 
-			obj.OnDeserialized();
+			//obj.OnDeserialized();
 			return obj;
 		}
 
-		public void DeserializeDifferential<T>(byte[] simulationBytes, T entityRegistry)
-			where T : ISerializable, EntityRegistry
+		public void DeserializeDifferential(byte[] simulationBytes, ECS entityRegistry)
 		{
 			var serializerSettings = GetDefaultSettings();
 
-			var contractResolver = new EntityRegistryContractResolver(StateLevel.Full, entityRegistry);
+			var contractResolver = new ECSContractResolver(StateLevel.Full, entityRegistry);
 			serializerSettings.ContractResolver = contractResolver;
 
 			var objString = Encoding.UTF8.GetString(simulationBytes);
-			var obj = DeserializeObject<T>(objString, serializerSettings);
+			var obj = DeserializeObject<ECS>(objString, serializerSettings);
 
 			contractResolver.ResolveEntityReferences();
 			// onDeserialized call is not necessary when process has been done differntially

@@ -8,21 +8,21 @@ using Newtonsoft.Json.Serialization;
 
 namespace Engine.Serialization
 {
-	internal class EntityRegistryValueProvider : IValueProvider
+	internal class ECSValueProvider : IValueProvider
 	{
 		private const string EntityPrefix = "$entity:";
 		
 		internal event EventHandler<DeserializingEntityReferenceEventArgs> DeserializingEntityReference;
 
-		private readonly EntityRegistry _entityRegistry;
+		private readonly ECS _ecs;
 		private readonly MemberInfo _memberInfo;
 
 		private Func<object, object> _getter;
 		private Action<object, object> _setter;
 
-		public EntityRegistryValueProvider(EntityRegistry entityRegistry, MemberInfo memberInfo)
+		public ECSValueProvider(ECS ecs, MemberInfo memberInfo)
 		{
-			_entityRegistry = entityRegistry;
+			_ecs = ecs;
 			_memberInfo = memberInfo;
 		}
 
@@ -40,7 +40,7 @@ namespace Engine.Serialization
 
 				//TODO: investigate if we need to defer these until the entity registry has been deserialized
 				Entity entity;
-				if (_entityRegistry.TryGetEntityById(entityId, out entity))
+				if (_ecs.EntityRegistry.TryGetEntityById(entityId, out entity))
 				{
 					OnDeserializingEntityReference(new DeserializingEntityReferenceEventArgs(() => _setter(target, entity)));
 					// _setter(target, entity);

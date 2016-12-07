@@ -8,19 +8,19 @@ using Newtonsoft.Json.Serialization;
 
 namespace Engine.Serialization
 {
-	internal class EntityRegistryContractResolver : DefaultContractResolver
+	internal class ECSContractResolver : DefaultContractResolver
 	{
 
 		private readonly Dictionary<Type, List<JsonProperty>> _propertyCache = new Dictionary<Type, List<JsonProperty>>();
 
-		private readonly EntityRegistry _entityRegistry;
+		private readonly ECS _entityRegistry;
 
 		private StateLevel Level { get; }
 
 
 		private readonly List<Action> _entityReferenceResolverQueue = new List<Action>();
 
-		public EntityRegistryContractResolver(StateLevel level, EntityRegistry registry)
+		public ECSContractResolver(StateLevel level, ECS registry)
 		{
 			_entityRegistry = registry;
 			Level = level;
@@ -56,7 +56,7 @@ namespace Engine.Serialization
 			return contract;
 		}
 
-		private void AttachEntityValueProviderDeserializationCallback(EntityRegistryValueProvider valueProvider)
+		private void AttachEntityValueProviderDeserializationCallback(ECSValueProvider valueProvider)
 		{
 			valueProvider.DeserializingEntityReference += ValueProviderOnDeserializingEntityReference;
 		}
@@ -107,9 +107,9 @@ namespace Engine.Serialization
 						jsonProperty.Readable = true;
 
 						if ((propertyInfo.PropertyType.IsEntityCollection() || propertyInfo.PropertyType.IsEntity()) 
-							&& type.IsEntityRegistry() == false)
+							&& type.IsECS() == false)
 						{
-							jsonProperty.ValueProvider = new EntityRegistryValueProvider(_entityRegistry, propertyInfo);
+							jsonProperty.ValueProvider = new ECSValueProvider(_entityRegistry, propertyInfo);
 						}
 
 						orderedProperties.Add(new OrderedProperty()
@@ -132,9 +132,9 @@ namespace Engine.Serialization
 						jsonProperty.Writable = true;
 						jsonProperty.Readable = true;
 
-						if (fieldInfo.FieldType.IsEntity() && type.IsEntityRegistry() == false)
+						if (fieldInfo.FieldType.IsEntity() && type.IsECS() == false)
 						{
-							jsonProperty.ValueProvider = new EntityRegistryValueProvider(_entityRegistry, fieldInfo);
+							jsonProperty.ValueProvider = new ECSValueProvider(_entityRegistry, fieldInfo);
 						}
 
 						orderedProperties.Add(new OrderedProperty()
