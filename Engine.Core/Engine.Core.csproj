@@ -71,6 +71,7 @@
     <Compile Include="ECSInstaller.cs" />
     <Compile Include="Entities\ComponentContainer.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\EntityDictionary.cs" />
     <Compile Include="Entities\EntityExtensions.cs" />
     <Compile Include="Entities\EntityFactory.cs" />
     <Compile Include="Entities\EntityRegistry.cs" />
