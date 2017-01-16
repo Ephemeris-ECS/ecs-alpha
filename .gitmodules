@@ -1,0 +1,3 @@
+[submodule "Newtonsoft.Json"]
+	path = Newtonsoft.Json
+	url = git@gitlab.com:ephemeris/Newtonsoft.Json.git
