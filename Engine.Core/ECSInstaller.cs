@@ -28,6 +28,8 @@ namespace Engine
 
 			Container.BindFactory<Entity, Entity.Factory>();
 
+			Container.Bind<EntityDictionary>().AsSingle();
+
 			Container.Bind<IEntityRegistry>()
 				.To<EntityRegistry>()
 				.AsSingle();

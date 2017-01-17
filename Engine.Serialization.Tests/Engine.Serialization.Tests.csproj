@@ -44,13 +44,22 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zenject, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Zenject\Zenject.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityDictionaryContractResolverTests.cs" />
     <Compile Include="ECSContractResolverTests.cs" />
     <Compile Include="JsonSerializerExperiements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Engine.Newtonsoft.Json\Engine.Newtonsoft.Json.csproj">
+      <Project>{7f39c40c-9acd-42b1-ae6f-470a759e98ce}</Project>
+      <Name>Engine.Newtonsoft.Json</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine.Serialization\Engine.Serialization.csproj">
       <Project>{6719ceee-ea1d-48cc-a301-89a0e47bc3ad}</Project>
       <Name>Engine.Serialization</Name>

@@ -4,7 +4,7 @@ namespace Engine.Entities
 {
 	public interface IEntityRegistry
 	{
-		Dictionary<int, Entity> Entities { get; }
+		EntityDictionary Entities { get; }
 		int NextEntityId { get; }
 
 		Entity CreateEntity();

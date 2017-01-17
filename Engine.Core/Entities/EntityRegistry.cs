@@ -12,7 +12,7 @@ namespace Engine.Entities
 
 		private Entity.Factory _entityFactory;
 
-		public Dictionary<int, Entity> Entities { get; }
+		public EntityDictionary Entities { get; }
 
 		public Queue<Entity> EntityPool { get; }
 
@@ -21,11 +21,15 @@ namespace Engine.Entities
 		private readonly object _entityPoolLock = new object();
 		private readonly object _entityLock = new object();
 
-		// TODO: need a DI solution
-		public EntityRegistry(Entity.Factory entityFactory)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="entityDictionary">this is is injected so that the DI system can ensure it is a singleton and can be resused by the serializer</param>
+		/// <param name="entityFactory"></param>
+		public EntityRegistry(EntityDictionary entityDictionary, Entity.Factory entityFactory)
 		{
 			_entityFactory = entityFactory;
-			Entities = new Dictionary<int, Entity>();
+			Entities = entityDictionary;
 			EntityPool = new Queue<Entity>();
 		}
 

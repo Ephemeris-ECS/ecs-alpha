@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Engine.Entities
 {
-	public class EntityDictionary : Dictionary<int, Entity>
+	public sealed class EntityDictionary : Dictionary<int, Entity>
 	{
 		/// <summary>
 		/// Entity dictionary

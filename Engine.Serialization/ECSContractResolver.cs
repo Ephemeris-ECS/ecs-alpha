@@ -2,37 +2,94 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
+using Engine.Components;
 using Engine.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Zenject;
 
 namespace Engine.Serialization
 {
 	// ReSharper disable once InconsistentNaming
-	internal class ECSContractResolver : DefaultContractResolver
+	public class ECSContractResolver : DefaultContractResolver
 	{
+		private readonly DiContainer _container;
 
-		private readonly Dictionary<Type, List<JsonProperty>> _propertyCache = new Dictionary<Type, List<JsonProperty>>();
+		private readonly HashSet<int> _entitiesDeserialized;
 
-		private readonly ECS _ecs;
-
-		public ECSContractResolver(ECS registry)
+		public bool TrackDeserializedEntities { get; set; }
+		
+		public ECSContractResolver(DiContainer container)
 		{
-			_ecs = registry;
+			_container = container;
+			_entitiesDeserialized = new HashSet<int>();
 		}
 
 		public override JsonContract ResolveContract(Type type)
 		{
 			var contract = base.ResolveContract(type);
 
-			contract.DefaultCreator = () => DefaultCreator(type);
+
+			if (type == typeof(EntityDictionary))
+			{
+				contract.DefaultCreator = () => ResolveCreator(type);
+				if (TrackDeserializedEntities)
+				{
+					contract.OnDeserializedCallbacks.Add(EntityDictionaryDeserialized);
+				}
+			}
+			else if (type == typeof(Entity))
+			{
+				if (TrackDeserializedEntities)
+				{
+					contract.OnDeserializedCallbacks.Add(EntityDeserialized);
+				}
+			}
+			else if (typeof(IComponent).IsAssignableFrom(type))
+			{
+				
+			}
 
 			return contract;
 		}
 
-		private object DefaultCreator(Type type)
+		private void EntityDeserialized(object obj, StreamingContext streamingContext)
 		{
-			return _ecs.Container.Instantiate(type);
+			var entity = obj as Entity;
+			if (entity != null)
+			{
+				_entitiesDeserialized.Add(entity.Id);
+			}
+		}
+
+		private void EntityDictionaryDeserialized(object obj, StreamingContext streamingContext)
+		{
+			var entityDictionary = obj as EntityDictionary;
+			if (entityDictionary != null)
+			{
+				foreach (var i in _entitiesDeserialized)
+				{
+					Entity entity;
+					if (entityDictionary.TryGetValue(i, out entity))
+					{
+						// TODO: see if there is a better way to clean up these
+						entity.Dispose();
+						entityDictionary.Remove(i);
+					}
+				}
+			}
+		}
+
+		private object ResolveCreator(Type type)
+		{
+			return _container.Resolve(type);
+		}
+
+		private object InstantiateCreator(Type type)
+		{
+			// TODO: RESOLVE OBJECT POOL AND GET FROM THERE
+			return _container.Instantiate(type);
 		}
 
 		//protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
@@ -74,6 +131,26 @@ namespace Engine.Serialization
 
 		#region property resolver
 
+		protected override JsonProperty CreateProperty(
+			MemberInfo member,
+			MemberSerialization memberSerialization)
+		{
+			//TODO: Maybe cache
+			var prop = base.CreateProperty(member, memberSerialization);
+
+			if (!prop.Writable)
+			{
+				var property = member as PropertyInfo;
+				if (property != null)
+				{
+					var hasPrivateSetter = property.GetSetMethod(true) != null;
+					prop.Writable = hasPrivateSetter;
+				}
+			}
+
+			return prop;
+		}
+
 		//protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
 		//{
 		//	List<JsonProperty> properties;
@@ -81,12 +158,12 @@ namespace Engine.Serialization
 		//	{
 		//		var typeIsEntity = type.IsEntity();
 		//		var orderedProperties = new List<OrderedProperty>();
-				
+
 		//		var currentType = type;
 		//		while (currentType != null && currentType != typeof(object))
 		//		{
 		//			var props = currentType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-					
+
 		//			foreach (var propertyInfo in props)
 		//			{
 		//				var syncStateAttribute =
