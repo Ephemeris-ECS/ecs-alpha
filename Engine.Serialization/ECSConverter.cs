@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Engine.Components;
 using Engine.Entities;
 using Engine.Serialization.Newtonsoft.Json;
 using ICSharpCode.SharpZipLib.GZip;
@@ -19,9 +20,9 @@ namespace Engine.Serialization
 
 		private readonly JsonSerializer _configSerializer;
 
-		public ECSConverter(DiContainer container, ECSSerializerSettings entitySerializerSettings)
+		public ECSConverter(DiContainer container, ComponentRegistry componentRegistry, ECSSerializerSettings entitySerializerSettings)
 		{
-			var entityContractResolver = new ECSContractResolver(container)
+			var entityContractResolver = new ECSContractResolver(container, componentRegistry)
 			{
 				TrackDeserializedEntities = entitySerializerSettings.PruneEntitiesOnDeserialize
 			};

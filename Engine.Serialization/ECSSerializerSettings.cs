@@ -10,7 +10,7 @@ namespace Engine.Serialization
 	// ReSharper disable once InconsistentNaming
 	public class ECSSerializerSettings : JsonSerializerSettings
 	{
-		public bool PruneEntitiesOnDeserialize { get; set; }
+		public bool PruneEntitiesOnDeserialize { get; set; } = true;
 
 		// TODO: I dont like the way this is constructed!
 		public ECSSerializerSettings()

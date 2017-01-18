@@ -18,19 +18,23 @@ namespace Engine.Serialization
 
 		private readonly HashSet<int> _entitiesDeserialized;
 
+		private bool _entityCreated;
+
+		private readonly ComponentRegistry _componentRegistry;
+
 		public bool TrackDeserializedEntities { get; set; }
 		
-		public ECSContractResolver(DiContainer container)
+		public ECSContractResolver(DiContainer container, ComponentRegistry componentRegistry)
 		{
 			_container = container;
 			_entitiesDeserialized = new HashSet<int>();
+			_componentRegistry = componentRegistry;
 		}
 
 		public override JsonContract ResolveContract(Type type)
 		{
 			var contract = base.ResolveContract(type);
-
-
+			
 			if (type == typeof(EntityDictionary))
 			{
 				contract.DefaultCreator = () => ResolveCreator(type);
@@ -41,6 +45,8 @@ namespace Engine.Serialization
 			}
 			else if (type == typeof(Entity))
 			{
+				contract.DefaultCreator = () => CreateEntity(type);
+
 				if (TrackDeserializedEntities)
 				{
 					contract.OnDeserializedCallbacks.Add(EntityDeserialized);
@@ -48,7 +54,7 @@ namespace Engine.Serialization
 			}
 			else if (typeof(IComponent).IsAssignableFrom(type))
 			{
-				
+				contract.DefaultCreator = () => InstantiateCreator(type);
 			}
 
 			return contract;
@@ -60,7 +66,12 @@ namespace Engine.Serialization
 			if (entity != null)
 			{
 				_entitiesDeserialized.Add(entity.Id);
+				if (_entityCreated)
+				{
+					_componentRegistry.UpdateMatcherGroups(entity);
+				}
 			}
+			_entityCreated = false;
 		}
 
 		private void EntityDictionaryDeserialized(object obj, StreamingContext streamingContext)
@@ -84,6 +95,12 @@ namespace Engine.Serialization
 		private object ResolveCreator(Type type)
 		{
 			return _container.Resolve(type);
+		}
+
+		private object CreateEntity(Type type)
+		{
+			_entityCreated = true;
+			return InstantiateCreator(type);
 		}
 
 		private object InstantiateCreator(Type type)
