@@ -50,3 +50,5 @@ _ReSharper*/
 lib/**/*.mdb
 lib/**/*.meta
 !lib/**/*.dll.meta
+Engine.Documentation/_site/
+Engine.Documentation/log.txt
