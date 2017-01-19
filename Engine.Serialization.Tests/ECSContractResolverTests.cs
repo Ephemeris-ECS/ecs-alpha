@@ -25,14 +25,14 @@ namespace Engine.Serialization.Tests
 			var container = new DiContainer();
 
 			container.Bind<ECSContractResolver>().AsSingle();
-			container.Bind<ECSSerializerSettings>().AsSingle();
+			container.Bind<EntityDictionarySerializerSettings>().AsSingle();
 			container.Bind<EntityDictionary>().AsSingle();
 
 			var entityDictionary = container.Resolve<EntityDictionary>();
 
 			var json = "{ 1: { Id: 1 } }";
 
-			var settings = container.Resolve<ECSSerializerSettings>();
+			var settings = container.Resolve<EntityDictionarySerializerSettings>();
 			var dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
 			Assert.That(dict, Is.EqualTo(entityDictionary));
@@ -78,14 +78,14 @@ namespace Engine.Serialization.Tests
 			var container = new DiContainer();
 
 			container.Bind<ECSContractResolver>().AsSingle();
-			container.Bind<ECSSerializerSettings>().AsSingle();
+			container.Bind<EntityDictionarySerializerSettings>().AsSingle();
 			container.Bind<EntityDictionary>().AsSingle();
 
 			var entityDictionary = container.Resolve<EntityDictionary>();
 
 			var json = "{ 1: { Id: 1 } }";
 
-			var settings = container.Resolve<ECSSerializerSettings>();
+			var settings = container.Resolve<EntityDictionarySerializerSettings>();
 			var dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
 			Assert.That(dict, Is.EqualTo(entityDictionary));

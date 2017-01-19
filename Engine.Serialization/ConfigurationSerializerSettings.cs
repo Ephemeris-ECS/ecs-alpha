@@ -8,18 +8,15 @@ using Newtonsoft.Json.Converters;
 namespace Engine.Serialization
 {
 	// ReSharper disable once InconsistentNaming
-	public class ECSSerializerSettings : JsonSerializerSettings
+	internal class ConfigurationSerializerSettings : JsonSerializerSettings
 	{
-		public bool PruneEntitiesOnDeserialize { get; set; } = true;
-
 		// TODO: I dont like the way this is constructed!
-		public ECSSerializerSettings()
+		public ConfigurationSerializerSettings()
 		{
 			TypeNameHandling = TypeNameHandling.Auto;
 			Converters.Add(new StringEnumConverter());
 			
-			// this shouldn't need to be very deep now that we have just the lightweight entites being copied
-			MaxDepth = 64;
+			MaxDepth = 256;
 
 			// TODO: check if these work with the dictionary serialization changes!
 			DefaultValueHandling = DefaultValueHandling.Include;

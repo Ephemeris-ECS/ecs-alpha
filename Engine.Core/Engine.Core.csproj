@@ -68,7 +68,6 @@
     <Compile Include="Configuration\ECSConfiguration.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="ECS.cs" />
-    <Compile Include="ECSInstaller.cs" />
     <Compile Include="Entities\ComponentContainer.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityDictionary.cs" />

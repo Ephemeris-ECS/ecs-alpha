@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Engine.Archetypes;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
+using Engine.Serialization;
 using Engine.Systems;
 using Zenject;
 
-namespace Engine
+namespace Engine.Startup
 {
 	// ReSharper disable once InconsistentNaming
 	public abstract class ECSInstaller<TInstaller> : Installer<TInstaller>
@@ -17,10 +16,16 @@ namespace Engine
 	{
 		protected ECSConfiguration Configuration;
 
+		public EntityStateSerializer Converter => Container.Resolve<EntityStateSerializer>();
+
+		#region Constructor
+
 		protected ECSInstaller(ECSConfiguration configuration)
 		{
 			Configuration = configuration;
 		}
+
+		#endregion
 
 		public override void InstallBindings()
 		{
@@ -41,7 +46,7 @@ namespace Engine
 			Container.Bind<ISystemRegistry>()
 				.To<SystemRegistry>()
 				.AsSingle();
-
+			
 			// configuration driven system loading
 			foreach (var systemConfiguration in Configuration.Systems)
 			{
@@ -52,6 +57,8 @@ namespace Engine
 			//{
 			//	InstallArchetype(archetypeConfiguration);
 			//}
+
+			Container.Bind<EntityStateSerializer>().AsSingle();
 
 			OnInstallBindings();
 		}
@@ -123,24 +130,32 @@ namespace Engine
 	}
 
 	// ReSharper disable InconsistentNaming
-	public abstract class ECSInstaller<TECS, TInstaller> : ECSInstaller<TInstaller>
-		where TECS : ECS
+	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> : ECSInstaller<TInstaller>
+		where TECS : ECS<TConfiguration>
+		where TConfiguration : ECSConfiguration
 		where TInstaller : ECSInstaller<TInstaller>
-	// ReSharper restore InconsistentNaming
+		where TECSRoot : ECSRoot<TECS, TConfiguration>
+		// ReSharper restore InconsistentNaming
 	{
+		protected ECSInstaller(string configurationJson)
+			: this(ConfigurationSerializer.DeserializeConfiguration<TConfiguration>(configurationJson))
+		{
+			
+		}
+
 		protected ECSInstaller(ECSConfiguration configuration)
 			: base(configuration)
 		{
 		}
 
-		public static TECS InstantiateECS<TConfiguration>(TConfiguration configuration)
-			where TConfiguration : ECSConfiguration
+		// ReSharper disable once InconsistentNaming
+		public static TECSRoot CreateECSRoot(TConfiguration configuration)
 		{
 			var container = new DiContainer();
 			container.BindInstance(configuration);
 			Install(container);
 
-			return container.Instantiate<TECS>();
+			return container.Instantiate<TECSRoot>();
 		}
 	}
 }

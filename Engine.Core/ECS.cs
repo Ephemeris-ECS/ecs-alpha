@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Engine.Archetypes;
 using Engine.Components;
+using Engine.Configuration;
 using Engine.Entities;
 using Engine.Systems;
 using Zenject;
@@ -13,13 +14,14 @@ using Zenject;
 namespace Engine
 {
 	// ReSharper disable once InconsistentNaming
-	public abstract class ECS : IDisposable, IECS
+	public abstract class ECS<TConfiguration> : IDisposable, IECS<TConfiguration>
+		where TConfiguration : ECSConfiguration
 	{
 		private bool _disposed;
 
 		private int _tick;
 
-		public DiContainer Container { get; }
+		public TConfiguration Configuration { get; }
 
 		/// <summary>
 		/// This is where the entity pool lives and new entities are created
@@ -48,11 +50,12 @@ namespace Engine
 		/// </summary>
 		protected Dictionary<string, Archetype> Archetypes { get; private set; }
 
-		protected ECS(DiContainer container,
+		protected ECS(TConfiguration configuration,
 			IEntityRegistry entityRegistry,
 			IComponentRegistry componentRegistry,
 			ISystemRegistry systemRegistry)
 		{
+			Configuration = configuration;
 			EntityRegistry = entityRegistry;
 			ComponentRegistry = componentRegistry;
 			SystemRegistry = systemRegistry;
@@ -92,5 +95,6 @@ namespace Engine
 		{
 			SystemRegistry.Tick(++_tick);
 		}
+
 	}
 }

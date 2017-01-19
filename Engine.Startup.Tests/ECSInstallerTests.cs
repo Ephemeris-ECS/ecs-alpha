@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
+using Engine.Serialization;
 using Engine.Systems;
 using NUnit.Framework;
 using Zenject;
 
-namespace Engine.Core.Tests
+namespace Engine.Startup.Tests
 {
 	[TestFixture]
 	// ReSharper disable once InconsistentNaming
@@ -118,15 +117,15 @@ namespace Engine.Core.Tests
 		#region installer
 
 		// ReSharper disable once InconsistentNaming
-		public class TestECS : ECS
+		public class TestECS : ECS<ECSConfiguration>
 		{
-			public TestECS(DiContainer container, IEntityRegistry entityRegistry, IComponentRegistry componentRegistry, ISystemRegistry systemRegistry)
-				: base(container, entityRegistry, componentRegistry, systemRegistry)
+			public TestECS(ECSConfiguration configuration, IEntityRegistry entityRegistry, IComponentRegistry componentRegistry, ISystemRegistry systemRegistry)
+				: base(configuration, entityRegistry, componentRegistry, systemRegistry)
 			{
 			}
 		}
 
-		public class TestInstaller : ECSInstaller<TestECS, TestInstaller>
+		public class TestInstaller : ECSInstaller<TestECS, ECSConfiguration, TestInstaller, ECSRoot<TestECS, ECSConfiguration>>
 		{
 			public DiContainer PublicContainer => Container;
 
@@ -174,7 +173,7 @@ namespace Engine.Core.Tests
 
 			var configuration = new ECSConfiguration(null, systemConfigurations);
 
-			var ecs = TestInstaller.InstantiateECS(configuration);
+			var ecs = TestInstaller.CreateECSRoot(configuration).ECS;
 
 			Assert.That(ecs, Is.Not.Null);
 			Assert.That(ecs.SystemRegistry.GetSystems<ISystemA>(), Is.Not.Null);
