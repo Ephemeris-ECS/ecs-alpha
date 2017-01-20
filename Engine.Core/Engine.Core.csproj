@@ -75,7 +75,6 @@
     <Compile Include="Entities\EntityFactory.cs" />
     <Compile Include="Entities\EntityRegistry.cs" />
     <Compile Include="Entities\EntityRegistryException.cs" />
-    <Compile Include="Entities\EntityState.cs" />
     <Compile Include="Entities\IEntityRegistry.cs" />
     <Compile Include="Exceptions\EngineException.cs" />
     <Compile Include="IECS.cs" />
