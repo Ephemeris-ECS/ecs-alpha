@@ -41,7 +41,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Zenject">
-      <HintPath>..\..\..\..\ecs-alpha\lib\Zenject\Zenject.dll</HintPath>
+      <HintPath>..\lib\Zenject\Zenject.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
