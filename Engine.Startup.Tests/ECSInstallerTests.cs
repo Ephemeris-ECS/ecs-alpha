@@ -133,6 +133,11 @@ namespace Engine.Startup.Tests
 				: base(configuration)
 			{
 			}
+
+			public static ECSRoot<TestECS, ECSConfiguration> CreatTestRoot(ECSConfiguration configuration)
+			{
+				return CreateECSRoot(configuration, null);
+			}
 		}
 
 		#endregion
@@ -173,7 +178,7 @@ namespace Engine.Startup.Tests
 
 			var configuration = new ECSConfiguration(null, systemConfigurations);
 
-			var ecs = TestInstaller.CreateECSRoot(configuration).ECS;
+			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
 			Assert.That(ecs, Is.Not.Null);
 			Assert.That(ecs.SystemRegistry.GetSystems<ISystemA>(), Is.Not.Null);

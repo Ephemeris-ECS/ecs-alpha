@@ -6,6 +6,7 @@ using Engine.Configuration;
 using Engine.Entities;
 using Engine.Serialization;
 using Engine.Systems;
+using ModestTree;
 using Zenject;
 
 namespace Engine.Startup
@@ -149,9 +150,12 @@ namespace Engine.Startup
 		}
 
 		// ReSharper disable once InconsistentNaming
-		public static TECSRoot CreateECSRoot(TConfiguration configuration)
+		protected static TECSRoot CreateECSRoot(TConfiguration configuration, DiContainer container)
 		{
-			var container = new DiContainer();
+			Assert.IsNotNull(configuration, nameof(configuration));
+
+			container = container ?? new DiContainer();
+
 			container.BindInstance(configuration);
 			Install(container);
 
