@@ -11,6 +11,17 @@ namespace Engine.Configuration
 		public abstract Type Type { get; }
 
 		public SystemExtensionConfiguration[] ExtensionConfiguration { get; set; }
+
+		protected SystemConfiguration()
+			: this (null)
+		{
+			
+		}
+
+		protected SystemConfiguration(SystemExtensionConfiguration[] extensionConfiguration)
+		{
+			ExtensionConfiguration = extensionConfiguration ?? new SystemExtensionConfiguration[0];
+		}
 	}
 
 	public sealed class SystemConfiguration<TSystem> : SystemConfiguration

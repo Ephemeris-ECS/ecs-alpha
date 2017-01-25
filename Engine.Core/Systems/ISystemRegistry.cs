@@ -2,6 +2,7 @@
 
 namespace Engine.Systems
 {
+	// TODO: make this interface and the implementation internal as these will cause circular references and break the DI if a system depends on this
 	public interface ISystemRegistry
 	{
 		TSystem GetSystem<TSystem>() where TSystem : class, ISystem;

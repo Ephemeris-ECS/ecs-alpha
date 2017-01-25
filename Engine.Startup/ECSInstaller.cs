@@ -80,26 +80,29 @@ namespace Engine.Startup
 
 		private static void InstallSystem(DiContainer container, SystemConfiguration systemConfiguration)
 		{
-			//container.BindAllInterfaces(systemConfiguration.Type).To(systemConfiguration.Type).AsSingle();
-			foreach (var extensionConfiguration in systemConfiguration.ExtensionConfiguration)
+			if (systemConfiguration.ExtensionConfiguration != null)
 			{
-				if (extensionConfiguration.AllOfType)
+				//container.BindAllInterfaces(systemConfiguration.Type).To(systemConfiguration.Type).AsSingle();
+				foreach (var extensionConfiguration in systemConfiguration.ExtensionConfiguration)
 				{
-					container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type));
-				}
-				else
-				{
-					foreach (var extensionImplementation in extensionConfiguration.Implementations)
+					if (extensionConfiguration.AllOfType)
 					{
-						container.Bind(extensionConfiguration.Type).To(extensionImplementation);
+						container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type));
 					}
+					else
+					{
+						foreach (var extensionImplementation in extensionConfiguration.Implementations)
+						{
+							container.Bind(extensionConfiguration.Type).To(extensionImplementation);
+						}
+					}
+					// TODO: keep this for later reference - we are using [InjectOptional] instead
+					//var extensionListType = typeof(List<>).MakeGenericType(extensionConfiguration.Type);
+					//if (container.HasBinding(new InjectContext(container, extensionListType, null)) == false)
+					//{
+					//	container.Bind(extensionListType).AsSingle();
+					//}
 				}
-				// TODO: keep this for later reference - we are using [InjectOptional] instead
-				//var extensionListType = typeof(List<>).MakeGenericType(extensionConfiguration.Type);
-				//if (container.HasBinding(new InjectContext(container, extensionListType, null)) == false)
-				//{
-				//	container.Bind(extensionListType).AsSingle();
-				//}
 			}
 		}
 
@@ -131,22 +134,23 @@ namespace Engine.Startup
 	}
 
 	// ReSharper disable InconsistentNaming
-	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> : ECSInstaller<TInstaller>
+	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> 
+		: ECSInstaller<TInstaller>
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
 		where TInstaller : ECSInstaller<TInstaller>
 		where TECSRoot : ECSRoot<TECS, TConfiguration>
 		// ReSharper restore InconsistentNaming
 	{
-		protected ECSInstaller(string configurationJson)
-			: this(ConfigurationSerializer.DeserializeConfiguration<TConfiguration>(configurationJson))
-		{
-			
-		}
-
 		protected ECSInstaller(ECSConfiguration configuration)
 			: base(configuration)
 		{
+		}
+
+		public override void InstallBindings()
+		{
+			Container.Bind(typeof(TECS)).AsSingle();
+			base.InstallBindings();
 		}
 
 		// ReSharper disable once InconsistentNaming
