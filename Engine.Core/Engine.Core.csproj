@@ -72,7 +72,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\EntityDictionary.cs" />
     <Compile Include="Entities\EntityExtensions.cs" />
-    <Compile Include="Entities\EntityFactory.cs" />
+    <Compile Include="Archetypes\EntityFactory.cs" />
     <Compile Include="Entities\EntityRegistry.cs" />
     <Compile Include="Entities\EntityRegistryException.cs" />
     <Compile Include="Entities\IEntityFactory.cs" />

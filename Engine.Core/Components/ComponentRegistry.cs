@@ -19,7 +19,9 @@ namespace Engine.Components
 
 		static ComponentRegistry()
 		{
-			
+			// TODO: this should probably not use the app domain but the DiContainer to see what has been bound as we dont care about anything 
+			// else until components and/or archetypes can be added at runtime
+
 			// build a dictionary of components by the interfaces they implement
 			// this can be static since new components aren't added to the app domain at runtime
 			ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
