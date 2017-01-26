@@ -48,12 +48,14 @@ namespace Engine
 		/// Dicyionary of entity archetypes
 		/// TODO: allow this to be modified at runtim and/or loaded from configuration
 		/// </summary>
-		protected Dictionary<string, Archetype> Archetypes { get; private set; }
+		protected Dictionary<string, IEntityFactory> Archetypes { get; private set; }
 
 		protected ECS(TConfiguration configuration,
 			IEntityRegistry entityRegistry,
 			IComponentRegistry componentRegistry,
-			ISystemRegistry systemRegistry)
+			ISystemRegistry systemRegistry,
+			// TODO: remove zenject dependency when implicit optional collection paramters is implemented
+			[InjectOptional] List<IEntityFactory> entityFactories)
 		{
 			Configuration = configuration;
 			EntityRegistry = entityRegistry;
@@ -63,17 +65,15 @@ namespace Engine
 			// signal the component registry that a new entity has been populated
 			ComponentFactory.EntityArchetypeCreated += ComponentRegistry.UpdateMatcherGroups;
 
-			Archetypes = new Dictionary<string, Archetype>();
+			Archetypes = entityFactories.ToDictionary(k => k.Archetype.Name, v => v);
 		}
 
 		public Entity CreateEntityFromArchetype(string archetypeName)
 		{
-			Archetype archetype;
-			if (Archetypes.TryGetValue(archetypeName, out archetype))
+			IEntityFactory entityFactory;
+			if (Archetypes.TryGetValue(archetypeName, out entityFactory))
 			{
-				var entity = EntityRegistry.CreateEntity();
-				ComponentFactory.PopulateContainerForArchetype(archetypeName, entity);
-				return entity;
+				return entityFactory.CreateEntity();
 			}
 			throw new KeyNotFoundException($"No archetype found for key '{archetypeName}'");
 		}

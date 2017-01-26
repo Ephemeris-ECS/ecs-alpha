@@ -9,7 +9,7 @@ namespace Engine.Components
 { 
 	public class ComponentRegistry : IComponentRegistry
 	{
-		public static Dictionary<Type, HashSet<Type>> ComponentTypeImplementations { get; }
+		public static Dictionary<Type, HashSet<Type>> ComponentTypesByImplementation { get; }
 
 		private readonly Dictionary<Type, HashSet<Entity>> _componentEntities;
 
@@ -22,7 +22,7 @@ namespace Engine.Components
 			
 			// build a dictionary of components by the interfaces they implement
 			// this can be static since new components aren't added to the app domain at runtime
-			ComponentTypeImplementations = ModuleLoader.GetTypesImplementing<IComponent>()
+			ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
 				.SelectMany(componentType => componentType.GetInterfaces()
 					.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
 				.GroupBy(componentTuple => componentTuple.Interface)
@@ -36,19 +36,23 @@ namespace Engine.Components
 			_componentEntities = new Dictionary<Type, HashSet<Entity>>();
 
 		}
+		
+		private void AddComponentEntityMapping(Entity entity, Type componentType)
+		{
+			HashSet<Entity> componentEntities;
+
+			if (_componentEntities.TryGetValue(componentType, out componentEntities) == false)
+			{
+				componentEntities = new HashSet<Entity>();
+				_componentEntities.Add(componentType, componentEntities);
+			}
+			componentEntities.Add(entity);
+		}
 
 		public void AddComponentBinding(Entity entity, IComponent component)
 		{
 			var componentType = component.GetType();
 			AddComponentEntityMapping(entity, componentType);
-
-			//caching these in two different ways is sub optimal but I havent decided which I prefer for now!
-
-			var componentInterfaces = ComponentTypeImplementations[componentType];
-			foreach (var componentInterface in componentInterfaces)
-			{
-				AddComponentEntityMapping(entity, componentInterface);
-			}
 
 			UpdateMatcherGroups(entity);
 		}
@@ -90,17 +94,6 @@ namespace Engine.Components
 			}
 		}
 
-		private void AddComponentEntityMapping(Entity entity, Type componentType)
-		{
-			HashSet<Entity> componentEntities;
-
-			if (_componentEntities.TryGetValue(componentType, out componentEntities) == false)
-			{
-				componentEntities = new HashSet<Entity>();
-				_componentEntities.Add(componentType, componentEntities);
-			}
-			componentEntities.Add(entity);
-		}
 
 		public void RemoveComponentEntityMapping(Entity entity)
 		{

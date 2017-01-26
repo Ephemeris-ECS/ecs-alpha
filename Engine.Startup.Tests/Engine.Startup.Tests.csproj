@@ -61,6 +61,10 @@
       <Project>{92dac07e-8a7a-466b-b778-daf781a993f4}</Project>
       <Name>Engine.Startup</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine.Testing\Engine.Testing.csproj">
+      <Project>{27721dc6-0dfd-42e7-86ba-33fb9632ad19}</Project>
+      <Name>Engine.Testing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

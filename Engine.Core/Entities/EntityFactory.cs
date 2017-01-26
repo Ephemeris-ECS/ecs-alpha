@@ -2,27 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Archetypes;
+using Engine.Components;
 using Zenject;
 
 namespace Engine.Entities
 {
-	public class EntityFactory : IFactory<string, Entity>
+	public class EntityFactory : IEntityFactory
 	{
-		private DiContainer _container;
+		private readonly DiContainer _factoryContainer;
 
-		public EntityFactory(DiContainer container)
+		private readonly IComponentRegistry _componentRegistry;
+
+		public Archetype Archetype { get; }
+
+		private Dictionary<Type, string> _initializationData;
+
+		public EntityFactory(DiContainer factoryContainer, Archetype archetype, IComponentRegistry componentRegistry)
 		{
-			_container = container;
+			_factoryContainer = factoryContainer;
+			Archetype = archetype;
+			_initializationData = archetype.Components.ToDictionary(k => k.ComponentType, v => v.ComponentTemplateSerialized);
+			_componentRegistry = componentRegistry;
 		}
 
-		public Entity Create(string param)
+		public Entity CreateEntity()
 		{
-			throw new NotImplementedException();
-		}
+			var entity = _factoryContainer.Instantiate<Entity>();
 
-		//public Entity Create(string param)
-		//{
-		//	return _container.
-		//}
+			var components = _factoryContainer.Resolve<List<IComponent>>();
+			foreach (var component in components)
+			{
+				entity.AddComponent(component);
+				_componentRegistry.AddComponentBinding(entity, component);
+				// TODO: populate component from template
+			}
+
+			return entity;
+		}
 	}
 }

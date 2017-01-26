@@ -20,11 +20,11 @@ namespace Engine.Serialization
 
 		private bool _entityCreated;
 
-		private readonly ComponentRegistry _componentRegistry;
+		private readonly IComponentRegistry _componentRegistry;
 
 		public bool TrackDeserializedEntities { get; set; }
 		
-		public ECSContractResolver(DiContainer container, ComponentRegistry componentRegistry)
+		public ECSContractResolver(DiContainer container, IComponentRegistry componentRegistry)
 		{
 			_container = container;
 			_entitiesDeserialized = new HashSet<int>();

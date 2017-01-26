@@ -82,7 +82,7 @@ namespace Engine.Entities
 		//{
 		//	//TODO: this looks like a m * n problem
 		//	HashSet<Type> componentTypes;
-		//	if (ComponentRegistry.ComponentTypeImplementations.TryGetValue(componentType, out componentTypes))
+		//	if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(componentType, out componentTypes))
 		//	{
 		//		return componentTypes.Where(ct => Components.ContainsKey(ct))
 		//			.Select(ct => Components[ct]);
@@ -93,15 +93,23 @@ namespace Engine.Entities
 		private IEnumerable<TComponentInterface> GetComponentsInternal<TComponentInterface>()
 			where TComponentInterface : class, IComponent
 		{
+			var components = new List<TComponentInterface>();
+
+			IComponent component;
+			if (Components.TryGetValue(typeof(TComponentInterface), out component))
+			{
+				components.Add(component as TComponentInterface);
+			}
+
 			//TODO: this looks like a m * n problem
 			HashSet<Type> componentTypes;
-			if (ComponentRegistry.ComponentTypeImplementations.TryGetValue(typeof(TComponentInterface), out componentTypes))
-			{ 
-				return componentTypes.Where(ct => Components.ContainsKey(ct))
+			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypes))
+			{
+				components.AddRange(componentTypes.Where(ct => Components.ContainsKey(ct))
 					.Select(ct => Components[ct])
-					.Cast<TComponentInterface>();
+					.Cast<TComponentInterface>());
 			}
-			return new TComponentInterface[0];
+			return components;
 		}
 
 		public bool HasComponentsImplmenting<TComponentInterface>()

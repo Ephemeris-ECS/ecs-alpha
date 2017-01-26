@@ -21,7 +21,7 @@ namespace Engine.Serialization
 
 
 		public EntityStateSerializer(DiContainer container, 
-			ComponentRegistry componentRegistry)
+			IComponentRegistry componentRegistry)
 		{
 			var entitySerializerSettings = new EntityDictionarySerializerSettings();
 			var entityContractResolver = new ECSContractResolver(container, componentRegistry)

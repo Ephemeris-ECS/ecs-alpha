@@ -6,6 +6,7 @@ using Engine.Configuration;
 using Engine.Entities;
 using Engine.Serialization;
 using Engine.Systems;
+using Engine.Testing;
 using NUnit.Framework;
 using Zenject;
 
@@ -13,7 +14,7 @@ namespace Engine.Startup.Tests
 {
 	[TestFixture]
 	// ReSharper disable once InconsistentNaming
-	public class ECSInstallerTests
+	public partial class ECSInstallerTests
 	{
 		#region test classes
 
@@ -111,34 +112,6 @@ namespace Engine.Startup.Tests
 
 
 		#endregion
-
-		#endregion
-
-		#region installer
-
-		// ReSharper disable once InconsistentNaming
-		public class TestECS : ECS<ECSConfiguration>
-		{
-			public TestECS(ECSConfiguration configuration, IEntityRegistry entityRegistry, IComponentRegistry componentRegistry, ISystemRegistry systemRegistry)
-				: base(configuration, entityRegistry, componentRegistry, systemRegistry)
-			{
-			}
-		}
-
-		public class TestInstaller : ECSInstaller<TestECS, ECSConfiguration, TestInstaller, ECSRoot<TestECS, ECSConfiguration>>
-		{
-			public DiContainer PublicContainer => Container;
-
-			public TestInstaller(ECSConfiguration configuration)
-				: base(configuration)
-			{
-			}
-
-			public static ECSRoot<TestECS, ECSConfiguration> CreatTestRoot(ECSConfiguration configuration)
-			{
-				return CreateECSRoot(configuration, null);
-			}
-		}
 
 		#endregion
 

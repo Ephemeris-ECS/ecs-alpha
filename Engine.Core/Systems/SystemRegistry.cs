@@ -14,9 +14,10 @@ namespace Engine.Systems
 
 		private readonly DiContainer _container;
 
-		public SystemRegistry(DiContainer container, List<ISystem> systems)
+		public SystemRegistry(DiContainer container, 
+			[InjectOptional] List<ISystem> systems)
 		{
-			_systems = systems;
+			_systems = systems ?? new List<ISystem>();
 			_container = container;
 		}
 

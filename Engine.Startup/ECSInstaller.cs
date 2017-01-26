@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Engine.Archetypes;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
@@ -48,16 +49,15 @@ namespace Engine.Startup
 				.To<SystemRegistry>()
 				.AsSingle();
 			
-			// configuration driven system loading
 			foreach (var systemConfiguration in Configuration.Systems)
 			{
 				InstallSystemBinding(systemConfiguration);
 			}
 
-			//foreach (var archetypeConfiguration in Configuration.Archetypes)
-			//{
-			//	InstallArchetype(archetypeConfiguration);
-			//}
+			foreach (var archetypeConfiguration in Configuration.Archetypes)
+			{
+				InstallArchetype(archetypeConfiguration);
+			}
 
 			Container.Bind<EntityStateSerializer>().AsSingle();
 
@@ -96,41 +96,28 @@ namespace Engine.Startup
 							container.Bind(extensionConfiguration.Type).To(extensionImplementation);
 						}
 					}
-					// TODO: keep this for later reference - we are using [InjectOptional] instead
-					//var extensionListType = typeof(List<>).MakeGenericType(extensionConfiguration.Type);
-					//if (container.HasBinding(new InjectContext(container, extensionListType, null)) == false)
-					//{
-					//	container.Bind(extensionListType).AsSingle();
-					//}
 				}
 			}
 		}
 
-		//private void InstallArchetype(Archetype archetypeConfiguration)
-		//{
-		//	Container.BindIFactory<string, Entity, EntityFactory>()
-		//		.WithId(archetypeConfiguration.Name)
-		//		.FromSubContainerResolve()
-		//		.ByMethod()
-		//}
+		private void InstallArchetype(Archetype archetypeConfiguration)
+		{
+			Container.Bind<IEntityFactory>() 
+				.FromSubContainerResolve()
+				.ByMethod(container => InstallArchetypeFactory(container, archetypeConfiguration))
+				.AsSingle()
+				.NonLazy();
+		}
 
-		//private static void InstallArchetypeFactory(DiContainer container, Archetype archetypeConfiguration)
-		//{
-		//	foreach (var extensionConfiguration in systemConfiguration.ExtensionConfiguration)
-		//	{
-		//		if (extensionConfiguration.AllOfType)
-		//		{
-		//			container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type));
-		//		}
-		//		else
-		//		{
-		//			foreach (var extensionImplementation in extensionConfiguration.Implementations)
-		//			{
-		//				container.Bind(extensionConfiguration.Type).To(extensionImplementation);
-		//			}
-		//		}
-		//	}
-		//}
+		private static void InstallArchetypeFactory(DiContainer container, Archetype archetypeConfiguration)
+		{
+			container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
+			container.BindInstance(archetypeConfiguration).AsSingle();
+			foreach (var componentBinding in archetypeConfiguration.Components)
+			{
+				container.Bind<IComponent>().To(componentBinding.ComponentType);
+			}
+		}
 	}
 
 	// ReSharper disable InconsistentNaming
