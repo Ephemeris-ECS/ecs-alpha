@@ -8,6 +8,12 @@ namespace Engine.Components
 		public TValue MaxValue { get; private set; }
 		public TValue MinValue { get; private set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value">Initial value</param>
+		/// <param name="minValue">Minimum value</param>
+		/// <param name="maxValue">Maximum value</param>
 		protected RangedNumericProperty(TValue value,
 			TValue minValue, 
 			TValue maxValue)
@@ -17,11 +23,22 @@ namespace Engine.Components
 			MinValue = minValue;
 		}
 
+		protected RangedNumericProperty()
+		{
+			
+		}
+
 		public abstract float GetValueAsProportion();
 	}
 
 	public abstract class RangedIntegerProperty : RangedNumericProperty<int>
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value">Initial value</param>
+		/// <param name="minValue">Minimum value</param>
+		/// <param name="maxValue">Maximum value</param>
 		protected RangedIntegerProperty(int value, 
 			int minValue, 
 			int maxValue) 
@@ -44,8 +61,14 @@ namespace Engine.Components
 
 	public abstract class RangedDoubleProperty : RangedNumericProperty<double>
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value">Initial value</param>
+		/// <param name="minValue">Minimum value</param>
+		/// <param name="maxValue">Maximum value</param>
 		protected RangedDoubleProperty(double value,
-			double minValue, 
+		double minValue, 
 			double maxValue) 
 			: base(value, minValue, maxValue)
 		{
@@ -66,6 +89,12 @@ namespace Engine.Components
 
 	public abstract class RangedFloatProperty : RangedNumericProperty<float>
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value">Initial value</param>
+		/// <param name="minValue">Minimum value</param>
+		/// <param name="maxValue">Maximum value</param>
 		protected RangedFloatProperty(float value,
 			float minValue,
 			float maxValue)
