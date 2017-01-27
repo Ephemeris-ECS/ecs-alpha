@@ -8,8 +8,8 @@ namespace Engine.Testing
 {
 	public class TestComponentB : IComponent
 	{
-		public Dictionary<int, int> DictionaryValuePublic { get; set; }
+		public Dictionary<int, int> IntDictionaryValuePublic { get; set; }
 
-		private Dictionary<int, int> _dictionaryValuePrivate;
+		private Dictionary<int, int> _intDictionaryValuePrivate;
 	}
 }

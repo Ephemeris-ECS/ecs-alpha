@@ -13,7 +13,7 @@ namespace Engine.Archetypes
 		/// <summary>
 		/// represents the minimal set of property overrides to initialize the component in the required initial state.
 		/// </summary>
-		public string ComponentTemplateSerialized { get; }
+		public string ComponentTemplateSerialized { get; set; }
 		
 		protected ComponentBinding()
 		{
