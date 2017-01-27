@@ -115,7 +115,7 @@ namespace Engine.Startup
 			container.BindInstance(archetypeConfiguration).AsSingle();
 			foreach (var componentBinding in archetypeConfiguration.Components)
 			{
-				container.Bind<IComponent>().To(componentBinding.ComponentType);
+				container.Bind(componentBinding.ComponentType);
 			}
 		}
 	}

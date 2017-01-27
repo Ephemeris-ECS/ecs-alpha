@@ -12,11 +12,15 @@ namespace Engine.Archetypes
 
 		public List<ComponentBinding> Components { get; }
 
+		#region Constrcutors
+
 		public Archetype(string name)
 		{
 			Name = name;
 			Components = new List<ComponentBinding>();
 		}
+
+		#endregion
 	}
 
 	/// <summary>

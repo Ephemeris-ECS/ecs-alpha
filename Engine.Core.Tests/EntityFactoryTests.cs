@@ -79,6 +79,67 @@ namespace Engine.Core.Tests
 			};
 
 
+			var configuration = new ECSConfiguration(archetypes, null);
+
+			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+
+			ecs.CreateEntityFromArchetype("TestA");
+
+			var entityA = ecs.CreateEntityFromArchetype("TestA");
+			TestComponentA componentA;
+			Assert.That(entityA.TryGetComponent<TestComponentA>(out componentA), Is.True);
+			Assert.That(componentA.StringValuePublic, Is.EqualTo("Woo"));
+			Assert.That(componentA.IntValuePublic, Is.EqualTo(1));
+
+			// TODO: test private members via reflection
+			// TODO: decide if private members should be settable in the template, or if it should all be public
+
+			TestComponentB componentB;
+			var entityB = ecs.CreateEntityFromArchetype("TestB");
+			Assert.That(entityB.TryGetComponent<TestComponentB>(out componentB), Is.True);
+			Assert.That(componentB.IntDictionaryValuePublic.Count, Is.EqualTo(2));
+			Assert.That(componentB.IntDictionaryValuePublic.Keys.Contains(1));
+			Assert.That(componentB.IntDictionaryValuePublic[1], Is.EqualTo(1));
+		}
+
+		[Test]
+		public void TestEntityTemplate()
+		{
+			var archetypes = new List<Archetype>()
+			{
+				new Archetype("TestA")
+				{
+					Components =
+					{
+						new ComponentBinding<TestComponentA>()
+						{
+							ComponentTemplate = new TestComponentA()
+							{
+								StringValuePublic = "Woo",
+								IntValuePublic = 1,
+							}
+						},
+					}
+				},
+				new Archetype("TestB")
+				{
+					Components =
+					{
+						new ComponentBinding<TestComponentB>()
+						{
+							ComponentTemplate = new TestComponentB()
+							{
+								IntDictionaryValuePublic = new Dictionary<int, int>()
+								{
+									{ 1, 1 },
+									{ 2, 2 }
+								}
+							}
+						},
+					}
+				},
+			};
+
 
 			var configuration = new ECSConfiguration(archetypes, null);
 
@@ -100,7 +161,8 @@ namespace Engine.Core.Tests
 			Assert.That(componentB.IntDictionaryValuePublic[1], Is.EqualTo(1));
 		}
 
-		[Test]
+
+		//[Test]
 		public void TestEntityTemplateDeserializationTime()
 		{
 			var archetypes = new List<Archetype>()
@@ -136,11 +198,12 @@ namespace Engine.Core.Tests
 			const int repeat = 1000;
 
 			var stopwatch = new Stopwatch();
+			var entityA = ecs.CreateEntityFromArchetype("TestA");
 			stopwatch.Start();
 
 			for (var i = 0; i < repeat; i++)
 			{
-				var entityA = ecs.CreateEntityFromArchetype("TestA");
+				entityA = ecs.CreateEntityFromArchetype("TestA");
 				TestComponentA componentA;
 				Assert.That(entityA.TryGetComponent<TestComponentA>(out componentA), Is.True);
 				Assert.That(componentA.StringValuePublic, Is.EqualTo("Woo"));

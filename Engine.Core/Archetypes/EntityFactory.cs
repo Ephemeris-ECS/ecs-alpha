@@ -11,52 +11,56 @@ namespace Engine.Archetypes
 {
 	public class EntityFactory : IEntityFactory
 	{
-		private static readonly JsonSerializer ComponentTemplateSerializer;
-
-		static EntityFactory()
-		{
-			// TODO: we probably need some settings overrides
-			ComponentTemplateSerializer = JsonSerializer.CreateDefault();
-		}
-
 		private readonly DiContainer _factoryContainer;
 
 		private readonly IComponentRegistry _componentRegistry;
 
 		public Archetype Archetype { get; }
 
-		private Dictionary<Type, string> _componentTemplates;
-
 		public EntityFactory(DiContainer factoryContainer, Archetype archetype, IComponentRegistry componentRegistry)
 		{
 			_factoryContainer = factoryContainer;
 			Archetype = archetype;
-			_componentTemplates = archetype.Components.ToDictionary(k => k.ComponentType, v => v.ComponentTemplateSerialized);
 			_componentRegistry = componentRegistry;
+
+			InitialiseTemplates();
+		}
+
+		private void InitialiseTemplates()
+		{
+			foreach (var componentBinding in Archetype.Components)
+			{
+				try
+				{
+					componentBinding.InitialiseTemplate();
+				}
+				catch (Exception ex)
+				{
+					throw new EntityFactoryException($"Error initialising component template for component type {componentBinding.ComponentType.Name}", ex, Archetype.Name);
+				}
+			}
 		}
 
 		public Entity CreateEntity()
 		{
-			var entity = _factoryContainer.Instantiate<Entity>();
-
-			var components = _factoryContainer.Resolve<List<IComponent>>();
-			foreach (var component in components)
+			try
 			{
-				entity.AddComponent(component);
-				_componentRegistry.AddComponentBinding(entity, component);
+				var entity = _factoryContainer.Instantiate<Entity>();
 
-				string componentTemplate;
-				if (_componentTemplates.TryGetValue(component.GetType(), out componentTemplate))
+				foreach (var componentBinding in Archetype.Components)
 				{
-					// TODO: this is probably far too slow, we need to build a cache and copy
-					using (var reader = new JsonTextReader(new StringReader(componentTemplate)))
-					{
-						ComponentTemplateSerializer.Populate(reader, component);
-					}
+					var component = (IComponent) _factoryContainer.Resolve(componentBinding.ComponentType);
+					componentBinding.PopulateComponent(component);
+					entity.AddComponent(component);
+					_componentRegistry.AddComponentBinding(entity, component);
 				}
-			}
 
-			return entity;
+				return entity;
+			}
+			catch (Exception ex)
+			{
+				throw new EntityFactoryException("Error creating entity from archetype.", ex, Archetype.Name);
+			}
 		}
 	}
 }

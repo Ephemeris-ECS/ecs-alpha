@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Archetypes\Archetype.cs" />
     <Compile Include="Archetypes\ComponentBinding.cs" />
+    <Compile Include="Archetypes\EntityFactoryException.cs" />
     <Compile Include="Components\ComponentAttributeExtensions.cs" />
     <Compile Include="Components\ComponentDependencyAttribute.cs" />
     <Compile Include="Components\ComponentDependencyException.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="IECS.cs" />
     <Compile Include="Planning\IIntent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\INcludePrivate MbmersContractREsolver.cs" />
     <Compile Include="Serialization\ISerializable.cs" />
     <Compile Include="Serialization\StateLevel.cs" />
     <Compile Include="Serialization\SyncStateAttribute.cs" />
@@ -90,6 +92,8 @@
     <Compile Include="Systems\System.cs" />
     <Compile Include="Systems\SystemRegistry.cs" />
     <Compile Include="Util\AttributeHelper.cs" />
+    <Compile Include="Util\DefaultValueHelper.cs" />
+    <Compile Include="Util\DynamicMethodHelper.cs" />
     <Compile Include="Util\ModuleLoader.cs" />
     <Compile Include="Util\NotNullHelper.cs" />
   </ItemGroup>

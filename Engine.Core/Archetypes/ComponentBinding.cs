@@ -1,20 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Engine.Components;
+using Engine.Serialization;
+using Engine.Util;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Engine.Archetypes
 {
 	public abstract class ComponentBinding
 	{
+		protected static readonly JsonSerializer ComponentTemplateSerializer;
+
+		static ComponentBinding()
+		{
+			// TODO: extract this all to the serialization assembly
+			var serializerSettings = new JsonSerializerSettings()
+			{
+				ContractResolver = new IncludePrivateMembersContractResolver(),
+			};
+			serializerSettings.Converters.Add(new StringEnumConverter());
+
+			// TODO: we probably need some settings overrides
+			ComponentTemplateSerializer = JsonSerializer.CreateDefault(serializerSettings);
+		}
+
 		public abstract Type ComponentType { get; }
 
 		/// <summary>
 		/// represents the minimal set of property overrides to initialize the component in the required initial state.
 		/// </summary>
 		public string ComponentTemplateSerialized { get; set; }
-		
+
+		#region constrcutors
+
 		protected ComponentBinding()
 		{
 			ComponentTemplateSerialized = "{}";
@@ -24,18 +47,84 @@ namespace Engine.Archetypes
 		{
 			ComponentTemplateSerialized = componentTemplateSerialized;
 		}
+
+		#endregion
+
+		public abstract void InitialiseTemplate();
+
+		public abstract void PopulateComponent(IComponent component);
 	}
 
 	public class ComponentBinding<TComponent> : ComponentBinding
 		where TComponent : IComponent
 	{
+		private class TemplateValueProxy
+		{
+			private readonly Func<TComponent, object> _getter;
+			private readonly Action<TComponent, object> _setter;
+
+			public TemplateValueProxy(Func<TComponent, object> getter, Action<TComponent, object> setter)
+			{
+				_getter = getter;
+				_setter = setter;
+			}
+
+			public void CopyValue(TComponent source, TComponent destination)
+			{
+				_setter(destination, _getter(source));
+			}
+		}
+
+		private List<TemplateValueProxy> _templateValueProxies;
+
 		public override Type ComponentType => typeof(TComponent);
 
-		///// <summary>
-		///// represents the initial state of the component
-		///// values will be copied to new instances where they do not match
-		///// if this is null the compont template will be deserialized from <cref:ComponentTemplateSerialized />
-		///// </summary>
-		//public TComponent ComponentTemplate { get; set; }
+		/// <summary>
+		/// represents the initial state of the component
+		/// values will be copied to new instances where they do not match
+		/// if this is null the compont template will be deserialized from <cref:ComponentTemplateSerialized />
+		/// </summary>
+		public TComponent ComponentTemplate { get; set; }
+
+		public override void InitialiseTemplate()
+		{
+			if (_templateValueProxies == null)
+			{
+				_templateValueProxies = new List<TemplateValueProxy>();
+
+				if (ComponentTemplate == null)
+				{
+					using (var reader = new JsonTextReader(new StringReader(ComponentTemplateSerialized)))
+					{
+						ComponentTemplate = ComponentTemplateSerializer.Deserialize<TComponent>(reader);
+					}
+				}
+
+				foreach (var field in typeof(TComponent).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+				{
+					var getter = DynamicMethodHelper.CreateGet<TComponent>(field);
+					var value = getter(ComponentTemplate);
+
+					if (value != null && value.Equals(DefaultValueHelper.GetDefault(field.FieldType)) == false)
+					{
+						_templateValueProxies.Add(new TemplateValueProxy(getter, DynamicMethodHelper.CreateSet<TComponent>(field)));
+					}
+				}
+			}
+		}
+
+		public override void PopulateComponent(IComponent component)
+		{
+			InitialiseTemplate();
+			PopulateComponent((TComponent) component);
+		}
+
+		private void PopulateComponent(TComponent component)
+		{
+			foreach (var templateValueProxy in _templateValueProxies)
+			{
+				templateValueProxy.CopyValue(ComponentTemplate, component);
+			}
+		}
 	}
 }

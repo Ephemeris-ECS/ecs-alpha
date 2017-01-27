@@ -36,6 +36,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 // hacky!
+[assembly: InternalsVisibleTo("Engine.Core")]
 [assembly: InternalsVisibleTo("Engine.Newtonsoft.Json.Tests")]
 [assembly: InternalsVisibleTo("Engine.Serialization")]
 [assembly: InternalsVisibleTo("Engine.Serialization.Tests")]
