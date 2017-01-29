@@ -1,4 +1,4 @@
-=== EPHEMERIS ECS-ALPHA ===
+### EPHEMERIS / ECS-ALPHA
 
 This is pre-release work. 
 
