@@ -36,12 +36,24 @@ namespace Engine.Configuration
 
 		public bool AllOfType { get; set; }
 
-		public Type[] Implementations { get; set; }
+		public SystemExtensionImplementation[] Implementations { get; set; }
+	}
+
+	public abstract class SystemExtensionImplementation
+	{
+		public abstract Type Type { get; }
 	}
 
 	public sealed class SystemExtensionConfiguration<TExtension> : SystemExtensionConfiguration
 		where TExtension : ISystemExtension
 	{
+
+		public sealed class SystemExtensionImplementation<TImplmentation> : SystemExtensionImplementation
+			where TImplmentation : TExtension
+		{
+			public override Type Type => typeof(TImplmentation);
+		}
+
 		public override Type Type => typeof(TExtension);
 	}
 }

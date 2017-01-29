@@ -13,7 +13,7 @@ namespace Engine.Archetypes
 	{
 		private readonly DiContainer _factoryContainer;
 
-		private IEntityRegistry _entityRegistry;
+		private readonly IEntityRegistry _entityRegistry;
 
 		private readonly IComponentRegistry _componentRegistry;
 
@@ -42,7 +42,7 @@ namespace Engine.Archetypes
 				}
 				catch (Exception ex)
 				{
-					throw new EntityFactoryException($"Error initialising component template for component type {componentBinding.ComponentType.Name}", ex, Archetype.Name);
+					throw new EntityFactoryException($"Error initialising component for archetype '{Archetype.Name}', component type {componentBinding.ComponentType.Name}", ex);
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace Engine.Archetypes
 			}
 			catch (Exception ex)
 			{
-				throw new EntityFactoryException("Error creating entity from archetype.", ex, Archetype.Name);
+				throw new EntityFactoryException($"Error creating entity from archetype '{Archetype.Name}'", ex);
 			}
 		}
 	}

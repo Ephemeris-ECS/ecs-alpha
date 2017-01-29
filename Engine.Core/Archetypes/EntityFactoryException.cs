@@ -8,23 +8,16 @@ namespace Engine.Archetypes
 {
 	public class EntityFactoryException : EngineException
 	{
-		public string Archetype { get; }
-
-		public EntityFactoryException(string archetype)
+		public EntityFactoryException()
 		{
-			Archetype = archetype;
 		}
 
-		public EntityFactoryException(string message, string archetype)
-			: base(message)
+		public EntityFactoryException(string message) : base(message)
 		{
-			Archetype = archetype;
 		}
 
-		public EntityFactoryException(string message, Exception innerException, string archetype)
-			: base(message, innerException)
+		public EntityFactoryException(string message, Exception innerException) : base(message, innerException)
 		{
-			Archetype = archetype;
 		}
 	}
 }

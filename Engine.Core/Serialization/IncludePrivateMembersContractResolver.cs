@@ -13,6 +13,7 @@ namespace Engine.Serialization
 		protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
 		{
 			var props = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+							.Where(p => p.CanWrite)
 							.Select(p => base.CreateProperty(p, memberSerialization))
 						.Union(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
 							.Select(f => base.CreateProperty(f, memberSerialization)))

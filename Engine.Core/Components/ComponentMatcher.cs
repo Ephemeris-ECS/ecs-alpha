@@ -21,6 +21,7 @@ namespace Engine.Components
 		/// 
 		/// </summary>
 		/// <param name="componentTypes">Entities containing all component types will be matched</param>
+		// TODO: the matcher should be smart enough to infer all required types from the ComponentDependency attributes on the types specified
 		internal ComponentMatcher(IEnumerable<Type> componentTypes)
 			: this(componentTypes, entity => true)
 		{

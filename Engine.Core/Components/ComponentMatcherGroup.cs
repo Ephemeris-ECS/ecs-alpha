@@ -8,6 +8,10 @@ namespace Engine.Components
 {
 	public class ComponentMatcherGroup : ComponentMatcher
 	{
+		public event Action<Entity> MatchingEntityAdded;
+
+		public event Action<Entity> MatchingEntityRemoved;
+
 		public HashSet<Entity> MatchingEntities { get; }
 
 		internal ComponentMatcherGroup(IEnumerable<Type> componentTypes)
@@ -29,12 +33,8 @@ namespace Engine.Components
 				//var cet = new ComponentEntityTuple(entity, ComponentTypes.ToDictionary(k => k, v => entity.GetComponent<>()));
 				MatchingEntities.Add(entity);
 				entity.EntityDestroyed += EntityOnEntityDestroyed;
+				OnNewMatchingEntity(entity);
 				return true;
-			}
-			// TODO: lazy implementation - catch the entity destroyed event instead
-			else
-			{
-				MatchingEntities.Remove(entity);
 			}
 			return false;
 		}
@@ -53,6 +53,17 @@ namespace Engine.Components
 		{
 			MatchingEntities.Remove(entity);
 			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			OnMatchingEntityRemoved(entity);
+		}
+
+		protected virtual void OnNewMatchingEntity(Entity obj)
+		{
+			MatchingEntityAdded?.Invoke(obj);
+		}
+
+		protected virtual void OnMatchingEntityRemoved(Entity obj)
+		{
+			MatchingEntityRemoved?.Invoke(obj);
 		}
 	}
 }

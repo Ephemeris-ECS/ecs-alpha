@@ -93,7 +93,7 @@ namespace Engine.Startup
 					{
 						foreach (var extensionImplementation in extensionConfiguration.Implementations)
 						{
-							container.Bind(extensionConfiguration.Type).To(extensionImplementation);
+							container.Bind(extensionConfiguration.Type).To(extensionImplementation.Type);
 						}
 					}
 				}

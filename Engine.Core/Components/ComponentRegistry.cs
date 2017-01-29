@@ -73,6 +73,7 @@ namespace Engine.Components
 			}
 		}
 
+		// TODO: this implementation probably needs revisiting
 		public void UpdateMatcherGroups(Entity entity)
 		{
 			foreach (var matcherGroup in _matcherGroups)
