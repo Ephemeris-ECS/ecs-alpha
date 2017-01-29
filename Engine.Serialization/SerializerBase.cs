@@ -13,9 +13,9 @@ namespace Engine.Serialization
 	{
 		protected static string SerializeObjectInternal<T>(T value, Type type, JsonSerializer jsonSerializer)
 		{
-			StringBuilder sb = new StringBuilder(256);
-			StringWriter sw = new StringWriter(sb, CultureInfo.InvariantCulture);
-			using (JsonTextWriter jsonWriter = new JsonTextWriter(sw))
+			var sb = new StringBuilder(256);
+			var sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+			using (var jsonWriter = new JsonTextWriter(sw))
 			{
 				jsonWriter.Formatting = jsonSerializer.Formatting;
 

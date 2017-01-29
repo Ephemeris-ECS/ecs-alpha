@@ -64,8 +64,6 @@
     <Compile Include="Components\IComponentRegistry.cs" />
     <Compile Include="Components\IFlagComponent.cs" />
     <Compile Include="Components\MatchAll.cs" />
-    <Compile Include="Components\Property.cs" />
-    <Compile Include="Components\RangedNumericProperty.cs" />
     <Compile Include="Configuration\ECSConfiguration.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="ECS.cs" />

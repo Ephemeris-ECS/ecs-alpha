@@ -35,7 +35,7 @@ namespace Engine.Components
 		internal ComponentMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter)
 		{
 			ComponentTypes = new HashSet<Type>(componentTypes);
-			EntityFilter = entityFilter;
+			EntityFilter = entityFilter ?? (entity => true);
 		}
 
 		public virtual bool IsMatch(Entity entity)

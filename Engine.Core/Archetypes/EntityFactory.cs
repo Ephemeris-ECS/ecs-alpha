@@ -13,14 +13,20 @@ namespace Engine.Archetypes
 	{
 		private readonly DiContainer _factoryContainer;
 
+		private IEntityRegistry _entityRegistry;
+
 		private readonly IComponentRegistry _componentRegistry;
 
 		public Archetype Archetype { get; }
 
-		public EntityFactory(DiContainer factoryContainer, Archetype archetype, IComponentRegistry componentRegistry)
+		public EntityFactory(DiContainer factoryContainer,
+			Archetype archetype, 
+			IEntityRegistry entityRegistry,
+			IComponentRegistry componentRegistry)
 		{
 			_factoryContainer = factoryContainer;
 			Archetype = archetype;
+			_entityRegistry = entityRegistry;
 			_componentRegistry = componentRegistry;
 
 			InitialiseTemplates();
@@ -45,14 +51,21 @@ namespace Engine.Archetypes
 		{
 			try
 			{
-				var entity = _factoryContainer.Instantiate<Entity>();
+				var entity = _entityRegistry.CreateEntity();
 
 				foreach (var componentBinding in Archetype.Components)
 				{
-					var component = (IComponent) _factoryContainer.Resolve(componentBinding.ComponentType);
-					componentBinding.PopulateComponent(component);
-					entity.AddComponent(component);
-					_componentRegistry.AddComponentBinding(entity, component);
+					try
+					{
+						var component = (IComponent) _factoryContainer.Resolve(componentBinding.ComponentType);
+						componentBinding.PopulateComponent(component);
+						entity.AddComponent(component);
+						_componentRegistry.AddComponentBinding(entity, component);
+					}
+					catch (Exception ex)
+					{
+						throw;
+					}
 				}
 
 				return entity;

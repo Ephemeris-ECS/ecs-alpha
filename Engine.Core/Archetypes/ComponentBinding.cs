@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -102,12 +103,39 @@ namespace Engine.Archetypes
 
 				foreach (var field in typeof(TComponent).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy))
 				{
+					// TODO: replace with skip sync attribute, or inversely sync only attributed properties
+					if (field.Name.Equals("Id"))
+					{
+						continue;
+					}
 					var getter = DynamicMethodHelper.CreateGet<TComponent>(field);
 					var value = getter(ComponentTemplate);
 
 					if (value != null && value.Equals(DefaultValueHelper.GetDefault(field.FieldType)) == false)
 					{
-						_templateValueProxies.Add(new TemplateValueProxy(getter, DynamicMethodHelper.CreateSet<TComponent>(field)));
+						// TODO: replace this special case handling with something mroe generic
+						// all object references aren't going to work
+						if (field.FieldType.IsClass && field.FieldType != typeof(string))
+						{
+							var sb = new StringBuilder(256);
+							var sw = new StringWriter(sb, CultureInfo.InvariantCulture);
+							using (var jsonWriter = new JsonTextWriter(sw))
+							{
+								ComponentTemplateSerializer.Serialize(jsonWriter, value, field.FieldType);
+							}
+							var valueString = sw.ToString();
+
+							_templateValueProxies.Add(new TemplateValueProxy(obj => {
+								using (var reader = new JsonTextReader(new StringReader(valueString)))
+								{
+									return ComponentTemplateSerializer.Deserialize(reader, field.FieldType);
+								}
+							}, DynamicMethodHelper.CreateSet<TComponent>(field)));
+						}
+						else
+						{
+							_templateValueProxies.Add(new TemplateValueProxy(getter, DynamicMethodHelper.CreateSet<TComponent>(field)));
+						}
 					}
 				}
 			}
