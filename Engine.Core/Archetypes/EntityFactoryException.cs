@@ -6,7 +6,7 @@ using Engine.Exceptions;
 
 namespace Engine.Archetypes
 {
-	public class EntityFactoryException : EngineException
+	internal class EntityFactoryException : EngineException
 	{
 		public EntityFactoryException()
 		{

@@ -15,7 +15,7 @@ namespace Engine.Util
 		public static IEnumerable<Type> GetTypesImplementing(Type interfaceType)
 		{
 			return AppDomain.CurrentDomain.GetAssemblies()
-					.SelectMany(assembly => assembly.GetTypes().Where(interfaceType.IsAssignableFrom));
+					.SelectMany(assembly => assembly.GetTypes().Where(interfaceType.IsAssignableFrom).Where(t => t.IsAbstract == false && t.IsInterface == false));
 		}
 
 		//public static IEnumerable<TInterface> InstantiateTypesImplementing<TInterface>(params object[] constructorArgs)

@@ -78,6 +78,7 @@ namespace Engine.Serialization.Tests
 
 			json = JsonConvert.SerializeObject(dict, settings);
 
+			// test that components are added correctly to new entities
 			json = "{ \"5\": { \"Id\": 5, \"Components\": { \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\": { \"$type\": \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests\", \"Value\": 1 } } } }";
 
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
@@ -87,6 +88,11 @@ namespace Engine.Serialization.Tests
 			Assert.That(dict[5].Components.ContainsKey(typeof(TestComponent)), Is.True);
 			Assert.That(dict[5].Components[typeof(TestComponent)] as TestComponent, Is.Not.Null);
 			Assert.That((dict[5].Components[typeof(TestComponent)] as TestComponent).Value, Is.EqualTo(1));
+
+			// test that component instances are not replaced by deserialization
+			var component = dict[5].Components[typeof(TestComponent)];
+			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
+			Assert.That(dict[5].Components[typeof(TestComponent)], Is.EqualTo(component));
 		}
 
 		[Test]

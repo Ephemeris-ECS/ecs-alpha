@@ -105,9 +105,8 @@ namespace Engine.Entities
 			HashSet<Type> componentTypes;
 			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypes))
 			{
-				components.AddRange(componentTypes.Where(ct => Components.ContainsKey(ct))
-					.Select(ct => Components[ct])
-					.Cast<TComponentInterface>());
+				var matchingComponents = componentTypes.Intersect(Components.Keys);
+				components.AddRange(matchingComponents.Select(ct => Components[ct]).Cast<TComponentInterface>());
 			}
 			return components;
 		}

@@ -8,6 +8,8 @@ namespace Engine.Archetypes
 {
 	public class Archetype
 	{
+		// TODO: possibly add categories?
+
 		public string Name { get; }
 
 		public List<ComponentBinding> Components { get; }
@@ -40,6 +42,7 @@ namespace Engine.Archetypes
 			return archetype;
 		}
 
+		// TODO: make this return the new archetpye object and copy props from parent
 		public static Archetype Extends(this Archetype archetype, Archetype otherArchetype)
 		{
 			return archetype.HasComponents(otherArchetype.Components);
