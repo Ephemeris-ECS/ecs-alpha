@@ -22,20 +22,29 @@ namespace Engine.Serialization
 
 		private readonly IComponentRegistry _componentRegistry;
 
-		public bool TrackDeserializedEntities { get; set; }
+		private Dictionary<Type, bool> _contractsResolved;
+
+		public bool TrackDeserializedEntities { get; set; } = true;
 		
 		public ECSContractResolver(DiContainer container, IComponentRegistry componentRegistry)
 		{
 			_container = container;
 			_entitiesDeserialized = new HashSet<int>();
 			_componentRegistry = componentRegistry;
+			_contractsResolved = new Dictionary<Type, bool>();
 		}
 
 		public override JsonContract ResolveContract(Type type)
 		{
 			var contract = base.ResolveContract(type);
+
+			bool contractResolved;
+			if (_contractsResolved.TryGetValue(type, out contractResolved) == false)
+			{
+				_contractsResolved.Add(type, true);
+			}
 			
-			if (type == typeof(EntityDictionary))
+			if (type == typeof(EntityDictionary) && contractResolved == false)
 			{
 				contract.DefaultCreator = () => ResolveCreator(type);
 				if (TrackDeserializedEntities)
@@ -43,7 +52,7 @@ namespace Engine.Serialization
 					contract.OnDeserializedCallbacks.Add(EntityDictionaryDeserialized);
 				}
 			}
-			else if (type == typeof(Entity))
+			else if (type == typeof(Entity) && contractResolved == false)
 			{
 				contract.DefaultCreator = () => CreateEntity(type);
 
@@ -52,7 +61,7 @@ namespace Engine.Serialization
 					contract.OnDeserializedCallbacks.Add(EntityDeserialized);
 				}
 			}
-			else if (typeof(IComponent).IsAssignableFrom(type))
+			else if (typeof(IComponent).IsAssignableFrom(type) && contractResolved == false)
 			{
 				contract.DefaultCreator = () => InstantiateCreator(type);
 			}
@@ -79,7 +88,7 @@ namespace Engine.Serialization
 			var entityDictionary = obj as EntityDictionary;
 			if (entityDictionary != null)
 			{
-				foreach (var i in _entitiesDeserialized)
+				foreach (var i in entityDictionary.Keys.Except(_entitiesDeserialized).ToArray())
 				{
 					Entity entity;
 					if (entityDictionary.TryGetValue(i, out entity))
@@ -90,6 +99,7 @@ namespace Engine.Serialization
 					}
 				}
 			}
+			_entitiesDeserialized.Clear();
 		}
 
 		private object ResolveCreator(Type type)

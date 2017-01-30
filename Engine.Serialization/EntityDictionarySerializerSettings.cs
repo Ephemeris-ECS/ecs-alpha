@@ -16,13 +16,14 @@ namespace Engine.Serialization
 		public EntityDictionarySerializerSettings()
 		{
 			TypeNameHandling = TypeNameHandling.Auto;
+			TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
 			Converters.Add(new StringEnumConverter());
 			
 			// this shouldn't need to be very deep now that we have just the lightweight entites being copied
 			MaxDepth = 64;
 
 			// TODO: check if these work with the dictionary serialization changes!
-			DefaultValueHandling = DefaultValueHandling.Include;
+			DefaultValueHandling = DefaultValueHandling.Ignore;
 			NullValueHandling = NullValueHandling.Ignore;
 			Formatting = Formatting.None;
 		}

@@ -14,7 +14,7 @@ namespace Engine.Startup
 	{
 		public TECS ECS { get; }
 
-		private TConfiguration Configuration { get; }
+		public TConfiguration Configuration { get; }
 
 		public EntityStateSerializer EntityStateSerializer { get; }
 
