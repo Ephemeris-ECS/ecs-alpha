@@ -14,12 +14,14 @@ namespace Engine.Components
 
 		public event Action<Entity> MatchingEntityRemoved;
 
-		public HashSet<Entity> MatchingEntities { get; }
+		private readonly HashSet<Entity> _matchingEntities;
+
+		public IEnumerable<Entity> MatchingEntities => _matchingEntities;
 
 		internal ComponentMatcherGroup(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
 			: base(componentTypes, entityFilter)
 		{
-			MatchingEntities = new HashSet<Entity>();
+			_matchingEntities = new HashSet<Entity>();
 		}
 
 		public virtual bool TryAddEntity(Entity entity)
@@ -27,7 +29,7 @@ namespace Engine.Components
 			if (IsMatch(entity))
 			{
 				//var cet = new ComponentEntityTuple(entity, ComponentTypes.ToDictionary(k => k, v => entity.GetComponent<>()));
-				MatchingEntities.Add(entity);
+				_matchingEntities.Add(entity);
 				OnMatchingEntityAdded(entity);
 				return true;
 			}
@@ -36,7 +38,7 @@ namespace Engine.Components
 
 		public void Clear()
 		{
-			MatchingEntities.Clear();
+			_matchingEntities.Clear();
 		}
 
 		public override bool IsMatch(Entity entity)
@@ -46,7 +48,7 @@ namespace Engine.Components
 
 		private void EntityOnEntityDestroyed(Entity entity)
 		{
-			MatchingEntities.Remove(entity);
+			_matchingEntities.Remove(entity);
 			entity.EntityDestroyed -= EntityOnEntityDestroyed;
 			OnMatchingEntityRemoved(entity);
 		}
@@ -73,37 +75,40 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1>> MatchingEntityAdded;
 
-		public new event Action<ComponentEntityTuple<TComponent1>> MatchingEntityRemoved;
+		private readonly Dictionary<int, ComponentEntityTuple<TComponent1>> _matchingEntities;
 
-		public new HashSet<ComponentEntityTuple<TComponent1>> MatchingEntities { get; }
+		public new IEnumerable<ComponentEntityTuple<TComponent1>> MatchingEntities => _matchingEntities.Values;
 
 		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1) }, entityFilter)
 		{
-			MatchingEntities = new HashSet<ComponentEntityTuple<TComponent1>>();
+			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1>>();
 		}
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
 			{
 				var tuple = new ComponentEntityTuple<TComponent1>(entity,
 					entity.GetComponent<TComponent1>());
-				MatchingEntities.Add(tuple);
+				_matchingEntities.Add(entity.Id, tuple);
 				OnMatchingEntityAdded(tuple);
 				return true;
 			}
 			return false;
 		}
 
-		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1> obj)
+		protected void EntityOnEntityDestroyed(Entity entity)
 		{
-			MatchingEntityAdded?.Invoke(obj);
+			_matchingEntities.Remove(entity.Id);
+			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			OnMatchingEntityRemoved(entity);
 		}
 
-		protected virtual void OnMatchingEntityRemoved(ComponentEntityTuple<TComponent1> obj)
+		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1> tuple)
 		{
-			MatchingEntityRemoved?.Invoke(obj);
+			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			MatchingEntityAdded?.Invoke(tuple);
 		}
 	}
 
@@ -117,38 +122,40 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1, TComponent2>> MatchingEntityAdded;
 
-		public new event Action<ComponentEntityTuple<TComponent1, TComponent2>> MatchingEntityRemoved;
+		private readonly Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2>> _matchingEntities;
 
-		public new HashSet<ComponentEntityTuple<TComponent1, TComponent2>> MatchingEntities { get; }
+		public new IEnumerable<ComponentEntityTuple<TComponent1, TComponent2>> MatchingEntities => _matchingEntities.Values;
 
 		public ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1), typeof(TComponent2) }, entityFilter)
 		{
-			MatchingEntities = new HashSet<ComponentEntityTuple<TComponent1, TComponent2>>();
+			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2>>();
 		}
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
 			{
 				var tuple = new ComponentEntityTuple<TComponent1, TComponent2>(entity,
 					entity.GetComponent<TComponent1>(),
 					entity.GetComponent<TComponent2>());
-				MatchingEntities.Add(tuple);
+				_matchingEntities.Add(entity.Id, tuple);
 				OnMatchingEntityAdded(tuple);
 				return true;
 			}
 			return false;
 		}
-
-		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2> obj)
+		protected void EntityOnEntityDestroyed(Entity entity)
 		{
-			MatchingEntityAdded?.Invoke(obj);
+			_matchingEntities.Remove(entity.Id);
+			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			OnMatchingEntityRemoved(entity);
 		}
 
-		protected virtual void OnMatchingEntityRemoved(ComponentEntityTuple<TComponent1, TComponent2> obj)
+		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2> tuple)
 		{
-			MatchingEntityRemoved?.Invoke(obj);
+			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			MatchingEntityAdded?.Invoke(tuple);
 		}
 	}
 
@@ -163,40 +170,44 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> MatchingEntityAdded;
 
-		public new event Action<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> MatchingEntityRemoved;
+		private readonly Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> _matchingEntities;
 
-		public new HashSet<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> MatchingEntities { get; }
+		public new IEnumerable<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> MatchingEntities => _matchingEntities.Values;
 
 		public ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3) }, entityFilter)
 		{
-			MatchingEntities = new HashSet<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>>();
+			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3>>();
 		}
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
 			{
 				var tuple = new ComponentEntityTuple<TComponent1, TComponent2, TComponent3>(entity,
 					entity.GetComponent<TComponent1>(),
 					entity.GetComponent<TComponent2>(),
 					entity.GetComponent<TComponent3>());
-				MatchingEntities.Add(tuple);
+				_matchingEntities.Add(entity.Id, tuple);
 				OnMatchingEntityAdded(tuple);
 				return true;
 			}
 			return false;
 		}
 
-		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3> obj)
+		protected void EntityOnEntityDestroyed(Entity entity)
 		{
-			MatchingEntityAdded?.Invoke(obj);
+			_matchingEntities.Remove(entity.Id);
+			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			OnMatchingEntityRemoved(entity);
 		}
 
-		protected virtual void OnMatchingEntityRemoved(ComponentEntityTuple<TComponent1, TComponent2, TComponent3> obj)
+		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3> tuple)
 		{
-			MatchingEntityRemoved?.Invoke(obj);
+			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			MatchingEntityAdded?.Invoke(tuple);
 		}
+
 	}
 
 	#endregion

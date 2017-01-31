@@ -66,6 +66,8 @@
     <Compile Include="Components\IComponentFactory.cs" />
     <Compile Include="Components\IComponentRegistry.cs" />
     <Compile Include="Components\IFlagComponent.cs" />
+    <Compile Include="Exceptions\ConfigurationException.cs" />
+    <Compile Include="Exceptions\SystemException.cs" />
     <Compile Include="Planning\IIntentProcessor.cs" />
     <Compile Include="Planning\Intents.cs" />
     <Compile Include="Components\MatchAll.cs" />

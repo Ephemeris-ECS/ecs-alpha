@@ -154,16 +154,21 @@ namespace Engine.Startup.Tests
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
 			Assert.That(ecs, Is.Not.Null);
-			Assert.That(ecs.SystemRegistry.GetSystems<ISystemA>(), Is.Not.Null);
-			Assert.That(ecs.SystemRegistry.GetSystems<ISystemA>().Count, Is.EqualTo(2));
-			Assert.That(ecs.SystemRegistry.GetSystem<ISystemB>(), Is.Not.Null);
-			Assert.That(ecs.SystemRegistry.GetSystem<ISystemC>(), Is.Not.Null);
-			Assert.That(ecs.SystemRegistry.GetSystem<SystemA>().SystemB, Is.Not.Null);
-			Assert.That(ecs.SystemRegistry.GetSystem<SystemA>().SystemB, Is.EqualTo(ecs.SystemRegistry.GetSystem<ISystemB>()));
-			Assert.That(ecs.SystemRegistry.GetSystem<SystemA>().SystemB, Is.EqualTo(ecs.SystemRegistry.GetSystem<ISystemC>().SystemB));
-
-			Assert.That(ecs.SystemRegistry.GetSystem<SystemA>().Extensions.Count, Is.EqualTo(2));
-			Assert.That(ecs.SystemRegistry.GetSystem<SystemB>().Extensions.Count, Is.EqualTo(0));
+			Assert.That(ecs.GetSystems<ISystemA>(), Is.Not.Null);
+			Assert.That(ecs.GetSystems<ISystemA>().Count, Is.EqualTo(2));
+			ISystemB iSystemB;
+			Assert.That(ecs.TryGetSystem<ISystemB>(out iSystemB));
+			ISystemC iSystemC;
+			Assert.That(ecs.TryGetSystem<ISystemC>(out iSystemC));
+			SystemA systemA;
+			Assert.That(ecs.TryGetSystem<SystemA>(out systemA));
+			Assert.That(systemA.SystemB, Is.Not.Null);
+			Assert.That(systemA.SystemB, Is.EqualTo(iSystemB));
+			Assert.That(systemA.SystemB, Is.EqualTo(iSystemC.SystemB));
+			SystemB systemB;
+			Assert.That(ecs.TryGetSystem<SystemB>(out systemB));
+			Assert.That(systemA.Extensions.Count, Is.EqualTo(2));
+			Assert.That(systemB.Extensions.Count, Is.EqualTo(0));
 		}
 
 	}

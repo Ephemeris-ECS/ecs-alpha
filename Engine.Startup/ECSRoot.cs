@@ -21,6 +21,7 @@ namespace Engine.Startup
 		public ECSRoot(TECS ecs, TConfiguration configuration, EntityStateSerializer entityStateSerializer)
 		{
 			ECS = ecs;
+			ECS.Initialize();
 			Configuration = configuration;
 			EntityStateSerializer = entityStateSerializer;
 		}

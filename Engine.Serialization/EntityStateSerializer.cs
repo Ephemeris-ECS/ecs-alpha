@@ -34,7 +34,7 @@ namespace Engine.Serialization
 
 		public string SerializeEntities(IECS ecs)
 		{
-			return SerializeEntities(ecs.EntityRegistry.Entities);
+			return SerializeEntities(ecs.Entities);
 		}
 
 		public string SerializeEntities(EntityDictionary entityDictionary)

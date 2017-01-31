@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Engine.Components;
 using Engine.Entities;
+using Engine.Exceptions;
 using Zenject;
 
 namespace Engine.Systems
@@ -39,6 +40,20 @@ namespace Engine.Systems
 			}
 		}
 
+		public bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem
+		{
+			try
+			{
+				system = _container.Resolve<TSystem>();
+				return true;
+			}
+			catch (ZenjectException zex)
+			{
+				system = null;
+				return false;
+			}
+		}
+
 		public IList<TSystem> GetSystems<TSystem>() where TSystem : class, ISystem
 		{
 			try
@@ -48,7 +63,7 @@ namespace Engine.Systems
 			}
 			catch (ZenjectException zex)
 			{
-				throw new InvalidOperationException($"System of type {typeof(TSystem)} not registered.");
+				return new TSystem[0];
 			}
 		}
 
@@ -56,7 +71,14 @@ namespace Engine.Systems
 		{
 			foreach (var system in _systems.OfType<IInitializingSystem>())
 			{
-				system.Initialize();
+				try
+				{
+					system.Initialize();
+				}
+				catch (Exception ex)
+				{
+					throw new Engine.Exceptions.SystemException($"Error initializing system '{system.GetType()}'", ex);
+				}
 			}
 		}
 

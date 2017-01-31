@@ -26,17 +26,20 @@ namespace Engine
 		/// <summary>
 		/// This is where the entity pool lives and new entities are created
 		/// </summary>
-		public IEntityRegistry EntityRegistry { get; private set; }
+		protected IEntityRegistry EntityRegistry { get; private set; }
+
+		public EntityDictionary Entities => EntityRegistry.Entities;
+
 
 		/// <summary>
 		/// This is where the component pool lives and component to entity mappings take place
 		/// </summary>
-		public IComponentRegistry ComponentRegistry { get; private set; }
+		protected IComponentRegistry ComponentRegistry { get; private set; }
 
 		/// <summary>
 		/// This is where the system pool lives and systems are activated 
 		/// </summary>
-		public ISystemRegistry SystemRegistry { get; private set; }
+		protected ISystemRegistry SystemRegistry { get; private set; }
 
 		/// <summary>
 		/// This factory creates components and popualtes an entity when an archetype is instantiated
@@ -72,7 +75,7 @@ namespace Engine
 		/// Perform initialization operations,
 		/// this includes ISystemRegistry.Initialize which activates all of the IInitializingSystem(s)
 		/// </summary>
-		protected virtual void Initialize()
+		public virtual void Initialize()
 		{
 			SystemRegistry.Initialize();
 		}
@@ -87,10 +90,22 @@ namespace Engine
 			throw new KeyNotFoundException($"No archetype found for key '{archetypeName}'");
 		}
 
-		public Dictionary<int, Entity> GetEntities()
+		#region System access
+
+		public bool TryGetSystem<TSystem>(out TSystem system)
+			where TSystem : class, ISystem
 		{
-			return EntityRegistry.Entities;
+			return SystemRegistry.TryGetSystem<TSystem>(out system);
 		}
+
+		public IEnumerable<TSystem> GetSystems<TSystem>()
+			where TSystem : class, ISystem
+		{
+			return SystemRegistry.GetSystems<TSystem>();
+		}
+
+
+		#endregion
 
 		public void Dispose()
 		{

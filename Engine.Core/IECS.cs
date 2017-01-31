@@ -8,12 +8,11 @@ namespace Engine
 	// ReSharper disable once InconsistentNaming
 	public interface IECS
 	{
+		EntityDictionary Entities { get; }
+
 		Entity CreateEntityFromArchetype(string archetypeName);
 
-		IEntityRegistry EntityRegistry { get; }
-		IComponentRegistry ComponentRegistry { get; }
-
-		ISystemRegistry SystemRegistry { get; }
+		bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem;
 	}
 
 	// ReSharper disable once InconsistentNaming
