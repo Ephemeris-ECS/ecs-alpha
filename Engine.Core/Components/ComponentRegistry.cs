@@ -120,6 +120,8 @@ namespace Engine.Components
 			return new Entity[0];
 		}
 
+		#region matcher factory
+
 		public ComponentMatcher CreateMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
 		{
 			var matcher = new ComponentMatcher(componentTypes, entityFilter);
@@ -133,5 +135,34 @@ namespace Engine.Components
 			RegisterMatcher(matcher);
 			return matcher;
 		}
+
+		public ComponentMatcherGroup<TComponent1> CreateMatcherGroup<TComponent1>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+		{
+			var matcher = new ComponentMatcherGroup<TComponent1>(entityFilter);
+			RegisterMatcher(matcher);
+			return matcher;
+		}
+
+		public ComponentMatcherGroup<TComponent1, TComponent2> CreateMatcherGroup<TComponent1, TComponent2>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent
+		{
+			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2>(entityFilter);
+			RegisterMatcher(matcher);
+			return matcher;
+		}
+
+		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3> CreateMatcherGroup<TComponent1, TComponent2, TComponent3>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent
+			where TComponent3 : class, IComponent
+		{
+			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3>(entityFilter);
+			RegisterMatcher(matcher);
+			return matcher;
+		}
+
+		#endregion
 	}
 }

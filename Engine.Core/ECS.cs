@@ -68,6 +68,15 @@ namespace Engine
 			Archetypes = entityFactories.ToDictionary(k => k.Archetype.Name, v => v);
 		}
 
+		/// <summary>
+		/// Perform initialization operations,
+		/// this includes ISystemRegistry.Initialize which activates all of the IInitializingSystem(s)
+		/// </summary>
+		protected virtual void Initialize()
+		{
+			SystemRegistry.Initialize();
+		}
+
 		public Entity CreateEntityFromArchetype(string archetypeName)
 		{
 			IEntityFactory entityFactory;

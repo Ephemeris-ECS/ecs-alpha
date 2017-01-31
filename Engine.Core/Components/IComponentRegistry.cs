@@ -15,5 +15,16 @@ namespace Engine.Components
 
 		ComponentMatcher CreateMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null);
 		ComponentMatcherGroup CreateMatcherGroup(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null);
+
+		ComponentMatcherGroup<TComponent1> CreateMatcherGroup<TComponent1>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent;
+
+		ComponentMatcherGroup<TComponent1, TComponent2> CreateMatcherGroup<TComponent1, TComponent2>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent;
+		ComponentMatcherGroup<TComponent1, TComponent2, TComponent3> CreateMatcherGroup<TComponent1, TComponent2, TComponent3>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent
+			where TComponent3 : class, IComponent;
 	}
 }

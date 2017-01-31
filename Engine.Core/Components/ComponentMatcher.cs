@@ -21,19 +21,8 @@ namespace Engine.Components
 		/// 
 		/// </summary>
 		/// <param name="componentTypes">Entities containing all component types will be matched</param>
-		// TODO: the matcher should be smart enough to infer all required types from the ComponentDependency attributes on the types specified
-		internal ComponentMatcher(IEnumerable<Type> componentTypes)
-			: this(componentTypes, entity => true)
-		{
-			
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="componentTypes">Entities containing all component types will be matched</param>
 		/// <param name="entityFilter">Additional predicate filter to reduce matching entities</param>
-		internal ComponentMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter)
+		internal ComponentMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
 		{
 			ComponentTypes = new HashSet<Type>(componentTypes);
 			EntityFilter = entityFilter ?? (entity => true);
@@ -41,6 +30,7 @@ namespace Engine.Components
 
 		public virtual bool IsMatch(Entity entity)
 		{
+			// TODO: this can probably be much more efficient when being called by the generic subtypes
 			return ComponentTypes.All(rt => entity.Components.ContainsKey(rt)) && EntityFilter(entity);
 		}
 	}
