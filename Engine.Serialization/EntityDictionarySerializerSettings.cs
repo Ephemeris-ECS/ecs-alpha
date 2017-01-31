@@ -23,7 +23,7 @@ namespace Engine.Serialization
 			MaxDepth = 64;
 
 			// TODO: check if these work with the dictionary serialization changes!
-			DefaultValueHandling = DefaultValueHandling.Include;
+			DefaultValueHandling = DefaultValueHandling.Ignore;
 			NullValueHandling = NullValueHandling.Ignore;
 			Formatting = Formatting.None;
 		}

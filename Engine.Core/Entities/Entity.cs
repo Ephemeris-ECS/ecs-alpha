@@ -22,7 +22,10 @@ namespace Engine.Entities
 			Id = id;
 			Disposed = false;
 			EntityDestroyed = null;
-			Components.Clear();
+			for (var i = 0; i < Components.Length; i++)
+			{
+				Components[i] = null;
+			}
 		}
 
 		#region Event registry

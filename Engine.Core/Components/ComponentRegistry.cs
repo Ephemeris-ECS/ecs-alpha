@@ -11,6 +11,8 @@ namespace Engine.Components
 	{
 		public static Dictionary<Type, HashSet<Type>> ComponentTypesByImplementation { get; }
 
+		public static Dictionary<Type, int> ComponentTypeMap { get; }
+
 		private readonly Dictionary<Type, HashSet<Entity>> _componentEntities;
 
 		private readonly List<ComponentMatcherGroup> _matcherGroups;
@@ -29,6 +31,9 @@ namespace Engine.Components
 					.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
 				.GroupBy(componentTuple => componentTuple.Interface)
 				.ToDictionary(k => k.Key, v => new HashSet<Type>(v.Select(componentTuple => componentTuple.ComponentType)));
+
+			ComponentTypeMap = ModuleLoader.GetTypesImplementing<IComponent>().Select((t, i) => new {Type = t, Index = i}).ToDictionary(k => k.Type, v => v.Index);
+
 		}
 
 		public ComponentRegistry(IEntityRegistry entityRegistry)

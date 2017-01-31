@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Engine.Entities;
@@ -30,8 +31,13 @@ namespace Engine.Components
 
 		public virtual bool IsMatch(Entity entity)
 		{
+			if (ComponentTypes.Any(ct => ComponentRegistry.ComponentTypeMap.ContainsKey(ct) == false))
+			{
+				Debugger.Break();
+			}
+			// TODO: this doesnt Support component interfaces
 			// TODO: this can probably be much more efficient when being called by the generic subtypes
-			return ComponentTypes.All(rt => entity.Components.ContainsKey(rt)) && EntityFilter(entity);
+			return ComponentTypes.All(rt => ComponentRegistry.ComponentTypeMap.ContainsKey(rt) && entity.Components[ComponentRegistry.ComponentTypeMap[rt]] != null) && EntityFilter(entity);
 		}
 	}
 }

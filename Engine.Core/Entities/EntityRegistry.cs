@@ -37,7 +37,8 @@ namespace Engine.Entities
 		{
 			lock (_entityPoolLock)
 			{
-				var entity = EntityPool.Count > 0 ? EntityPool.Dequeue() : _entityFactory.Create();
+				//var entity = EntityPool.Count > 0 ? EntityPool.Dequeue() : _entityFactory.Create();
+				var entity = _entityFactory.Create();
 				entity.Initialize(NextEntityId);
 				entity.EntityDestroyed += EntityOnEntityDestroyed;
 				AddEntity(entity);

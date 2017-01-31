@@ -47,6 +47,7 @@
     <Compile Include="DictionaryContractResolverTests.cs" />
     <Compile Include="NewtonsoftActivatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTypeSerialization.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Newtonsoft.Json\Engine.Newtonsoft.Json.csproj">

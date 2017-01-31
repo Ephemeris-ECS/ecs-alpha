@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Engine.Components;
 
@@ -9,7 +10,7 @@ namespace Engine.Entities
 	{
 		protected ComponentRegistry ComponentRegistry { get; }
 
-		public Dictionary<Type, IComponent> Components { get; }
+		public IComponent[] Components { get; }
 
 		private bool _disposed;
 		
@@ -17,7 +18,7 @@ namespace Engine.Entities
 
 		public ComponentContainer()
 		{
-			Components = new Dictionary<Type, IComponent>();
+			Components = new IComponent[ComponentRegistry.ComponentTypeMap.Count];
 		}
 
 		#endregion
@@ -45,7 +46,13 @@ namespace Engine.Entities
 
 		public void AddComponent(IComponent component)
 		{
-			Components.Add(component.GetType(), component);
+			int concreteComponentIndex;
+			if (ComponentRegistry.ComponentTypeMap.TryGetValue(component.GetType(), out concreteComponentIndex) == false)
+			{
+				Debugger.Break();
+			}
+
+			Components[concreteComponentIndex] = component;
 		}
 
 		public bool HasComponent<TComponentInterface>()
@@ -90,23 +97,53 @@ namespace Engine.Entities
 		//	return new IComponent[0];
 		//}
 
+		private bool TryGetConcreteComponent<TComponentInterface>(out TComponentInterface component)
+			where TComponentInterface : class, IComponent
+		{
+			IComponent componentInternal;
+			var success = TryGetConcreteComponent(typeof(TComponentInterface), out componentInternal);
+			component = componentInternal as TComponentInterface;
+			return success;
+		}
+
+		private bool TryGetConcreteComponent(Type componentType, out IComponent component)
+		{
+			int concreteIndex;
+			if (ComponentRegistry.ComponentTypeMap.TryGetValue(componentType, out concreteIndex))
+			{
+				if (Components[concreteIndex] == null)
+				{
+					component = null;
+					return false;
+				}
+				component = Components[concreteIndex];
+				return true;
+			}
+			component = null;
+			return false;
+		}
+
 		private IEnumerable<TComponentInterface> GetComponentsInternal<TComponentInterface>()
 			where TComponentInterface : class, IComponent
 		{
 			var components = new List<TComponentInterface>();
 
-			IComponent component;
-			if (Components.TryGetValue(typeof(TComponentInterface), out component))
+			TComponentInterface component;
+			if (TryGetConcreteComponent<TComponentInterface>(out component))
 			{
-				components.Add(component as TComponentInterface);
+				components.Add(component);
 			}
 
 			//TODO: this looks like a m * n problem
 			HashSet<Type> componentTypes;
 			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypes))
 			{
-				var matchingComponents = componentTypes.Intersect(Components.Keys);
-				components.AddRange(matchingComponents.Select(ct => Components[ct]).Cast<TComponentInterface>());
+				foreach (var concreteComponentType in componentTypes)
+				{
+					IComponent concreteComponent;
+					if (TryGetConcreteComponent(concreteComponentType, out concreteComponent))
+					components.Add(concreteComponent as TComponentInterface);
+				}
 			}
 			return components;
 		}

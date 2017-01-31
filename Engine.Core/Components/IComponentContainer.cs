@@ -5,7 +5,7 @@ namespace Engine.Components
 {
 	public interface IComponentContainer
 	{
-		Dictionary<Type, IComponent> Components { get; }
+		IComponent[] Components { get; }
 
 		void AddComponent(IComponent component);
 
