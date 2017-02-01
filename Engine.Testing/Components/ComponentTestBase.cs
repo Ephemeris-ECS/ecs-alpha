@@ -2,6 +2,7 @@
 using Engine.Archetypes;
 using Engine.Components;
 using Engine.Configuration;
+using Engine.Entities;
 using NUnit.Framework;
 
 namespace Engine.Testing.Components
@@ -28,7 +29,8 @@ namespace Engine.Testing.Components
 
 			var configuration = new ECSConfiguration(archetypes, null);
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
-			var entity = ecs.CreateEntityFromArchetype("Test");
+			Entity entity;
+			ecs.TryCreateEntityFromArchetype("Test", out entity);
 
 			var component = entity.GetComponent<TComponent>();
 			Assert.That(component, Is.Not.Null);

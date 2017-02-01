@@ -6,6 +6,6 @@ namespace Engine.Entities
 	{
 		Archetype Archetype { get; }
 
-		Entity CreateEntity();
+		Entity CreateEntityFromArchetype();
 	}
 }

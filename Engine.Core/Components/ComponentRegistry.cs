@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Engine.Components;
 using Engine.Entities;
+using Engine.Exceptions;
 using Engine.Util;
 
 namespace Engine.Components
 { 
 	public class ComponentRegistry : IComponentRegistry
 	{
-		public static Dictionary<Type, HashSet<Type>> ComponentTypesByImplementation { get; }
+		public static Dictionary<Type, HashSet<int>> ComponentTypesByImplementation { get; }
 
 		public static Dictionary<Type, int> ComponentTypeMap { get; }
 
@@ -24,16 +25,24 @@ namespace Engine.Components
 			// TODO: this should probably not use the app domain but the DiContainer to see what has been bound as we dont care about anything 
 			// else until components and/or archetypes can be added at runtime
 
-			// build a dictionary of components by the interfaces they implement
-			// this can be static since new components aren't added to the app domain at runtime
-			ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
-				.SelectMany(componentType => componentType.GetInterfaces()
-					.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
-				.GroupBy(componentTuple => componentTuple.Interface)
-				.ToDictionary(k => k.Key, v => new HashSet<Type>(v.Select(componentTuple => componentTuple.ComponentType)));
+			try
+			{
+				ComponentTypeMap = ModuleLoader.GetTypesImplementing<IComponent>()
+				.Select((t, i) => new {Type = t, Index = i})
+				.ToDictionary(k => k.Type, v => v.Index);
 
-			ComponentTypeMap = ModuleLoader.GetTypesImplementing<IComponent>().Select((t, i) => new {Type = t, Index = i}).ToDictionary(k => k.Type, v => v.Index);
-
+				// build a dictionary of components by the interfaces they implement
+				// this can be static since new components aren't added to the app domain at runtime
+				ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
+					.SelectMany(componentType => componentType.GetInterfaces()
+						.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
+					.GroupBy(componentTuple => componentTuple.Interface)
+					.ToDictionary(k => k.Key, v => new HashSet<int>(v.Select(componentTuple => ComponentTypeMap[componentTuple.ComponentType])));
+			}
+			catch (Exception ex)
+			{
+				throw new EngineException($"Error initializing component type map", ex);
+			}
 		}
 
 		public ComponentRegistry(IEntityRegistry entityRegistry)
@@ -127,14 +136,14 @@ namespace Engine.Components
 
 		#region matcher factory
 
-		public ComponentMatcher CreateMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
+		public ComponentMatcher CreateMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null)
 		{
 			var matcher = new ComponentMatcher(componentTypes, entityFilter);
 			//RegisterMatcher(matcher);
 			return matcher;
 		}
 
-		public ComponentMatcherGroup CreateMatcherGroup(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
+		public ComponentMatcherGroup CreateMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null)
 		{
 			var matcher = new ComponentMatcherGroup(componentTypes, entityFilter);
 			RegisterMatcher(matcher);

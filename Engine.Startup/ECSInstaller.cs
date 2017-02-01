@@ -48,6 +48,8 @@ namespace Engine.Startup
 			Container.Bind<ISystemRegistry>()
 				.To<SystemRegistry>()
 				.AsSingle();
+
+			Container.Bind<EntityFactoryProvider>().AsSingle();
 			
 			foreach (var systemConfiguration in Configuration.Systems)
 			{

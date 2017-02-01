@@ -14,12 +14,12 @@ namespace Engine.Testing
 			IEntityRegistry entityRegistry, 
 			IComponentRegistry componentRegistry, 
 			ISystemRegistry systemRegistry,
-			[InjectOptional] List<IEntityFactory> entityFactories)
+			EntityFactoryProvider entityFactoryProvider)
 			: base(configuration, 
 				entityRegistry, 
 				componentRegistry, 
-				systemRegistry, 
-				entityFactories)
+				systemRegistry,
+				entityFactoryProvider)
 		{
 		}
 	}

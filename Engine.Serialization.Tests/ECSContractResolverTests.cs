@@ -22,6 +22,7 @@ namespace Engine.Serialization.Tests
 		[Test]
 		public void TestDictionaryResolution()
 		{
+			// container setup
 			var container = new DiContainer();
 
 			container.Bind<IComponentRegistry>().To<ComponentRegistry>().AsSingle();
@@ -37,9 +38,9 @@ namespace Engine.Serialization.Tests
 			{
 				ContractResolver = resolver,
 			};
-
 			container.BindInstance(settings).AsSingle();
 
+			// tests
 			var entityDictionary = container.Resolve<EntityDictionary>();
 
 			var json = "{ 1: { Id: 1 } }";
@@ -52,34 +53,34 @@ namespace Engine.Serialization.Tests
 			json = "{ 2: { Id: 2 } }";
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
-			Assert.That(dict.Count, Is.EqualTo(2));
-			Assert.That(dict.ContainsKey(2));
+			Assert.That(entityDictionary.Count, Is.EqualTo(2));
+			Assert.That(entityDictionary.ContainsKey(2));
 
 			var entity2 = dict[2];
 
 			json = "{ 1: { Id: 1 }, 3: { Id: 3 } }";
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
-			Assert.That(dict.Count, Is.EqualTo(3));
-			Assert.That(dict.ContainsKey(3));
+			Assert.That(entityDictionary.Count, Is.EqualTo(3));
+			Assert.That(entityDictionary.ContainsKey(3));
 
-			Assert.That(dict[3].Id, Is.EqualTo(3));
-			Assert.That(dict[1], Is.Not.EqualTo(entity2));
-			Assert.That(dict[2], Is.EqualTo(entity2));
-			Assert.That(dict[3], Is.Not.EqualTo(entity2));
+			Assert.That(entityDictionary[3].Id, Is.EqualTo(3));
+			Assert.That(entityDictionary[1], Is.Not.EqualTo(entity2));
+			Assert.That(entityDictionary[2], Is.EqualTo(entity2));
+			Assert.That(entityDictionary[3], Is.Not.EqualTo(entity2));
 
 			entity2.AddComponent(new TestComponent());
 
 			json = "{ 4: { Id: 4 } }";
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
-			Assert.That(dict[4].Id, Is.EqualTo(4));
-			Assert.That(dict[2].Components.Count, Is.EqualTo(1));
+			Assert.That(entityDictionary[4].Id, Is.EqualTo(4));
+			Assert.That(entityDictionary[2].Components.Count(c => c != null), Is.EqualTo(1));
 
-			json = JsonConvert.SerializeObject(dict, settings);
+			json = JsonConvert.SerializeObject(entityDictionary, settings);
 
 			// test that components are added correctly to new entities
-			json = "{ \"5\": { \"Id\": 5, \"Components\": { \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\": { \"$type\": \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests\", \"Value\": 1 } } } }";
+			json = "{ \"5\": { \"Id\": 5, \"Components\": [ { \"$type\": \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests\", \"Value\": 1 }, null, null ] } }";
 
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 

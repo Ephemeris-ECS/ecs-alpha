@@ -14,8 +14,7 @@ namespace Engine.Planning
 		}
 
 		public bool HasIntents => _intents.Any();
-
-
+		
 		public void Enqueue(IIntent intent)
 		{
 			_intents.Push(intent);

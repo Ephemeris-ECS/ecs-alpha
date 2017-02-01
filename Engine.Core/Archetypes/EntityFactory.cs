@@ -47,7 +47,7 @@ namespace Engine.Archetypes
 			}
 		}
 
-		public Entity CreateEntity()
+		public Entity CreateEntityFromArchetype()
 		{
 			try
 			{

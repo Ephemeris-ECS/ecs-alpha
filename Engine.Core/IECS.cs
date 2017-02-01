@@ -10,7 +10,7 @@ namespace Engine
 	{
 		EntityDictionary Entities { get; }
 
-		Entity CreateEntityFromArchetype(string archetypeName);
+		bool TryCreateEntityFromArchetype(string archetypeName, out Entity entity);
 
 		bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem;
 	}

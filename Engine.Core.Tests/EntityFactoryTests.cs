@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Engine.Archetypes;
 using Engine.Configuration;
+using Engine.Entities;
 using Engine.Testing;
 using NUnit.Framework;
 
@@ -33,20 +34,21 @@ namespace Engine.Core.Tests
 					}
 				},
 			};
-
-
-
+			
 			var configuration = new ECSConfiguration(archetypes, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
-			ecs.CreateEntityFromArchetype("TestA");
+			Entity entity;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
 
-			var entityA = ecs.CreateEntityFromArchetype("TestA");
+			Entity entityA;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entityA));
 			Assert.That(entityA.GetComponent<TestComponentA>(), Is.Not.Null);
 			Assert.That(entityA.HasComponent<TestComponentB>(), Is.False);
 
-			var entityB = ecs.CreateEntityFromArchetype("TestB");
+			Entity entityB;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestB", out entityB));
 			Assert.That(entityB.GetComponent<TestComponentB>(), Is.Not.Null);
 			Assert.That(entityB.HasComponent<TestComponentA>(), Is.False);
 		}
@@ -83,9 +85,11 @@ namespace Engine.Core.Tests
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
-			ecs.CreateEntityFromArchetype("TestA");
+			Entity entity;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
 
-			var entityA = ecs.CreateEntityFromArchetype("TestA");
+			Entity entityA;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entityA));
 			TestComponentA componentA;
 			Assert.That(entityA.TryGetComponent<TestComponentA>(out componentA), Is.True);
 			Assert.That(componentA.StringValuePublic, Is.EqualTo("Woo"));
@@ -95,7 +99,8 @@ namespace Engine.Core.Tests
 			// TODO: decide if private members should be settable in the template, or if it should all be public
 
 			TestComponentB componentB;
-			var entityB = ecs.CreateEntityFromArchetype("TestB");
+			Entity entityB;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestB", out entityB));
 			Assert.That(entityB.TryGetComponent<TestComponentB>(out componentB), Is.True);
 			Assert.That(componentB.IntDictionaryValuePublic.Count, Is.EqualTo(2));
 			Assert.That(componentB.IntDictionaryValuePublic.Keys.Contains(1));
@@ -145,16 +150,19 @@ namespace Engine.Core.Tests
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
-			ecs.CreateEntityFromArchetype("TestA");
+			Entity entity;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
 
-			var entityA = ecs.CreateEntityFromArchetype("TestA");
+			Entity entityA;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entityA));
 			TestComponentA componentA;
 			Assert.That(entityA.TryGetComponent<TestComponentA>(out componentA), Is.True);
 			Assert.That(componentA.StringValuePublic, Is.EqualTo("Woo"));
 			Assert.That(componentA.IntValuePublic, Is.EqualTo(1));
 
 			TestComponentB componentB;
-			var entityB = ecs.CreateEntityFromArchetype("TestB");
+			Entity entityB;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestB", out entityB));
 			Assert.That(entityB.TryGetComponent<TestComponentB>(out componentB), Is.True);
 			Assert.That(componentB.IntDictionaryValuePublic.Count, Is.EqualTo(2));
 			Assert.That(componentB.IntDictionaryValuePublic.Keys.Contains(1));
@@ -193,17 +201,19 @@ namespace Engine.Core.Tests
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
-			ecs.CreateEntityFromArchetype("TestA");
+			Entity entity;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
 
 			const int repeat = 1000;
 
 			var stopwatch = new Stopwatch();
-			var entityA = ecs.CreateEntityFromArchetype("TestA");
+			Entity entityA;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entityA));
 			stopwatch.Start();
 
 			for (var i = 0; i < repeat; i++)
 			{
-				entityA = ecs.CreateEntityFromArchetype("TestA");
+				Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entityA));
 				TestComponentA componentA;
 				Assert.That(entityA.TryGetComponent<TestComponentA>(out componentA), Is.True);
 				Assert.That(componentA.StringValuePublic, Is.EqualTo("Woo"));
@@ -214,7 +224,8 @@ namespace Engine.Core.Tests
 
 
 			TestComponentB componentB;
-			var entityB = ecs.CreateEntityFromArchetype("TestB");
+			Entity entityB;
+			Assert.That(ecs.TryCreateEntityFromArchetype("TestB", out entityB));
 			Assert.That(entityB.TryGetComponent<TestComponentB>(out componentB), Is.True);
 			Assert.That(componentB.IntDictionaryValuePublic.Count, Is.EqualTo(2));
 			Assert.That(componentB.IntDictionaryValuePublic.Keys.Contains(1));

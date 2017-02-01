@@ -22,7 +22,7 @@ namespace Engine.Serialization
 
 		private readonly IComponentRegistry _componentRegistry;
 
-		private Dictionary<Type, bool> _contractsResolved;
+		private readonly Dictionary<Type, bool> _contractsResolved;
 
 		public bool TrackDeserializedEntities { get; set; } = true;
 		

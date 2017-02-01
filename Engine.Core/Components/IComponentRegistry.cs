@@ -13,8 +13,8 @@ namespace Engine.Components
 		void RemoveComponentEntityMapping(Entity entity);
 		void UpdateMatcherGroups(Entity entity);
 
-		ComponentMatcher CreateMatcher(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null);
-		ComponentMatcherGroup CreateMatcherGroup(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null);
+		ComponentMatcher CreateMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null);
+		ComponentMatcherGroup CreateMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null);
 
 		ComponentMatcherGroup<TComponent1> CreateMatcherGroup<TComponent1>(Predicate<Entity> entityFilter = null)
 			where TComponent1 : class, IComponent;

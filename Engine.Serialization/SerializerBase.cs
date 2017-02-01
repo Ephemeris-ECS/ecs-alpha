@@ -11,12 +11,13 @@ namespace Engine.Serialization
 {
 	public abstract class SerializerBase
 	{
-		protected static string SerializeObjectInternal<T>(T value, Type type, JsonSerializer jsonSerializer)
+		protected static string SerializeObjectInternal<T>(T value, Type type, JsonSerializer jsonSerializer, bool quoteNames = true)
 		{
 			var sb = new StringBuilder(256);
 			var sw = new StringWriter(sb, CultureInfo.InvariantCulture);
 			using (var jsonWriter = new JsonTextWriter(sw))
 			{
+				jsonWriter.QuoteName = quoteNames;
 				jsonWriter.Formatting = jsonSerializer.Formatting;
 
 				jsonSerializer.Serialize(jsonWriter, value, type);

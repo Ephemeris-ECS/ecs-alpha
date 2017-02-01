@@ -18,7 +18,7 @@ namespace Engine.Components
 
 		public IEnumerable<Entity> MatchingEntities => _matchingEntities;
 
-		internal ComponentMatcherGroup(IEnumerable<Type> componentTypes, Predicate<Entity> entityFilter = null)
+		internal ComponentMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null)
 			: base(componentTypes, entityFilter)
 		{
 			_matchingEntities = new HashSet<Entity>();

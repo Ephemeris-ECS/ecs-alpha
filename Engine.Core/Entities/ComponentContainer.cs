@@ -8,9 +8,7 @@ namespace Engine.Entities
 {
 	public class ComponentContainer : IComponentContainer
 	{
-		protected ComponentRegistry ComponentRegistry { get; }
-
-		public IComponent[] Components { get; }
+		public IComponent[] Components { get; private set; }
 
 		private bool _disposed;
 		
@@ -111,16 +109,21 @@ namespace Engine.Entities
 			int concreteIndex;
 			if (ComponentRegistry.ComponentTypeMap.TryGetValue(componentType, out concreteIndex))
 			{
-				if (Components[concreteIndex] == null)
-				{
-					component = null;
-					return false;
-				}
-				component = Components[concreteIndex];
-				return true;
+				return TryGetConcreteComponent(concreteIndex, out component);
 			}
 			component = null;
 			return false;
+		}
+
+		private bool TryGetConcreteComponent(int componentIndex, out IComponent component)
+		{
+			if (Components[componentIndex] == null)
+			{
+				component = null;
+				return false;
+			}
+			component = Components[componentIndex];
+			return true;
 		}
 
 		private IEnumerable<TComponentInterface> GetComponentsInternal<TComponentInterface>()
@@ -129,20 +132,22 @@ namespace Engine.Entities
 			var components = new List<TComponentInterface>();
 
 			TComponentInterface component;
-			if (TryGetConcreteComponent<TComponentInterface>(out component))
+			if (TryGetConcreteComponent(out component))
 			{
 				components.Add(component);
 			}
 
 			//TODO: this looks like a m * n problem
-			HashSet<Type> componentTypes;
-			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypes))
+			HashSet<int> componentTypeIds;
+			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypeIds))
 			{
-				foreach (var concreteComponentType in componentTypes)
+				foreach (var concreteComponentTypeId in componentTypeIds)
 				{
 					IComponent concreteComponent;
-					if (TryGetConcreteComponent(concreteComponentType, out concreteComponent))
-					components.Add(concreteComponent as TComponentInterface);
+					if (TryGetConcreteComponent(concreteComponentTypeId, out concreteComponent))
+					{
+						components.Add(concreteComponent as TComponentInterface);
+					}
 				}
 			}
 			return components;
