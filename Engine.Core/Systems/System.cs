@@ -8,15 +8,15 @@ namespace Engine.Systems
 {
 	public class System : ISystem
 	{
-		protected IComponentRegistry ComponentRegistry { get; }
+		protected IMatcherProvider MatcherProvider { get; }
 
 		protected IEntityRegistry EntityRegistry { get; }
 
 
-		public System(IComponentRegistry componentRegistry, 
+		public System(IMatcherProvider matcherProvider, 
 			IEntityRegistry entityRegistry)
 		{
-			ComponentRegistry = componentRegistry;
+			MatcherProvider = matcherProvider;
 			EntityRegistry = entityRegistry;
 		}
 	}

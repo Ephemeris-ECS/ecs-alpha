@@ -41,15 +41,15 @@ namespace Engine.Startup
 				.To<EntityRegistry>()
 				.AsSingle();
 			
-			Container.Bind<IComponentRegistry>()
-				.To<ComponentRegistry>()
+			Container.Bind<IMatcherProvider>()
+				.To<MatcherProvider>()
 				.AsSingle();
 
 			Container.Bind<ISystemRegistry>()
 				.To<SystemRegistry>()
 				.AsSingle();
 
-			Container.Bind<EntityFactoryProvider>().AsSingle();
+			Container.Bind<IEntityFactoryProvider>().To<EntityFactoryProvider>().AsSingle();
 			
 			foreach (var systemConfiguration in Configuration.Systems)
 			{

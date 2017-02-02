@@ -1,4 +1,5 @@
-﻿using Engine.Components;
+﻿using System.Security.Cryptography.X509Certificates;
+using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
 using Engine.Systems;
@@ -10,9 +11,9 @@ namespace Engine
 	{
 		EntityDictionary Entities { get; }
 
-		bool TryCreateEntityFromArchetype(string archetypeName, out Entity entity);
-
 		bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem;
+
+		void Tick();
 	}
 
 	// ReSharper disable once InconsistentNaming

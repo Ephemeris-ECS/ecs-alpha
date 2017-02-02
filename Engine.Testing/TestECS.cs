@@ -12,15 +12,20 @@ namespace Engine.Testing
 	{
 		public TestECS(ECSConfiguration configuration, 
 			IEntityRegistry entityRegistry, 
-			IComponentRegistry componentRegistry, 
+			IMatcherProvider matcherProvider, 
 			ISystemRegistry systemRegistry,
 			EntityFactoryProvider entityFactoryProvider)
 			: base(configuration, 
 				entityRegistry, 
-				componentRegistry, 
+				matcherProvider, 
 				systemRegistry,
 				entityFactoryProvider)
 		{
+		}
+
+		public new bool TryCreateEntityFromArchetype(string archetype, out Entity entity)
+		{
+			return base.TryCreateEntityFromArchetype(archetype, out entity);
 		}
 	}
 }

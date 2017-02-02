@@ -6,13 +6,17 @@ using Zenject;
 
 namespace Engine.Entities
 {
-	public class EntityFactoryProvider
+	public class EntityFactoryProvider : IEntityFactoryProvider
 	{
+		private IEntityRegistry _entityRegistry;
+
 		private readonly Dictionary<string, IEntityFactory> _entityFactories;
 
-		public EntityFactoryProvider([InjectOptional] List<IEntityFactory> entityFactories)
+		public EntityFactoryProvider(IEntityRegistry entityRegistry, 
+			[InjectOptional] List<IEntityFactory> entityFactories)
 		// TODO: remove zenject dependency when implicit optional collection paramters is implemented
 		{
+			_entityRegistry = entityRegistry;
 			_entityFactories = entityFactories.ToDictionary(k => k.Archetype.Name, v => v);
 		}
 

@@ -25,7 +25,7 @@ namespace Engine.Serialization.Tests
 			// container setup
 			var container = new DiContainer();
 
-			container.Bind<IComponentRegistry>().To<ComponentRegistry>().AsSingle();
+			container.Bind<IMatcherProvider>().To<MatcherProvider>().AsSingle();
 			container.BindFactory<Entity, Entity.Factory>();
 			container.Bind<EntityDictionary>().AsSingle();
 
@@ -103,7 +103,7 @@ namespace Engine.Serialization.Tests
 		{
 			var container = new DiContainer();
 
-			container.Bind<IComponentRegistry>().To<ComponentRegistry>().AsSingle();
+			container.Bind<IMatcherProvider>().To<MatcherProvider>().AsSingle();
 			container.BindFactory<Entity, Entity.Factory>();
 			container.Bind<EntityDictionary>().AsSingle();
 

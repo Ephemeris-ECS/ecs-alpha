@@ -21,10 +21,10 @@ namespace Engine.Serialization
 
 
 		public EntityStateSerializer(DiContainer container, 
-			IComponentRegistry componentRegistry)
+			IMatcherProvider matcherProvider)
 		{
 			var entitySerializerSettings = new EntityDictionarySerializerSettings();
-			var entityContractResolver = new ECSContractResolver(container, componentRegistry)
+			var entityContractResolver = new ECSContractResolver(container, matcherProvider)
 			{
 				TrackDeserializedEntities = entitySerializerSettings.PruneEntitiesOnDeserialize
 			};

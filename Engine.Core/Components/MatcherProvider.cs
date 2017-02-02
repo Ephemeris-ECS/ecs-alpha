@@ -8,7 +8,7 @@ using Engine.Util;
 
 namespace Engine.Components
 { 
-	public class ComponentRegistry : IComponentRegistry
+	public class MatcherProvider : IMatcherProvider
 	{
 		public static Dictionary<Type, HashSet<int>> ComponentTypesByImplementation { get; }
 
@@ -20,7 +20,7 @@ namespace Engine.Components
 
 		private readonly IEntityRegistry _entityRegistry;
 
-		static ComponentRegistry()
+		static MatcherProvider()
 		{
 			// TODO: this should probably not use the app domain but the DiContainer to see what has been bound as we dont care about anything 
 			// else until components and/or archetypes can be added at runtime
@@ -45,7 +45,7 @@ namespace Engine.Components
 			}
 		}
 
-		public ComponentRegistry(IEntityRegistry entityRegistry)
+		public MatcherProvider(IEntityRegistry entityRegistry)
 		{
 			_entityRegistry = entityRegistry;
 			_matcherGroups = new List<ComponentMatcherGroup>();
@@ -53,24 +53,12 @@ namespace Engine.Components
 
 		}
 		
-		private void AddComponentEntityMapping(Entity entity, Type componentType)
+		public void UpdateMatchersForEntity(Entity entity)
 		{
-			HashSet<Entity> componentEntities;
-
-			if (_componentEntities.TryGetValue(componentType, out componentEntities) == false)
+			foreach (var matcherGroup in _matcherGroups)
 			{
-				componentEntities = new HashSet<Entity>();
-				_componentEntities.Add(componentType, componentEntities);
+				matcherGroup.TryAddEntity(entity);
 			}
-			componentEntities.Add(entity);
-		}
-
-		public void AddComponentBinding(Entity entity, IComponent component)
-		{
-			var componentType = component.GetType();
-			AddComponentEntityMapping(entity, componentType);
-
-			UpdateMatcherGroups(entity);
 		}
 
 		/// <summary>
@@ -87,15 +75,6 @@ namespace Engine.Components
 			}
 		}
 
-		// TODO: this implementation probably needs revisiting
-		public void UpdateMatcherGroups(Entity entity)
-		{
-			foreach (var matcherGroup in _matcherGroups)
-			{
-				matcherGroup.TryAddEntity(entity);
-			}
-		}
-
 		/// <summary>
 		/// This only exists as a post deserialize temporary measure
 		/// </summary>
@@ -109,29 +88,6 @@ namespace Engine.Components
 					matcherGroup.TryAddEntity(entity);
 				}
 			}
-		}
-
-
-		public void RemoveComponentEntityMapping(Entity entity)
-		{
-			// clean these up the lazy way - dont even check if the entity has a specific component type
-			// TODO: test if going through the entity's components is quicker
-			foreach (var componentType in _componentEntities)
-			{
-				componentType.Value.Remove(entity);
-			}
-		}
-
-		public IEnumerable<Entity> GetEntitesWithComponent<TComponentInterface>()
-			where TComponentInterface : class, IComponent
-		{
-			HashSet<Entity> componentEntities;
-			if (_componentEntities.TryGetValue(typeof(TComponentInterface), out componentEntities) )
-			{
-				return componentEntities;
-			}
-
-			return new Entity[0];
 		}
 
 		#region matcher factory

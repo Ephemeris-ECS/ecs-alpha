@@ -28,13 +28,13 @@ namespace Engine.Components
 		{
 			ComponentTypeIds = new HashSet<int>(componentTypes
 				.Where(ct => (ct.IsInterface || ct.IsAbstract) == false)
-				.Select(ct => ComponentRegistry.ComponentTypeMap[ct])
+				.Select(ct => MatcherProvider.ComponentTypeMap[ct])
 				.Union(componentTypes
-					.Where(ct => ComponentRegistry.ComponentTypesByImplementation.ContainsKey(ct))
-					.SelectMany(ct => ComponentRegistry.ComponentTypesByImplementation[ct])));
+					.Where(ct => MatcherProvider.ComponentTypesByImplementation.ContainsKey(ct))
+					.SelectMany(ct => MatcherProvider.ComponentTypesByImplementation[ct])));
 
 			// relatively expensive test but we need it for debugging
-			if (componentTypes.Any(ct => ComponentRegistry.ComponentTypeMap.ContainsKey(ct) || ComponentRegistry.ComponentTypesByImplementation.ContainsKey(ct)) == false)
+			if (componentTypes.Any(ct => MatcherProvider.ComponentTypeMap.ContainsKey(ct) || MatcherProvider.ComponentTypesByImplementation.ContainsKey(ct)) == false)
 			{
 				throw new EngineException($"Component type(s) not found in implementation cache {componentTypes.Aggregate(new StringBuilder(), (sb, ct) => sb.Append($"{ct.Name}, "), sb => sb.ToString())})");
 			}

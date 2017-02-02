@@ -56,7 +56,7 @@
     <Compile Include="Components\ComponentLookupException.cs" />
     <Compile Include="Components\ComponentMatcher.cs" />
     <Compile Include="Components\ComponentMatcherGroup.cs" />
-    <Compile Include="Components\ComponentRegistry.cs" />
+    <Compile Include="Components\MatcherProvider.cs" />
     <Compile Include="Components\ComponentUsageAttribute.cs" />
     <Compile Include="Components\ComponentUsageException.cs" />
     <Compile Include="Components\Coordinate2DProperty.cs" />
@@ -64,10 +64,11 @@
     <Compile Include="Components\IComponent.cs" />
     <Compile Include="Components\IComponentContainer.cs" />
     <Compile Include="Components\IComponentFactory.cs" />
-    <Compile Include="Components\IComponentRegistry.cs" />
+    <Compile Include="Components\IMatcherProvider.cs" />
     <Compile Include="Components\IFlagComponent.cs" />
     <Compile Include="Entities\ComponentArray.cs" />
     <Compile Include="Entities\EntityFactoryProvider.cs" />
+    <Compile Include="Entities\IEntityFactoryProvider.cs" />
     <Compile Include="Evaluations\CompoundEvaluator.cs" />
     <Compile Include="Evaluations\EntityEvaluator.cs" />
     <Compile Include="Evaluations\IComponentEvaluator.cs" />

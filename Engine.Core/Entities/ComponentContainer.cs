@@ -16,7 +16,7 @@ namespace Engine.Entities
 
 		public ComponentContainer()
 		{
-			Components = new IComponent[ComponentRegistry.ComponentTypeMap.Count];
+			Components = new IComponent[MatcherProvider.ComponentTypeMap.Count];
 		}
 
 		#endregion
@@ -45,7 +45,7 @@ namespace Engine.Entities
 		public void AddComponent(IComponent component)
 		{
 			int concreteComponentIndex;
-			if (ComponentRegistry.ComponentTypeMap.TryGetValue(component.GetType(), out concreteComponentIndex) == false)
+			if (MatcherProvider.ComponentTypeMap.TryGetValue(component.GetType(), out concreteComponentIndex) == false)
 			{
 				Debugger.Break();
 			}
@@ -87,7 +87,7 @@ namespace Engine.Entities
 		//{
 		//	//TODO: this looks like a m * n problem
 		//	HashSet<Type> componentTypes;
-		//	if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(componentType, out componentTypes))
+		//	if (MatcherProvider.ComponentTypesByImplementation.TryGetValue(componentType, out componentTypes))
 		//	{
 		//		return componentTypes.Where(ct => Components.ContainsKey(ct))
 		//			.Select(ct => Components[ct]);
@@ -107,7 +107,7 @@ namespace Engine.Entities
 		private bool TryGetConcreteComponent(Type componentType, out IComponent component)
 		{
 			int concreteIndex;
-			if (ComponentRegistry.ComponentTypeMap.TryGetValue(componentType, out concreteIndex))
+			if (MatcherProvider.ComponentTypeMap.TryGetValue(componentType, out concreteIndex))
 			{
 				return TryGetConcreteComponent(concreteIndex, out component);
 			}
@@ -139,7 +139,7 @@ namespace Engine.Entities
 
 			//TODO: this looks like a m * n problem
 			HashSet<int> componentTypeIds;
-			if (ComponentRegistry.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypeIds))
+			if (MatcherProvider.ComponentTypesByImplementation.TryGetValue(typeof(TComponentInterface), out componentTypeIds))
 			{
 				foreach (var concreteComponentTypeId in componentTypeIds)
 				{

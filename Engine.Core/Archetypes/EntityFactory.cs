@@ -15,19 +15,19 @@ namespace Engine.Archetypes
 
 		private readonly IEntityRegistry _entityRegistry;
 
-		private readonly IComponentRegistry _componentRegistry;
+		private readonly IMatcherProvider _matcherProvider;
 
 		public Archetype Archetype { get; }
 
 		public EntityFactory(DiContainer factoryContainer,
 			Archetype archetype, 
 			IEntityRegistry entityRegistry,
-			IComponentRegistry componentRegistry)
+			IMatcherProvider matcherProvider)
 		{
 			_factoryContainer = factoryContainer;
 			Archetype = archetype;
 			_entityRegistry = entityRegistry;
-			_componentRegistry = componentRegistry;
+			_matcherProvider = matcherProvider;
 
 			InitialiseTemplates();
 		}
@@ -49,9 +49,10 @@ namespace Engine.Archetypes
 
 		public Entity CreateEntityFromArchetype()
 		{
+			Entity entity = null;
 			try
 			{
-				var entity = _entityRegistry.CreateEntity();
+				entity = _entityRegistry.CreateEntity();
 
 				foreach (var componentBinding in Archetype.Components)
 				{
@@ -60,18 +61,21 @@ namespace Engine.Archetypes
 						var component = (IComponent) _factoryContainer.Resolve(componentBinding.ComponentType);
 						componentBinding.PopulateComponent(component);
 						entity.AddComponent(component);
-						_componentRegistry.AddComponentBinding(entity, component);
 					}
 					catch (Exception ex)
 					{
-						throw;
+						throw new EntityFactoryException($"Error initialising component for archetype '{Archetype.Name}', component type {componentBinding.ComponentType.Name}", ex);
+
 					}
 				}
+				_matcherProvider.UpdateMatchersForEntity(entity);
+
 
 				return entity;
 			}
 			catch (Exception ex)
 			{
+				entity?.Dispose();
 				throw new EntityFactoryException($"Error creating entity from archetype '{Archetype.Name}'", ex);
 			}
 		}

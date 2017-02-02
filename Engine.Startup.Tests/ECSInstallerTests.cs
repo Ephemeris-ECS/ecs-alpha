@@ -33,8 +33,8 @@ namespace Engine.Startup.Tests
 
 			public IList<ISystemAExtension> Extensions { get; }
 
-			public SystemA(IComponentRegistry componentRegistry, IEntityRegistry entityRegistry, ISystemB systemB, List<ISystemAExtension> extensions)
-				: base(componentRegistry, entityRegistry)
+			public SystemA(IMatcherProvider matcherProvider, IEntityRegistry entityRegistry, ISystemB systemB, List<ISystemAExtension> extensions)
+				: base(matcherProvider, entityRegistry)
 			{
 				SystemB = systemB;
 				SystemB.Value = "TEST";
@@ -71,10 +71,10 @@ namespace Engine.Startup.Tests
 		{
 			public IList<ISystemBExtension> Extensions { get; }
 
-			public SystemB(IComponentRegistry componentRegistry, 
+			public SystemB(IMatcherProvider matcherProvider, 
 				IEntityRegistry entityRegistry, 
 				[InjectOptional] List<ISystemBExtension> extensions)
-				: base(componentRegistry, entityRegistry)
+				: base(matcherProvider, entityRegistry)
 			{
 				Extensions = extensions;
 			}
@@ -100,10 +100,10 @@ namespace Engine.Startup.Tests
 		{
 			public ISystemB SystemB { get; }
 
-			public SystemC(IComponentRegistry componentRegistry, 
+			public SystemC(IMatcherProvider matcherProvider, 
 				IEntityRegistry entityRegistry, 
 				ISystemB systemB)
-				: base(componentRegistry, entityRegistry)
+				: base(matcherProvider, entityRegistry)
 			{
 				SystemB = systemB;
 			}

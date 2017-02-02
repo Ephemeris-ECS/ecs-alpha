@@ -10,7 +10,7 @@ namespace Engine.Entities
 	{
 		private int _entitySeed;
 
-		private Entity.Factory _entityFactory;
+		private readonly Entity.Factory _entityFactory;
 
 		public EntityDictionary Entities { get; }
 
@@ -73,11 +73,6 @@ namespace Engine.Entities
 			var found = Entities.TryGetValue(id, out gameEntity);
 			entity = gameEntity;
 			return found;
-		}
-
-		public void Dispose()
-		{
-			throw new System.NotImplementedException();
 		}
 	}
 }

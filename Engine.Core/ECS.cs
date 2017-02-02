@@ -34,7 +34,7 @@ namespace Engine
 		/// <summary>
 		/// This is where the component pool lives and component to entity mappings take place
 		/// </summary>
-		protected IComponentRegistry ComponentRegistry { get; private set; }
+		protected IMatcherProvider MatcherProvider { get; private set; }
 
 		/// <summary>
 		/// This is where the system pool lives and systems are activated 
@@ -47,23 +47,21 @@ namespace Engine
 		/// </summary>
 		protected ComponentFactory ComponentFactory { get; private set; }
 
-		protected EntityFactoryProvider EntityFactoryProvider { get; }
+		protected IEntityFactoryProvider EntityFactoryProvider { get; }
 
 		protected ECS(TConfiguration configuration,
 			IEntityRegistry entityRegistry,
-			IComponentRegistry componentRegistry,
+			IMatcherProvider matcherProvider,
 			ISystemRegistry systemRegistry,
-			EntityFactoryProvider entityFactoryProvider
-			
-			)
+			IEntityFactoryProvider entityFactoryProvider)
 		{
 			Configuration = configuration;
 			EntityRegistry = entityRegistry;
-			ComponentRegistry = componentRegistry;
+			MatcherProvider = matcherProvider;
 			SystemRegistry = systemRegistry;
 			ComponentFactory = new ComponentFactory();
 			// signal the component registry that a new entity has been populated
-			ComponentFactory.EntityArchetypeCreated += ComponentRegistry.UpdateMatcherGroups;
+			ComponentFactory.EntityArchetypeCreated += MatcherProvider.UpdateMatchersForEntity;
 			EntityFactoryProvider = entityFactoryProvider;
 		}
 
@@ -90,7 +88,7 @@ namespace Engine
 			return SystemRegistry.GetSystems<TSystem>();
 		}
 
-		public bool TryCreateEntityFromArchetype(string archetype, out Entity entity)
+		internal bool TryCreateEntityFromArchetype(string archetype, out Entity entity)
 		{
 			return EntityFactoryProvider.TryCreateEntityFromArchetype(archetype, out entity);
 		}

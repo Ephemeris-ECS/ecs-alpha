@@ -20,17 +20,17 @@ namespace Engine.Serialization
 
 		private bool _entityCreated;
 
-		private readonly IComponentRegistry _componentRegistry;
+		private readonly IMatcherProvider _matcherProvider;
 
 		private readonly Dictionary<Type, bool> _contractsResolved;
 
 		public bool TrackDeserializedEntities { get; set; } = true;
 		
-		public ECSContractResolver(DiContainer container, IComponentRegistry componentRegistry)
+		public ECSContractResolver(DiContainer container, IMatcherProvider matcherProvider)
 		{
 			_container = container;
 			_entitiesDeserialized = new HashSet<int>();
-			_componentRegistry = componentRegistry;
+			_matcherProvider = matcherProvider;
 			_contractsResolved = new Dictionary<Type, bool>();
 		}
 
@@ -77,7 +77,7 @@ namespace Engine.Serialization
 				_entitiesDeserialized.Add(entity.Id);
 				if (_entityCreated)
 				{
-					_componentRegistry.UpdateMatcherGroups(entity);
+					_matcherProvider.UpdateMatchersForEntity(entity);
 				}
 			}
 			_entityCreated = false;

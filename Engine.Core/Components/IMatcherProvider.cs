@@ -5,13 +5,12 @@ using Engine.Entities;
 
 namespace Engine.Components
 {
-	public interface IComponentRegistry
+	public interface IMatcherProvider
 	{
-		void AddComponentBinding(Entity entity, IComponent component);
-		IEnumerable<Entity> GetEntitesWithComponent<TComponentInterface>() where TComponentInterface : class, IComponent;
+		void UpdateMatchersForEntity(Entity entity);
 		void RegisterMatcher(ComponentMatcherGroup matcher);
-		void RemoveComponentEntityMapping(Entity entity);
-		void UpdateMatcherGroups(Entity entity);
+		
+		#region matcher factory
 
 		ComponentMatcher CreateMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null);
 		ComponentMatcherGroup CreateMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null);
@@ -22,9 +21,12 @@ namespace Engine.Components
 		ComponentMatcherGroup<TComponent1, TComponent2> CreateMatcherGroup<TComponent1, TComponent2>(Predicate<Entity> entityFilter = null)
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent;
+
 		ComponentMatcherGroup<TComponent1, TComponent2, TComponent3> CreateMatcherGroup<TComponent1, TComponent2, TComponent3>(Predicate<Entity> entityFilter = null)
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent
 			where TComponent3 : class, IComponent;
+
+		#endregion
 	}
 }

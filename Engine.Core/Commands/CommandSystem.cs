@@ -12,10 +12,10 @@ namespace Engine.Systems
 	{
 		private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
 
-		public CommandSystem(IComponentRegistry componentRegistry,
+		public CommandSystem(IMatcherProvider matcherProvider,
 			IEntityRegistry entityRegistry,
 			[InjectOptional] List<ICommandHandler> commandHandlers) 
-			: base (componentRegistry, entityRegistry)
+			: base (matcherProvider, entityRegistry)
 		{
 			_commandHandlers = commandHandlers.ToDictionary(k => k.HandlesType, v => v);
 		}

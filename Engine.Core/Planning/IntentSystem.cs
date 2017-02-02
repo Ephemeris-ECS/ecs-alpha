@@ -14,12 +14,12 @@ namespace Engine.Planning
 
 		private readonly Dictionary<Type, IIntentProcessor> _intentHandlers;
 
-		public IntentSystem(IComponentRegistry componentRegistry, 
+		public IntentSystem(IMatcherProvider matcherProvider, 
 			IEntityRegistry entityRegistry,
 			[InjectOptional] List<IIntentProcessor> intentHandlers)
-			: base(componentRegistry, entityRegistry)
+			: base(matcherProvider, entityRegistry)
 		{
-			_intentsMatcher = componentRegistry.CreateMatcherGroup<Intents>();
+			_intentsMatcher = matcherProvider.CreateMatcherGroup<Intents>();
 
 			_intentHandlers = intentHandlers.ToDictionary(k => k.HandlesIntent, v => v);
 		}
