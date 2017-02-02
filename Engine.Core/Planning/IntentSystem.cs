@@ -8,19 +8,16 @@ using Zenject;
 
 namespace Engine.Planning
 {
-	public class IntentSystem : Systems.System, ITickableSystem
+	public class IntentSystem : ITickableSystem
 	{
 		private readonly ComponentMatcherGroup<Intents> _intentsMatcher;
 
 		private readonly Dictionary<Type, IIntentProcessor> _intentHandlers;
 
 		public IntentSystem(IMatcherProvider matcherProvider, 
-			IEntityRegistry entityRegistry,
 			[InjectOptional] List<IIntentProcessor> intentHandlers)
-			: base(matcherProvider, entityRegistry)
 		{
 			_intentsMatcher = matcherProvider.CreateMatcherGroup<Intents>();
-
 			_intentHandlers = intentHandlers.ToDictionary(k => k.HandlesIntent, v => v);
 		}
 

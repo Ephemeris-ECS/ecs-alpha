@@ -108,13 +108,13 @@
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Systems\ISystemExtension.cs" />
     <Compile Include="Systems\ISystemRegistry.cs" />
-    <Compile Include="Systems\System.cs" />
     <Compile Include="Systems\SystemRegistry.cs" />
     <Compile Include="Util\AttributeHelper.cs" />
     <Compile Include="Util\DefaultValueHelper.cs" />
     <Compile Include="Util\DynamicMethodHelper.cs" />
     <Compile Include="Util\ModuleLoader.cs" />
     <Compile Include="Util\NotNullHelper.cs" />
+    <Compile Include="Util\RangeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messaging\" />

@@ -92,6 +92,11 @@ namespace Engine.Components
 
 		#region matcher factory
 
+		// TODO: store the component type sets for requested matchers and returned from cache when the same matcher already exists
+		// TODO: perhaps build matcher proxy for <currently unused> matcher filter predicate
+		// TODO: cache the MatchingEntities array to rpevent repeated projection to array when values have not changed
+		//			store a dirty flag or simialr inside matcher and set only when matches have been modified - reduce uncessary testing significantly
+
 		public ComponentMatcher CreateMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null)
 		{
 			var matcher = new ComponentMatcher(componentTypes, entityFilter);

@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Engine.Commands;
-using Engine.Components;
-using Engine.Entities;
+using Engine.Systems;
 using Zenject;
 
-namespace Engine.Systems
+namespace Engine.Commands
 {
-	public class CommandSystem : System
+	public class CommandSystem : ISystem
 	{
 		private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
 
-		public CommandSystem(IMatcherProvider matcherProvider,
-			IEntityRegistry entityRegistry,
-			[InjectOptional] List<ICommandHandler> commandHandlers) 
-			: base (matcherProvider, entityRegistry)
+		public CommandSystem([InjectOptional] List<ICommandHandler> commandHandlers) 
 		{
 			_commandHandlers = commandHandlers.ToDictionary(k => k.HandlesType, v => v);
 		}
