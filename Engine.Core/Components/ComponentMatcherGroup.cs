@@ -33,9 +33,11 @@ namespace Engine.Components
 		{
 			if (IsMatch(entity))
 			{
-				//var cet = new ComponentEntityTuple(entity, ComponentTypes.ToDictionary(k => k, v => entity.GetComponent<>()));
-				_matchingEntities.Add(entity.Id, entity);
-				OnMatchingEntityAdded(entity);
+				if (_matchingEntities.ContainsKey(entity.Id) == false)
+				{
+					_matchingEntities.Add(entity.Id, entity);
+					OnMatchingEntityAdded(entity);
+				}
 				return true;
 			}
 			return false;
@@ -97,12 +99,14 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
+			if (IsMatch(entity))
 			{
-				var tuple = new ComponentEntityTuple<TComponent1>(entity,
-					entity.GetComponent<TComponent1>());
-				_matchingEntities.Add(entity.Id, tuple);
-				OnMatchingEntityAdded(tuple);
+				if (_matchingEntities.ContainsKey(entity.Id) == false)
+				{
+					var tuple = new ComponentEntityTuple<TComponent1>(entity, entity.GetComponent<TComponent1>());
+					_matchingEntities.Add(entity.Id, tuple);
+					OnMatchingEntityAdded(tuple);
+				}
 				return true;
 			}
 			return false;
@@ -153,13 +157,16 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
+			if (IsMatch(entity))
 			{
-				var tuple = new ComponentEntityTuple<TComponent1, TComponent2>(entity,
-					entity.GetComponent<TComponent1>(),
-					entity.GetComponent<TComponent2>());
-				_matchingEntities.Add(entity.Id, tuple);
-				OnMatchingEntityAdded(tuple);
+				if (_matchingEntities.ContainsKey(entity.Id) == false)
+				{
+					var tuple = new ComponentEntityTuple<TComponent1, TComponent2>(entity,
+						entity.GetComponent<TComponent1>(),
+						entity.GetComponent<TComponent2>());
+					_matchingEntities.Add(entity.Id, tuple);
+					OnMatchingEntityAdded(tuple);
+				}
 				return true;
 			}
 			return false;
@@ -210,14 +217,17 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity) && _matchingEntities.ContainsKey(entity.Id) == false)
+			if (IsMatch(entity))
 			{
-				var tuple = new ComponentEntityTuple<TComponent1, TComponent2, TComponent3>(entity,
-					entity.GetComponent<TComponent1>(),
-					entity.GetComponent<TComponent2>(),
-					entity.GetComponent<TComponent3>());
-				_matchingEntities.Add(entity.Id, tuple);
-				OnMatchingEntityAdded(tuple);
+				if(_matchingEntities.ContainsKey(entity.Id) == false)
+				{
+					var tuple = new ComponentEntityTuple<TComponent1, TComponent2, TComponent3>(entity,
+						entity.GetComponent<TComponent1>(),
+						entity.GetComponent<TComponent2>(),
+						entity.GetComponent<TComponent3>());
+					_matchingEntities.Add(entity.Id, tuple);
+					OnMatchingEntityAdded(tuple);
+				}
 				return true;
 			}
 			return false;
