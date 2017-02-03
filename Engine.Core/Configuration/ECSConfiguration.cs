@@ -13,10 +13,6 @@ namespace Engine.Configuration
 
 		public List<SystemConfiguration> Systems { get; set; }
 
-		public ECSConfiguration()
-		{
-		}
-
 		public ECSConfiguration(List<Archetype> archetypes, List<SystemConfiguration> systems)
 		{
 			Archetypes = archetypes ?? new List<Archetype>();
