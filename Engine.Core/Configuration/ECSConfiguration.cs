@@ -9,14 +9,14 @@ namespace Engine.Configuration
 	// ReSharper disable once InconsistentNaming
 	public class ECSConfiguration
 	{
-		public List<Archetype> Archetypes { get; set; }
+		public IEnumerable<Archetype> Archetypes { get; set; }
 
-		public List<SystemConfiguration> Systems { get; set; }
+		public IEnumerable<SystemConfiguration> Systems { get; set; }
 
-		public ECSConfiguration(List<Archetype> archetypes, List<SystemConfiguration> systems)
+		public ECSConfiguration(IEnumerable<Archetype> archetypes, IEnumerable<SystemConfiguration> systems)
 		{
-			Archetypes = archetypes ?? new List<Archetype>();
-			Systems = systems ?? new List<SystemConfiguration>();
+			Archetypes = archetypes ?? new Archetype[0];
+			Systems = systems ?? new SystemConfiguration[0];
 		}
 	}
 }

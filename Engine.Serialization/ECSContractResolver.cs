@@ -61,7 +61,7 @@ namespace Engine.Serialization
 					contract.OnDeserializedCallbacks.Add(EntityDeserialized);
 				}
 			}
-			else if (typeof(IComponent).IsAssignableFrom(type) && contractResolved == false)
+			else if (type == typeof(IComponent[]) && contractResolved == false)
 			{
 				contract.DefaultCreator = () => InstantiateCreator(type);
 			}
@@ -117,6 +117,22 @@ namespace Engine.Serialization
 		{
 			// TODO: RESOLVE OBJECT POOL AND GET FROM THERE
 			return _container.Instantiate(type);
+		}
+
+		protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+		{
+			var properties = base.CreateProperties(type, memberSerialization);
+
+			if (type == typeof(Entity))
+			{
+				var property = properties.Single(p => p.PropertyName == nameof(Entity.Components));
+				property.ObjectCreationHandling = ObjectCreationHandling.Reuse;
+			}
+			// if ( typeof(IComponent).IsAssignableFrom(type))
+			//{
+			//}
+
+			return properties;
 		}
 
 		//protected override JsonDictionaryContract CreateDictionaryContract(Type objectType)
