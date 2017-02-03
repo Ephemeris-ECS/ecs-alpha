@@ -12,7 +12,7 @@ namespace Engine.Sequencing
 	/// in the long term this will become a graph with multiple routes and cyclic states and transitions
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public class Sequence<TECS>
+	public class Sequencer<TECS>
 		where TECS : class, IECS
 	{
 		public SequenceFrame<TECS>[] Frames { get; set; }
@@ -27,7 +27,7 @@ namespace Engine.Sequencing
 
 		public event Action Complete;
 
-		public Sequence(TECS ecs)
+		public Sequencer(TECS ecs)
 		{
 			Assert.IsNotNull(ecs);
 			_ecs = ecs;
@@ -40,7 +40,7 @@ namespace Engine.Sequencing
 				_currentFrame = Frames[_frameIndex];
 				_currentFrame.Enter(_ecs);
 			}
-			else if (_currentFrame?.Evaluator.Evalulate(_ecs) ?? false)
+			else if (_currentFrame?.Evaluator.Evaluate(_ecs) ?? false)
 			{
 				_currentFrame.Exit(_ecs);
 				_currentFrame = null;

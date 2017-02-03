@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Engine.Evaluations
+namespace Engine.Evaluators
 {
-	class CompoundEvaluator
+	public interface IEvaluator
 	{
 	}
 }

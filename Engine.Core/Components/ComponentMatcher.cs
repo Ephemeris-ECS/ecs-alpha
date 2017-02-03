@@ -10,7 +10,7 @@ namespace Engine.Components
 {
 	public class ComponentMatcher
 	{
-		public HashSet<int> ComponentTypeIds { get; }
+		public int[][] ComponentTypeIds { get; }
 
 		private Predicate<Entity> EntityFilter { get; }
 
@@ -26,12 +26,18 @@ namespace Engine.Components
 		/// <param name="entityFilter">Additional predicate filter to reduce matching entities</param>
 		internal ComponentMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null)
 		{
-			ComponentTypeIds = new HashSet<int>(componentTypes
-				.Where(ct => (ct.IsInterface || ct.IsAbstract) == false)
-				.Select(ct => MatcherProvider.ComponentTypeMap[ct])
-				.Union(componentTypes
-					.Where(ct => MatcherProvider.ComponentTypesByImplementation.ContainsKey(ct))
-					.SelectMany(ct => MatcherProvider.ComponentTypesByImplementation[ct])));
+			ComponentTypeIds = componentTypes.Select(ct =>
+			{
+				if ((ct.IsInterface || ct.IsAbstract) == false)
+				{
+					return new[] {MatcherProvider.ComponentTypeMap[ct]};
+				}
+				if (MatcherProvider.ComponentTypesByImplementation.ContainsKey(ct))
+				{
+					return MatcherProvider.ComponentTypesByImplementation[ct].ToArray();
+				}
+				return new int[0];
+			}).ToArray();
 
 			// relatively expensive test but we need it for debugging
 			if (componentTypes.Any(ct => MatcherProvider.ComponentTypeMap.ContainsKey(ct) || MatcherProvider.ComponentTypesByImplementation.ContainsKey(ct)) == false)
@@ -46,7 +52,7 @@ namespace Engine.Components
 		{
 			// TODO: this doesnt Support component interfaces
 			// TODO: this can probably be much more efficient when being called by the generic subtypes
-			return ComponentTypeIds.All(rt => entity.Components[rt] != null) && EntityFilter(entity);
+			return ComponentTypeIds.All(type => type.Any(impl => entity.Components[impl] != null)) && EntityFilter(entity);
 		}
 	}
 }

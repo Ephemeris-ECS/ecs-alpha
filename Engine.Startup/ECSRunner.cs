@@ -15,16 +15,16 @@ namespace Engine.Startup
 	{
 		private int _tickInterval = 100;
 
-		private readonly Sequence<TECS> _sequence;
+		private readonly Sequencer<TECS> _sequencer;
 
 		private readonly TECS _ecs;
 
 		private readonly Timer _tickTimer;
 
-		public ECSRunner(int tickInterval, Sequence<TECS> sequence, TECS ecs)
+		public ECSRunner(int tickInterval, Sequencer<TECS> sequencer, TECS ecs)
 		{
 			_tickInterval = tickInterval;
-			_sequence = sequence;
+			_sequencer = sequencer;
 			_ecs = ecs;
 			_tickTimer = new Timer(ECSLoop, null, Timeout.Infinite, Timeout.Infinite);
 		}
@@ -41,13 +41,13 @@ namespace Engine.Startup
 
 		private void ECSLoop(object state)
 		{
-			if (_sequence.IsComplete)
+			if (_sequencer.IsComplete)
 			{
 				Stop();
 			}
 			else
 			{
-				_sequence.Tick();
+				_sequencer.Tick();
 				_ecs.Tick();
 			}
 		}

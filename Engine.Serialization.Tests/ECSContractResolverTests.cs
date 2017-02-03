@@ -84,18 +84,16 @@ namespace Engine.Serialization.Tests
 
 			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
 
-			Assert.That(dict[5].Id, Is.EqualTo(5));
-			Assert.That(dict[5].Components.Count, Is.EqualTo(1));
-			// TODO: reimplement!
-			//Assert.That(dict[5].Components.ContainsKey(typeof(TestComponent)), Is.True);
-			//Assert.That(dict[5].Components[typeof(TestComponent)] as TestComponent, Is.Not.Null);
-			//Assert.That((dict[5].Components[typeof(TestComponent)] as TestComponent).Value, Is.EqualTo(1));
+			Assert.That(entityDictionary[5].Id, Is.EqualTo(5));
+			Assert.That(entityDictionary[5].Components.Count, Is.EqualTo(3));
+			Assert.That(entityDictionary[5].Components.Count(c => c != null), Is.EqualTo(1));
+			Assert.That(((TestComponent) entityDictionary[5].Components[0]).Value, Is.EqualTo(1));
 
-			// test that component instances are not replaced by deserialization
-			// TODO: reimplement!
-			//var component = dict[5].Components[typeof(TestComponent)];
-			//dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
-			//Assert.That(dict[5].Components[typeof(TestComponent)], Is.EqualTo(component));
+			json = "{ \"5\": { \"Id\": 5, \"Components\": [ { \"$type\": \"Engine.Serialization.Tests.ECSContractResolverTests+TestComponent, Engine.Serialization.Tests\" }, null, null ] } }";
+
+			dict = JsonConvert.DeserializeObject<EntityDictionary>(json, settings);
+
+			Assert.That(((TestComponent)entityDictionary[5].Components[0]).Value, Is.EqualTo(1));
 		}
 
 		[Test]

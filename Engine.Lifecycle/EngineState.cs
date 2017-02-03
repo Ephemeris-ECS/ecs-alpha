@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Engine.Evaluations
+namespace Engine.Lifecycle
 {
-	class EntityEvaluator
+	public enum EngineState
 	{
+		NotStarted = 0,
+		Started,
+		Paused,
+		Stopped,
 	}
 }

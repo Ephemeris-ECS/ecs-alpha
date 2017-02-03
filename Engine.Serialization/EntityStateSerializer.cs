@@ -39,7 +39,7 @@ namespace Engine.Serialization
 
 		public string SerializeEntities(EntityDictionary entityDictionary)
 		{
-			return SerializeObjectInternal(entityDictionary, entityDictionary.GetType(), _entitySerializer, false);
+			return SerializeObjectInternal(entityDictionary, entityDictionary.GetType(), _entitySerializer);
 		}
 
 		public EntityDictionary DeserializeEntities(string entityCollectionJson)

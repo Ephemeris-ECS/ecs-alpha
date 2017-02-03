@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Engine.Evaluations;
+using Engine.Evaluators;
 using ModestTree;
 
 namespace Engine.Sequencing
@@ -47,12 +47,18 @@ namespace Engine.Sequencing
 
 		public void Enter(TECS ecs)
 		{
-			ExecuteActions(OnEnterActions, ecs);
+			if (OnEnterActions != null)
+			{
+				ExecuteActions(OnEnterActions, ecs);
+			}
 		}
 
 		public void Exit(TECS ecs)
 		{
-			ExecuteActions(OnExitActions, ecs);
+			if (OnExitActions != null)
+			{
+				ExecuteActions(OnExitActions, ecs);
+			}
 		}
 	}
 }
