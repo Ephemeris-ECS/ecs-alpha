@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Engine.Commands
 {
-	public class StartSimulation : ICommand
+	public class EndSimulation : ICommand
 	{
 
 	}

@@ -5,13 +5,14 @@ using System.Text;
 
 namespace Engine.Lifecycle
 {
-	public enum EngineState
+	public interface ILifecycleManager
 	{
-		NotStarted = 0,
-		Started,
-		Paused,
-		Stopped,
+		bool TryStop();
 
-		Error,
+		bool TryStart();
+
+		bool TryPause();
+
+		bool TryTick();
 	}
 }

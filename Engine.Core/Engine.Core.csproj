@@ -48,6 +48,7 @@
     <Compile Include="Commands\CommandHandler.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
+    <Compile Include="Commands\ICommandSystem.cs" />
     <Compile Include="Components\ComponentAttributeExtensions.cs" />
     <Compile Include="Components\ComponentDependencyAttribute.cs" />
     <Compile Include="Components\ComponentDependencyException.cs" />
@@ -66,6 +67,9 @@
     <Compile Include="Components\IComponentFactory.cs" />
     <Compile Include="Components\IMatcherProvider.cs" />
     <Compile Include="Components\IFlagComponent.cs" />
+    <Compile Include="Configuration\LifeCycleConfiguration.cs" />
+    <Compile Include="Configuration\Scenario.cs" />
+    <Compile Include="Configuration\ScenarioInfo.cs" />
     <Compile Include="Entities\ComponentArray.cs" />
     <Compile Include="Entities\EntityFactoryProvider.cs" />
     <Compile Include="Entities\IEntityFactoryProvider.cs" />
@@ -80,6 +84,7 @@
     <Compile Include="Evaluators\TimeEvaluator.cs" />
     <Compile Include="Exceptions\ConfigurationException.cs" />
     <Compile Include="Exceptions\SystemException.cs" />
+    <Compile Include="Lifecycle\ILifecycleManager.cs" />
     <Compile Include="Planning\IIntentProcessor.cs" />
     <Compile Include="Planning\Intents.cs" />
     <Compile Include="Components\MatchAll.cs" />

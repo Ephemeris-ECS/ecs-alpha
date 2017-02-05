@@ -13,10 +13,15 @@ namespace Engine.Configuration
 
 		public IEnumerable<SystemConfiguration> Systems { get; set; }
 
-		public ECSConfiguration(IEnumerable<Archetype> archetypes, IEnumerable<SystemConfiguration> systems)
+		public LifeCycleConfiguration LifeCycleConfiguration { get; set; }
+
+		public ECSConfiguration(IEnumerable<Archetype> archetypes, 
+			IEnumerable<SystemConfiguration> systems,
+			LifeCycleConfiguration lifeCycleConfiguration)
 		{
 			Archetypes = archetypes ?? new Archetype[0];
 			Systems = systems ?? new SystemConfiguration[0];
+			LifeCycleConfiguration = lifeCycleConfiguration ?? new LifeCycleConfiguration();
 		}
 	}
 }

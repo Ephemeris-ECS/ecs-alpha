@@ -14,8 +14,6 @@ namespace Engine.Components
 
 		public static Dictionary<Type, int> ComponentTypeMap { get; }
 
-		private readonly Dictionary<Type, HashSet<Entity>> _componentEntities;
-
 		private readonly List<ComponentMatcherGroup> _matcherGroups;
 
 		private readonly IEntityRegistry _entityRegistry;
@@ -49,8 +47,6 @@ namespace Engine.Components
 		{
 			_entityRegistry = entityRegistry;
 			_matcherGroups = new List<ComponentMatcherGroup>();
-			_componentEntities = new Dictionary<Type, HashSet<Entity>>();
-
 		}
 		
 		public void UpdateMatchersForEntity(Entity entity)
@@ -66,7 +62,7 @@ namespace Engine.Components
 		/// TODO: support removing matchers and matchers that track component changes to living entities
 		/// </summary>
 		/// <param name="matcher"></param>
-		public void RegisterMatcher(ComponentMatcherGroup matcher)
+		private void RegisterMatcher(ComponentMatcherGroup matcher)
 		{
 			_matcherGroups.Add(matcher);
 			foreach (var entity in _entityRegistry.Entities.Values)
@@ -134,6 +130,17 @@ namespace Engine.Components
 			where TComponent3 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3>(entityFilter);
+			RegisterMatcher(matcher);
+			return matcher;
+		}
+
+		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4> CreateMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent
+			where TComponent3 : class, IComponent
+			where TComponent4 : class, IComponent
+		{
+			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(entityFilter);
 			RegisterMatcher(matcher);
 			return matcher;
 		}

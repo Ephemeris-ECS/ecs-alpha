@@ -142,7 +142,7 @@ namespace Engine.Startup.Tests
 				},
 			};
 
-			var configuration = new ECSConfiguration(null, systemConfigurations);
+			var configuration = new ECSConfiguration(null, systemConfigurations, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 

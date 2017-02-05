@@ -35,7 +35,7 @@ namespace Engine.Core.Tests
 				},
 			};
 			
-			var configuration = new ECSConfiguration(archetypes, null);
+			var configuration = new ECSConfiguration(archetypes, null, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
@@ -81,7 +81,7 @@ namespace Engine.Core.Tests
 			};
 
 
-			var configuration = new ECSConfiguration(archetypes, null);
+			var configuration = new ECSConfiguration(archetypes, null, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
@@ -146,7 +146,7 @@ namespace Engine.Core.Tests
 			};
 
 
-			var configuration = new ECSConfiguration(archetypes, null);
+			var configuration = new ECSConfiguration(archetypes, null, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 
@@ -197,7 +197,7 @@ namespace Engine.Core.Tests
 				},
 			};
 
-			var configuration = new ECSConfiguration(archetypes, null);
+			var configuration = new ECSConfiguration(archetypes, null, null);
 
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 

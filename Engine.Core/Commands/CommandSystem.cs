@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Engine.Commands
 {
-	public class CommandSystem : ISystem
+	public class CommandSystem : ISystem, ICommandSystem
 	{
 		private readonly Dictionary<Type, ICommandHandler> _commandHandlers;
 

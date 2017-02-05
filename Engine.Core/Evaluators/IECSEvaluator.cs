@@ -5,5 +5,7 @@ namespace Engine.Evaluators
 		where TECS : class, IECS
 	{
 		bool Evaluate(TECS ecs);
+
+		void Activate();
 	}
 }

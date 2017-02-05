@@ -8,7 +8,7 @@ namespace Engine.Evaluators
 	public class EvaluatorProxy<TECS> : IECSEvaluator<TECS>
 		where TECS : class, IECS
 	{
-		private Func<TECS, bool> _evaluator;
+		private readonly Func<TECS, bool> _evaluator;
 
 		public EvaluatorProxy(Func<TECS, bool> evaluator)
 		{
@@ -18,6 +18,10 @@ namespace Engine.Evaluators
 		public bool Evaluate(TECS ecs)
 		{
 			return _evaluator(ecs);
+		}
+
+		public void Activate()
+		{
 		}
 	}
 }

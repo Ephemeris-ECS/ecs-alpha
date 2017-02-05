@@ -8,7 +8,6 @@ namespace Engine.Components
 	public interface IMatcherProvider
 	{
 		void UpdateMatchersForEntity(Entity entity);
-		void RegisterMatcher(ComponentMatcherGroup matcher);
 		
 		#region matcher factory
 
@@ -26,6 +25,12 @@ namespace Engine.Components
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent
 			where TComponent3 : class, IComponent;
+
+		ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4> CreateMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(Predicate<Entity> entityFilter = null)
+			where TComponent1 : class, IComponent
+			where TComponent2 : class, IComponent
+			where TComponent3 : class, IComponent
+			where TComponent4 : class, IComponent;
 
 		#endregion
 	}

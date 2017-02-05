@@ -5,5 +5,7 @@
 		Undefined = 0,
 		Success,
 		Failure,
+
+		Error,
 	}
 }

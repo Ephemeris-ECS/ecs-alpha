@@ -1,6 +1,6 @@
 ﻿using Engine.Commands;
 
-namespace Engine.Lifecycle.Lifecycle
+namespace Engine.Lifecycle.Commands
 {
 	public class StopCommand : ICommand
 	{
@@ -8,16 +8,16 @@ namespace Engine.Lifecycle.Lifecycle
 
 	public class StopCommandHandler : CommandHandler<StopCommand>
 	{
-		private readonly LifecycleSystem _lifecycleSystem;
+		private readonly ILifecycleManager _lifecycleManager;
 
-		public StopCommandHandler(LifecycleSystem lifecycleSystem)
+		public StopCommandHandler(ILifecycleManager lifecycleManager)
 		{
-			_lifecycleSystem = lifecycleSystem;
+			_lifecycleManager = lifecycleManager;
 		}
 
 		protected override bool TryProcessCommand(StopCommand command)
 		{
-			return _lifecycleSystem.TryStop();
+			return _lifecycleManager.TryStop();
 		}
 	}
 }

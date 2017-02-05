@@ -51,6 +51,10 @@ namespace Engine.Sequencing
 			{
 				ExecuteActions(OnEnterActions, ecs);
 			}
+			if (Evaluator != null)
+			{
+				Evaluator.Activate();
+			}
 		}
 
 		public void Exit(TECS ecs)

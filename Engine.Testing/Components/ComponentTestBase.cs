@@ -27,7 +27,7 @@ namespace Engine.Testing.Components
 				},
 			};
 
-			var configuration = new ECSConfiguration(archetypes, null);
+			var configuration = new ECSConfiguration(archetypes, null, null);
 			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
 			Entity entity;
 			ecs.TryCreateEntityFromArchetype("Test", out entity);

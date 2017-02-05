@@ -123,8 +123,7 @@ namespace Engine.Startup
 	}
 
 	// ReSharper disable InconsistentNaming
-	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> 
-		: ECSInstaller<TInstaller>
+	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> : ECSInstaller<TInstaller>
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
 		where TInstaller : ECSInstaller<TInstaller>

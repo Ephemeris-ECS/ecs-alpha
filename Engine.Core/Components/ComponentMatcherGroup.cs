@@ -86,6 +86,8 @@ namespace Engine.Components
 
 		public new ComponentEntityTuple<TComponent1>[] MatchingEntities => _matchingEntities.Values.ToArray();
 
+		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
+
 		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1) }, entityFilter)
 		{
@@ -142,7 +144,9 @@ namespace Engine.Components
 		/// </summary>
 		private readonly Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2>> _matchingEntities;
 
+		// TODO: test if key/value collection to array is expensive when done on demand, this could be cached and only reevaluated when an entity is added or removed
 		public new ComponentEntityTuple<TComponent1, TComponent2>[] MatchingEntities => _matchingEntities.Values.ToArray();
+		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 
 		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1), typeof(TComponent2) }, entityFilter)
@@ -203,6 +207,7 @@ namespace Engine.Components
 		private readonly Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> _matchingEntities;
 
 		public new ComponentEntityTuple<TComponent1, TComponent2, TComponent3>[] MatchingEntities => _matchingEntities.Values.ToArray();
+		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 
 		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
 			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3) }, entityFilter)
@@ -241,6 +246,72 @@ namespace Engine.Components
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3> tuple)
+		{
+			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			MatchingEntityAdded?.Invoke(tuple);
+		}
+
+	}
+
+	#endregion
+
+	#region 4 tuple
+
+	public class ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4> : ComponentMatcherGroup
+		where TComponent1 : class, IComponent
+		where TComponent2 : class, IComponent
+		where TComponent3 : class, IComponent
+		where TComponent4 : class, IComponent
+	{
+		public new event Action<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> MatchingEntityAdded;
+
+		/// <summary>
+		/// Dictionary of matching entity tuples keyed by entity id.
+		/// This should always be projected to a array or similar hwen enumerating as disposing entities will modify the collection
+		/// </summary>
+		private readonly Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> _matchingEntities;
+
+		public new ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>[] MatchingEntities => _matchingEntities.Values.ToArray();
+		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
+		
+		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
+			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3), typeof(TComponent4) }, entityFilter)
+		{
+			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>>();
+		}
+
+		public bool TryGetMatchingEntity(int id, out ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4> tuple)
+		{
+			return _matchingEntities.TryGetValue(id, out tuple);
+		}
+
+		public override bool TryAddEntity(Entity entity)
+		{
+			if (IsMatch(entity))
+			{
+				if (_matchingEntities.ContainsKey(entity.Id) == false)
+				{
+					var tuple = new ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>(entity,
+						entity.GetComponent<TComponent1>(),
+						entity.GetComponent<TComponent2>(),
+						entity.GetComponent<TComponent3>(),
+						entity.GetComponent<TComponent4>());
+					_matchingEntities.Add(entity.Id, tuple);
+					OnMatchingEntityAdded(tuple);
+				}
+				return true;
+			}
+			return false;
+		}
+
+		protected void EntityOnEntityDestroyed(Entity entity)
+		{
+			_matchingEntities.Remove(entity.Id);
+			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			OnMatchingEntityRemoved(entity);
+		}
+
+		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4> tuple)
 		{
 			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
 			MatchingEntityAdded?.Invoke(tuple);

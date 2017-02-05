@@ -22,6 +22,8 @@ namespace Engine.Components
 		}
 	}
 
+	#region 1 tuple
+
 	public class ComponentEntityTuple<TComponent1> : IEquatable<ComponentEntityTuple<TComponent1>>
 		where TComponent1 : IComponent
 	{
@@ -42,6 +44,10 @@ namespace Engine.Components
 		}
 	}
 
+	#endregion
+
+	#region 2 tuple
+
 	public class ComponentEntityTuple<TComponent1, TComponent2> : ComponentEntityTuple<TComponent1>,
 			IEquatable<ComponentEntityTuple<TComponent1, TComponent2>>
 			where TComponent1 : IComponent
@@ -60,6 +66,10 @@ namespace Engine.Components
 			return base.Equals(other);
 		}
 	}
+
+	#endregion
+
+	#region 3 tuple
 
 	public class ComponentEntityTuple<TComponent1, TComponent2, TComponent3> : ComponentEntityTuple<TComponent1, TComponent2>,
 		IEquatable<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>>
@@ -80,5 +90,58 @@ namespace Engine.Components
 			return base.Equals(other);
 		}
 	}
+
+	#endregion
+
+	#region 4 tuple
+
+	public class ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4> : ComponentEntityTuple<TComponent1, TComponent2, TComponent3>,
+		IEquatable<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>>
+		where TComponent1 : IComponent
+		where TComponent2 : IComponent
+		where TComponent3 : IComponent
+		where TComponent4 : IComponent
+	{
+		public TComponent4 Component4 { get; }
+
+		public ComponentEntityTuple(Entity entity, TComponent1 component1, TComponent2 component2, TComponent3 component3, TComponent4 component4)
+			: base(entity, component1, component2, component3)
+		{
+			Component4 = component4;
+		}
+
+		public bool Equals(ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4> other)
+		{
+			return base.Equals(other);
+		}
+	}
+
+	#endregion
+
+	#region 5 tuple
+
+	public class ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5> : ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>,
+		IEquatable<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5>>
+		where TComponent1 : IComponent
+		where TComponent2 : IComponent
+		where TComponent3 : IComponent
+		where TComponent4 : IComponent
+		where TComponent5 : IComponent
+	{
+		public TComponent5 Component5 { get; }
+
+		public ComponentEntityTuple(Entity entity, TComponent1 component1, TComponent2 component2, TComponent3 component3, TComponent4 component4, TComponent5 component5)
+			: base(entity, component1, component2, component3, component4)
+		{
+			Component5 = component5;
+		}
+
+		public bool Equals(ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5> other)
+		{
+			return base.Equals(other);
+		}
+	}
+
+	#endregion
 }
 
