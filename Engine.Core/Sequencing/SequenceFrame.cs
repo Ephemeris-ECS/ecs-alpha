@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Configuration;
 using Engine.Evaluators;
 using ModestTree;
 
 namespace Engine.Sequencing
 {
-	public class SequenceFrame<TECS>
+	// ReSharper disable once InconsistentNaming
+	public class SequenceFrame<TECS, TConfiguration>
 		where TECS : class, IECS
+		where TConfiguration : ECSConfiguration
 	{
 		// TODO: definig these with delegates isnt very nice from a data driven perspective, but we wont worry about serialization till later
 
@@ -17,26 +20,26 @@ namespace Engine.Sequencing
 		/// <summary>
 		/// Actions performed when the frame is entered
 		/// </summary>
-		public List<ECSAction<TECS>> OnEnterActions { get; set; }
+		public List<ECSAction<TECS, TConfiguration>> OnEnterActions { get; set; }
 
 		/// <summary>
 		/// Actions performed when the frame is exited
 		/// </summary>
-		public List<ECSAction<TECS>> OnExitActions { get; set; }
+		public List<ECSAction<TECS, TConfiguration>> OnExitActions { get; set; }
 
 		/// <summary>
 		/// Condition to satisfy before proceeding to the next frame
 		/// TODO: this could be a collection, or an expression tree with logic implied by aggregate nodes
 		/// </summary>
-		public IECSEvaluator<TECS> Evaluator { get; set; }
+		public IEvaluator<TECS, TConfiguration> Evaluator { get; set; }
 
-		private void ExecuteActions(IEnumerable<ECSAction<TECS>> actions, TECS ecs)
+		private void ExecuteActions(IEnumerable<ECSAction<TECS, TConfiguration>> actions, TECS ecs, TConfiguration configuration)
 		{
 			foreach (var action in actions)
 			{
 				try
 				{
-					action.Action(ecs);
+					action.Action(ecs, configuration);
 				}
 				catch (Exception ex)
 				{
@@ -45,23 +48,20 @@ namespace Engine.Sequencing
 			}
 		}
 
-		public void Enter(TECS ecs)
+		public void Enter(TECS ecs, TConfiguration configuration)
 		{
 			if (OnEnterActions != null)
 			{
-				ExecuteActions(OnEnterActions, ecs);
+				ExecuteActions(OnEnterActions, ecs, configuration);
 			}
-			if (Evaluator != null)
-			{
-				Evaluator.Activate();
-			}
+			Evaluator?.Activate();
 		}
 
-		public void Exit(TECS ecs)
+		public void Exit(TECS ecs, TConfiguration configuration)
 		{
 			if (OnExitActions != null)
 			{
-				ExecuteActions(OnExitActions, ecs);
+				ExecuteActions(OnExitActions, ecs, configuration);
 			}
 		}
 	}

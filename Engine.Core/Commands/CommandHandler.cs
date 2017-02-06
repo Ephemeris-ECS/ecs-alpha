@@ -17,5 +17,13 @@ namespace Engine.Commands
 		}
 
 		protected abstract bool TryProcessCommand(TCommand command);
+
+		// TODO: this should be stored on an entity, or transferred to the slave client somehow
+		public bool Enabled { get; protected set; } = true;
+
+		public virtual void SetEnabled(bool enabled)
+		{
+			Enabled = enabled;
+		}
 	}
 }

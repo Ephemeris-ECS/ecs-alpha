@@ -14,6 +14,8 @@ namespace Engine
 		bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem;
 
 		void Tick();
+
+		IMatcherProvider MatcherProvider { get; }
 	}
 
 	// ReSharper disable once InconsistentNaming

@@ -84,7 +84,7 @@ namespace Engine.Lifecycle
 		{
 			if (_runner == null)
 			{
-				_runner = new ECSRunner<TECS, TConfiguration>(ECSRoot.Configuration.LifeCycleConfiguration.TickInterval, Sequencer, ECSRoot.ECS);
+				_runner = new ECSRunner<TECS, TConfiguration>(ECSRoot.Configuration.LifeCycleConfiguration.TickInterval, Sequencer, ECSRoot.ECS, ECSRoot.Configuration);
 				_runner.Tick += OnTick;
 				_runner.Exception += RunnerOnException;
 			}
@@ -177,7 +177,7 @@ namespace Engine.Lifecycle
 		private void TickInternal()
 		{
 			ECSRoot.ECS.Tick();
-			Sequencer?.Tick(ECSRoot.ECS);
+			Sequencer?.Tick(ECSRoot.ECS, ECSRoot.Configuration);
 			if (Sequencer?.IsComplete ?? false)
 			{
 				// TODO: need the sequence to evaluate the exit code

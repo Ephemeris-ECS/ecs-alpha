@@ -34,7 +34,7 @@ namespace Engine
 		/// <summary>
 		/// This is where the component pool lives and component to entity mappings take place
 		/// </summary>
-		protected IMatcherProvider MatcherProvider { get; private set; }
+		public IMatcherProvider MatcherProvider { get; private set; }
 
 		/// <summary>
 		/// This is where the system pool lives and systems are activated 

@@ -8,7 +8,7 @@ namespace Engine.Components
 {
 	#region pure match, no result tuple
 
-	public class ComponentMatcherGroup : ComponentMatcher
+	public abstract class ComponentMatcherGroup : ComponentMatcher
 	{
 		public event Action<Entity> MatchingEntityAdded;
 
@@ -18,8 +18,8 @@ namespace Engine.Components
 
 		public Entity[] MatchingEntities => _matchingEntities.Values.ToArray();
 
-		internal ComponentMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null)
-			: base(componentTypes, entityFilter)
+		internal ComponentMatcherGroup(Type[] componentTypes)
+			: base(componentTypes)
 		{
 			_matchingEntities = new Dictionary<int, Entity>();
 		}
@@ -31,7 +31,7 @@ namespace Engine.Components
 
 		public virtual bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsTypeMatch(entity))
 			{
 				if (_matchingEntities.ContainsKey(entity.Id) == false)
 				{
@@ -46,11 +46,6 @@ namespace Engine.Components
 		public void Clear()
 		{
 			_matchingEntities.Clear();
-		}
-
-		public override bool IsMatch(Entity entity)
-		{
-			return _matchingEntities.ContainsKey(entity.Id) || base.IsMatch(entity);
 		}
 
 		private void EntityOnEntityDestroyed(Entity entity)
@@ -82,15 +77,18 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1>> MatchingEntityAdded;
 
+		private Predicate<ComponentEntityTuple<TComponent1>> EntityFilter { get; }
+		
 		private readonly Dictionary<int, ComponentEntityTuple<TComponent1>> _matchingEntities;
 
 		public new ComponentEntityTuple<TComponent1>[] MatchingEntities => _matchingEntities.Values.ToArray();
 
 		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 
-		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
-			: base(new[] { typeof(TComponent1) }, entityFilter)
+		internal ComponentMatcherGroup(Predicate<ComponentEntityTuple<TComponent1>> entityFilter = null)
+			: base(new[] { typeof(TComponent1) })
 		{
+			EntityFilter = entityFilter;
 			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1>>();
 		}
 
@@ -101,15 +99,18 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsTypeMatch(entity))
 			{
 				if (_matchingEntities.ContainsKey(entity.Id) == false)
 				{
 					var tuple = new ComponentEntityTuple<TComponent1>(entity, entity.GetComponent<TComponent1>());
-					_matchingEntities.Add(entity.Id, tuple);
-					OnMatchingEntityAdded(tuple);
+					if (EntityFilter == null || EntityFilter(tuple))
+					{
+						_matchingEntities.Add(entity.Id, tuple);
+						OnMatchingEntityAdded(tuple);
+						return true;
+					}
 				}
-				return true;
 			}
 			return false;
 		}
@@ -138,6 +139,8 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1, TComponent2>> MatchingEntityAdded;
 
+		private Predicate<ComponentEntityTuple<TComponent1, TComponent2>> EntityFilter { get; }
+
 		/// <summary>
 		/// Dictionary of matching entity tuples keyed by entity id.
 		/// This should always be projected to a array or similar hwen enumerating as disposing entities will modify the collection
@@ -148,9 +151,10 @@ namespace Engine.Components
 		public new ComponentEntityTuple<TComponent1, TComponent2>[] MatchingEntities => _matchingEntities.Values.ToArray();
 		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 
-		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
-			: base(new[] { typeof(TComponent1), typeof(TComponent2) }, entityFilter)
+		internal ComponentMatcherGroup(Predicate<ComponentEntityTuple<TComponent1, TComponent2>> entityFilter = null)
+			: base(new[] { typeof(TComponent1), typeof(TComponent2) })
 		{
+			EntityFilter = entityFilter;
 			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2>>();
 		}
 
@@ -161,17 +165,20 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsTypeMatch(entity))
 			{
 				if (_matchingEntities.ContainsKey(entity.Id) == false)
 				{
 					var tuple = new ComponentEntityTuple<TComponent1, TComponent2>(entity,
 						entity.GetComponent<TComponent1>(),
 						entity.GetComponent<TComponent2>());
-					_matchingEntities.Add(entity.Id, tuple);
-					OnMatchingEntityAdded(tuple);
+					if (EntityFilter == null || EntityFilter(tuple))
+					{
+						_matchingEntities.Add(entity.Id, tuple);
+						OnMatchingEntityAdded(tuple);
+						return true;
+					}
 				}
-				return true;
 			}
 			return false;
 		}
@@ -200,6 +207,8 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> MatchingEntityAdded;
 
+		private Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> EntityFilter { get; }
+		
 		/// <summary>
 		/// Dictionary of matching entity tuples keyed by entity id.
 		/// This should always be projected to a array or similar hwen enumerating as disposing entities will modify the collection
@@ -209,9 +218,10 @@ namespace Engine.Components
 		public new ComponentEntityTuple<TComponent1, TComponent2, TComponent3>[] MatchingEntities => _matchingEntities.Values.ToArray();
 		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 
-		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
-			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3) }, entityFilter)
+		internal ComponentMatcherGroup(Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> entityFilter = null)
+			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3) })
 		{
+			EntityFilter = entityFilter;
 			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3>>();
 		}
 
@@ -222,7 +232,7 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsTypeMatch(entity))
 			{
 				if(_matchingEntities.ContainsKey(entity.Id) == false)
 				{
@@ -230,10 +240,13 @@ namespace Engine.Components
 						entity.GetComponent<TComponent1>(),
 						entity.GetComponent<TComponent2>(),
 						entity.GetComponent<TComponent3>());
-					_matchingEntities.Add(entity.Id, tuple);
-					OnMatchingEntityAdded(tuple);
+					if (EntityFilter == null || EntityFilter(tuple))
+					{
+						_matchingEntities.Add(entity.Id, tuple);
+						OnMatchingEntityAdded(tuple);
+						return true;
+					}
 				}
-				return true;
 			}
 			return false;
 		}
@@ -265,6 +278,8 @@ namespace Engine.Components
 	{
 		public new event Action<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> MatchingEntityAdded;
 
+		private Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> EntityFilter { get; }
+
 		/// <summary>
 		/// Dictionary of matching entity tuples keyed by entity id.
 		/// This should always be projected to a array or similar hwen enumerating as disposing entities will modify the collection
@@ -274,9 +289,10 @@ namespace Engine.Components
 		public new ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>[] MatchingEntities => _matchingEntities.Values.ToArray();
 		public int[] MatchingEntityKeys => _matchingEntities.Keys.ToArray();
 		
-		internal ComponentMatcherGroup(Predicate<Entity> entityFilter = null)
-			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3), typeof(TComponent4) }, entityFilter)
+		internal ComponentMatcherGroup(Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> entityFilter = null)
+			: base(new[] { typeof(TComponent1), typeof(TComponent2), typeof(TComponent3), typeof(TComponent4) })
 		{
+			EntityFilter = entityFilter;
 			_matchingEntities = new Dictionary<int, ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>>();
 		}
 
@@ -287,7 +303,7 @@ namespace Engine.Components
 
 		public override bool TryAddEntity(Entity entity)
 		{
-			if (IsMatch(entity))
+			if (IsTypeMatch(entity))
 			{
 				if (_matchingEntities.ContainsKey(entity.Id) == false)
 				{
@@ -296,10 +312,13 @@ namespace Engine.Components
 						entity.GetComponent<TComponent2>(),
 						entity.GetComponent<TComponent3>(),
 						entity.GetComponent<TComponent4>());
-					_matchingEntities.Add(entity.Id, tuple);
-					OnMatchingEntityAdded(tuple);
+					if (EntityFilter == null || EntityFilter(tuple))
+					{
+						_matchingEntities.Add(entity.Id, tuple);
+						OnMatchingEntityAdded(tuple);
+						return true;
+					}
 				}
-				return true;
 			}
 			return false;
 		}

@@ -3,9 +3,9 @@
 
 namespace Engine.Configuration
 {
-	public abstract class Scenario<TECS, TECSConfiguration>
+	public abstract class Scenario<TECS, TConfiguration>
 		where TECS : class, IECS
-		where TECSConfiguration : ECSConfiguration
+		where TConfiguration : ECSConfiguration
 	{
 		public string Name { get; set; }
 
@@ -15,8 +15,8 @@ namespace Engine.Configuration
 
 		public int MaxPlayers { get; set; }
 
-		public TECSConfiguration Configuration { get; set; }
+		public TConfiguration Configuration { get; set; }
 
-		public SequenceFrame<TECS>[] Sequence { get; set; }
+		public SequenceFrame<TECS, TConfiguration>[] Sequence { get; set; }
 	}
 }

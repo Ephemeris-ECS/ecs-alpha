@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Configuration;
 
 namespace Engine.Evaluators
 {
-	public class TickEvaluator<TECS> : IECSEvaluator<TECS>
+	// ReSharper disable once InconsistentNaming
+	public class TickEvaluator<TECS, TConfiguration> : IEvaluator<TECS, TConfiguration>
 		where TECS : class, IECS
+		where TConfiguration : ECSConfiguration
 	{
 		public int Threshold { get; set; }
 
@@ -17,7 +20,7 @@ namespace Engine.Evaluators
 			_value = 0;
 		}
 
-		public bool Evaluate(TECS ecs)
+		public bool Evaluate(TECS ecs, TConfiguration configuration)
 		{
 			return _value++ >= Threshold;
 		}

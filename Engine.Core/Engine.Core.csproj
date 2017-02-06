@@ -74,12 +74,10 @@
     <Compile Include="Entities\EntityFactoryProvider.cs" />
     <Compile Include="Entities\IEntityFactoryProvider.cs" />
     <Compile Include="Evaluators\CompoundEvaluator.cs" />
-    <Compile Include="Evaluators\EntityEvaluator.cs" />
+    <Compile Include="Evaluators\EvaluatorExtensions.cs" />
     <Compile Include="Evaluators\EvaluatorProxy.cs" />
-    <Compile Include="Evaluators\IComponentEvaluator.cs" />
-    <Compile Include="Evaluators\IEntityEvaluator.cs" />
-    <Compile Include="Evaluators\IECSEvaluator.cs" />
     <Compile Include="Evaluators\IEvaluator.cs" />
+    <Compile Include="Evaluators\Operand.cs" />
     <Compile Include="Evaluators\TickEvaluator.cs" />
     <Compile Include="Evaluators\TimeEvaluator.cs" />
     <Compile Include="Exceptions\ConfigurationException.cs" />
@@ -87,7 +85,6 @@
     <Compile Include="Lifecycle\ILifecycleManager.cs" />
     <Compile Include="Planning\IIntentProcessor.cs" />
     <Compile Include="Planning\Intents.cs" />
-    <Compile Include="Components\MatchAll.cs" />
     <Compile Include="Configuration\ECSConfiguration.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="ECS.cs" />

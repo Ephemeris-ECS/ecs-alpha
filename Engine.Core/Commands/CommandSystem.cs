@@ -20,9 +20,15 @@ namespace Engine.Commands
 			ICommandHandler commandHandler;
 			if (_commandHandlers.TryGetValue(command.GetType(), out commandHandler))
 			{
-				return commandHandler.TryProcessCommand(command);
+				return commandHandler.Enabled && commandHandler.TryProcessCommand(command);
 			}
 			return false;
+		}
+
+		public bool TryGetHandler<TCommand>(out ICommandHandler commandHandler)
+			where TCommand : ICommand
+		{
+			return _commandHandlers.TryGetValue(typeof(TCommand), out commandHandler);
 		}
 	}
 }

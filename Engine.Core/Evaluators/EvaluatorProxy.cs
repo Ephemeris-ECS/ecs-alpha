@@ -2,22 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Configuration;
 
 namespace Engine.Evaluators
 {
-	public class EvaluatorProxy<TECS> : IECSEvaluator<TECS>
+	// ReSharper disable once InconsistentNaming
+	public class EvaluatorProxy<TECS, TConfiguration> : IEvaluator<TECS, TConfiguration>
 		where TECS : class, IECS
+		where TConfiguration : ECSConfiguration
 	{
-		private readonly Func<TECS, bool> _evaluator;
+		protected Func<TECS, TConfiguration, bool> Evaluator;
 
-		public EvaluatorProxy(Func<TECS, bool> evaluator)
+		public EvaluatorProxy()
 		{
-			_evaluator = evaluator;
 		}
 
-		public bool Evaluate(TECS ecs)
+		public EvaluatorProxy(Func<TECS, TConfiguration, bool> evaluator)
 		{
-			return _evaluator(ecs);
+			Evaluator = evaluator;
+		}
+
+		public bool Evaluate(TECS ecs, TConfiguration configuration)
+		{
+			return Evaluator(ecs, configuration);
 		}
 
 		public void Activate()

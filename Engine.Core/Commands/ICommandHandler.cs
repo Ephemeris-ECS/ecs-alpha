@@ -8,5 +8,9 @@ namespace Engine.Commands
 		Type HandlesType { get; }
 
 		bool TryProcessCommand(ICommand command);
+
+		bool Enabled { get; }
+
+		void SetEnabled(bool enabled);
 	}
 }

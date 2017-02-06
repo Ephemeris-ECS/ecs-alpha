@@ -8,16 +8,9 @@ using Engine.Exceptions;
 
 namespace Engine.Components
 {
-	public class ComponentMatcher
+	public abstract class ComponentMatcher
 	{
-		public int[][] ComponentTypeIds { get; }
-
-		private Predicate<Entity> EntityFilter { get; }
-
-		protected internal ComponentMatcher()
-		{
-			
-		}
+		protected int[][] ComponentTypeIds { get; }
 
 		/// <summary>
 		/// 
@@ -44,15 +37,13 @@ namespace Engine.Components
 			{
 				throw new EngineException($"Component type(s) not found in implementation cache {componentTypes.Aggregate(new StringBuilder(), (sb, ct) => sb.Append($"{ct.Name}, "), sb => sb.ToString())})");
 			}
-
-			EntityFilter = entityFilter ?? (entity => true);
 		}
 
-		public virtual bool IsMatch(Entity entity)
+		protected bool IsTypeMatch(Entity entity)
 		{
 			// TODO: this doesnt Support component interfaces
 			// TODO: this can probably be much more efficient when being called by the generic subtypes
-			return ComponentTypeIds.All(type => type.Any(impl => entity.Components[impl] != null)) && EntityFilter(entity);
+			return ComponentTypeIds.All(type => type.Any(impl => entity.Components[impl] != null));
 		}
 	}
 }

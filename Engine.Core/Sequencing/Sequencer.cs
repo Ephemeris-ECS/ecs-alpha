@@ -17,7 +17,7 @@ namespace Engine.Sequencing
 		where TECS : class, IECS
 		where TConfiguration : ECSConfiguration
 	{
-		private SequenceFrame<TECS> _currentFrame;
+		private SequenceFrame<TECS, TConfiguration> _currentFrame;
 
 		private readonly Scenario<TECS, TConfiguration> _scenario;
 
@@ -35,16 +35,16 @@ namespace Engine.Sequencing
 			Assert.IsNotNull(scenario.Sequence);
 		}
 
-		public void Tick(TECS ecs)
+		public void Tick(TECS ecs, TConfiguration configuration)
 		{
 			if (_currentFrame == null && _frameIndex < _scenario.Sequence.Length)
 			{
 				_currentFrame = _scenario.Sequence[_frameIndex];
-				_currentFrame.Enter(ecs);
+				_currentFrame.Enter(ecs, configuration);
 			}
-			else if (_currentFrame?.Evaluator.Evaluate(ecs) ?? false)
+			else if (_currentFrame?.Evaluator.Evaluate(ecs, configuration) ?? false)
 			{
-				_currentFrame.Exit(ecs);
+				_currentFrame.Exit(ecs, configuration);
 				_currentFrame = null;
 
 				if (++_frameIndex >= _scenario.Sequence.Length)

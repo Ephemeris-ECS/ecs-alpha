@@ -93,21 +93,8 @@ namespace Engine.Components
 		// TODO: cache the MatchingEntities array to rpevent repeated projection to array when values have not changed
 		//			store a dirty flag or simialr inside matcher and set only when matches have been modified - reduce uncessary testing significantly
 
-		public ComponentMatcher CreateMatcher(Type[] componentTypes, Predicate<Entity> entityFilter = null)
-		{
-			var matcher = new ComponentMatcher(componentTypes, entityFilter);
-			//RegisterMatcher(matcher);
-			return matcher;
-		}
-
-		public ComponentMatcherGroup CreateMatcherGroup(Type[] componentTypes, Predicate<Entity> entityFilter = null)
-		{
-			var matcher = new ComponentMatcherGroup(componentTypes, entityFilter);
-			RegisterMatcher(matcher);
-			return matcher;
-		}
-
-		public ComponentMatcherGroup<TComponent1> CreateMatcherGroup<TComponent1>(Predicate<Entity> entityFilter = null)
+		public ComponentMatcherGroup<TComponent1> CreateMatcherGroup<TComponent1>(
+			Predicate<ComponentEntityTuple<TComponent1>> entityFilter = null)
 			where TComponent1 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1>(entityFilter);
@@ -115,7 +102,8 @@ namespace Engine.Components
 			return matcher;
 		}
 
-		public ComponentMatcherGroup<TComponent1, TComponent2> CreateMatcherGroup<TComponent1, TComponent2>(Predicate<Entity> entityFilter = null)
+		public ComponentMatcherGroup<TComponent1, TComponent2> CreateMatcherGroup<TComponent1, TComponent2>(
+			Predicate<ComponentEntityTuple<TComponent1, TComponent2>> entityFilter = null)
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent
 		{
@@ -124,7 +112,8 @@ namespace Engine.Components
 			return matcher;
 		}
 
-		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3> CreateMatcherGroup<TComponent1, TComponent2, TComponent3>(Predicate<Entity> entityFilter = null)
+		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3> CreateMatcherGroup<TComponent1, TComponent2, TComponent3>(
+			Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3>> entityFilter = null)
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent
 			where TComponent3 : class, IComponent
@@ -134,7 +123,8 @@ namespace Engine.Components
 			return matcher;
 		}
 
-		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4> CreateMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(Predicate<Entity> entityFilter = null)
+		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4> CreateMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(
+			Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4>> entityFilter = null)
 			where TComponent1 : class, IComponent
 			where TComponent2 : class, IComponent
 			where TComponent3 : class, IComponent
