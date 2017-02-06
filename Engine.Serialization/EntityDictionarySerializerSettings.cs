@@ -24,7 +24,7 @@ namespace Engine.Serialization
 
 			// TODO: check if these work with the dictionary serialization changes!
 			DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate;
-			NullValueHandling = NullValueHandling.Ignore;
+			NullValueHandling = NullValueHandling.Include;
 			Formatting = Formatting.None;
 		}
 	}
