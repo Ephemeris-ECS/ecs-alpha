@@ -46,6 +46,7 @@
     <Compile Include="Archetypes\ComponentBinding.cs" />
     <Compile Include="Archetypes\EntityFactoryException.cs" />
     <Compile Include="Commands\CommandHandler.cs" />
+    <Compile Include="Commands\HaltAndCatchFireCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\ICommandHandler.cs" />
     <Compile Include="Commands\ICommandSystem.cs" />
