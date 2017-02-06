@@ -135,6 +135,19 @@ namespace Engine.Components
 			return matcher;
 		}
 
+		public ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5> CreateMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5>(
+			Predicate<ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5>> entityFilter = null) 
+			where TComponent1 : class, IComponent 
+			where TComponent2 : class, IComponent
+			where TComponent3 : class, IComponent 
+			where TComponent4 : class, IComponent 
+			where TComponent5 : class, IComponent
+		{
+			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5>(entityFilter);
+			RegisterMatcher(matcher);
+			return matcher;
+		}
+
 		#endregion
 	}
 }

@@ -23,6 +23,7 @@ namespace Engine.Archetypes
 			var serializerSettings = new JsonSerializerSettings()
 			{
 				ContractResolver = new IncludePrivateMembersContractResolver(),
+				TypeNameHandling = TypeNameHandling.All,
 			};
 			serializerSettings.Converters.Add(new StringEnumConverter());
 

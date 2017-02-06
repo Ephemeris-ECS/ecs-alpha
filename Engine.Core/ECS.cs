@@ -41,12 +41,6 @@ namespace Engine
 		/// </summary>
 		protected ISystemRegistry SystemRegistry { get; private set; }
 
-		/// <summary>
-		/// This factory creates components and popualtes an entity when an archetype is instantiated
-		/// TODO: refactor this into the component registry
-		/// </summary>
-		protected ComponentFactory ComponentFactory { get; private set; }
-
 		protected IEntityFactoryProvider EntityFactoryProvider { get; }
 
 		protected ECS(TConfiguration configuration,
@@ -59,9 +53,7 @@ namespace Engine
 			EntityRegistry = entityRegistry;
 			MatcherProvider = matcherProvider;
 			SystemRegistry = systemRegistry;
-			ComponentFactory = new ComponentFactory();
 			// signal the component registry that a new entity has been populated
-			ComponentFactory.EntityArchetypeCreated += MatcherProvider.UpdateMatchersForEntity;
 			EntityFactoryProvider = entityFactoryProvider;
 		}
 
