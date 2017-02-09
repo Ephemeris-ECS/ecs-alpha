@@ -25,6 +25,8 @@ namespace Engine.Lifecycle
 
 		public event Action Tick;
 
+		public event Action<Exception> Exception;
+
 		public TECSRoot ECSRoot { get; private set; }
 
 		protected Sequencer<TECS, TConfiguration> Sequencer { get; set; }
@@ -93,7 +95,7 @@ namespace Engine.Lifecycle
 		private void RunnerOnException(Exception exception)
 		{
 			StopInternal(ExitCode.Error);
-
+			OnException(exception);
 		}
 
 		private void SetState(EngineState state)
@@ -206,6 +208,11 @@ namespace Engine.Lifecycle
 			{
 				_runner?.Dispose();
 			}
+		}
+
+		protected virtual void OnException(Exception obj)
+		{
+			Exception?.Invoke(obj);
 		}
 	}
 }
