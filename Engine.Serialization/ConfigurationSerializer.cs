@@ -35,5 +35,17 @@ namespace Engine.Serialization
 		{
 			return DeserializeObject<TConfiguration>(json, _configSerializer);
 		}
+
+		public static string SerializeScenario<TScenario>(TScenario scenario)
+		{
+			return SerializeObjectInternal(scenario, scenario.GetType(), _configSerializer);
+		}
+
+		public static TScenario DeserializeScenario<TScenario>(string json)
+			where TScenario : class
+		{
+			return DeserializeObject<TScenario>(json, _configSerializer);
+		}
+
 	}
 }

@@ -13,6 +13,8 @@ namespace Engine
 
 		bool TryGetSystem<TSystem>(out TSystem system) where TSystem : class, ISystem;
 
+		int CurrentTick { get; }
+
 		void Tick();
 
 		IMatcherProvider MatcherProvider { get; }

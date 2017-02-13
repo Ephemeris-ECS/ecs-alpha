@@ -19,7 +19,9 @@ namespace Engine
 	{
 		private bool _disposed;
 
-		private int _tick;
+		private int _currentTick;
+
+		public int CurrentTick => _currentTick;
 
 		public TConfiguration Configuration { get; }
 
@@ -97,7 +99,7 @@ namespace Engine
 
 		public void Tick()
 		{
-			SystemRegistry.Tick(++_tick);
+			SystemRegistry.Tick(++_currentTick);
 		}
 
 	}

@@ -20,8 +20,10 @@ namespace Engine.Serialization
 
 			// TODO: check if these work with the dictionary serialization changes!
 			DefaultValueHandling = DefaultValueHandling.Include;
-			NullValueHandling = NullValueHandling.Ignore;
+			NullValueHandling = NullValueHandling.Include;
 			Formatting = Formatting.None;
+			PreserveReferencesHandling = PreserveReferencesHandling.All;
+			ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
 		}
 	}
 }

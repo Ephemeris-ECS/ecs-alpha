@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressionUtil.cs" />
+    <Compile Include="CRC32.cs" />
     <Compile Include="ECSExtensions.cs" />
     <Compile Include="ConfigurationSerializerSettings.cs" />
     <Compile Include="EntityDictionarySerializerSettings.cs" />

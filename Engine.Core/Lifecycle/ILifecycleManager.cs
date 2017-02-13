@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Commands;
 
 namespace Engine.Lifecycle
 {
@@ -13,6 +14,6 @@ namespace Engine.Lifecycle
 
 		bool TryPause();
 
-		bool TryTick();
+		void EnqueueCommand(ICommand command);
 	}
 }

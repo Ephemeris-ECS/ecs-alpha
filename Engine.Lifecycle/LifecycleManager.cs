@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Engine.Commands;
 using Engine.Configuration;
 using Engine.Sequencing;
 using Engine.Startup;
@@ -11,6 +12,7 @@ using Zenject;
 
 namespace Engine.Lifecycle
 {
+	// TODO: this class is a good candidate for merging with ECS runner because there are so many methods on there that do nothing but proxy to the runner
 	public abstract class LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot> : ILifecycleManager, IDisposable
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
@@ -23,7 +25,7 @@ namespace Engine.Lifecycle
 
 		public event Action<ExitCode> Stopped;
 
-		public event Action Tick;
+		public event ECSTick Tick;
 
 		public event Action<Exception> Exception;
 
@@ -163,30 +165,6 @@ namespace Engine.Lifecycle
 			SetState(EngineState.Paused);
 		}
 
-		public bool TryTick()
-		{
-			switch (EngineState)
-			{
-				case EngineState.NotStarted:
-				case EngineState.Paused:
-					Tick();
-					return true;
-				default:
-					return false;
-			}
-		}
-
-		private void TickInternal()
-		{
-			ECSRoot.ECS.Tick();
-			Sequencer?.Tick(ECSRoot.ECS, ECSRoot.Configuration);
-			if (Sequencer?.IsComplete ?? false)
-			{
-				// TODO: need the sequence to evaluate the exit code
-				StopInternal(ExitCode.Success);
-			}
-		}
-
 		protected virtual void OnStopped(ExitCode obj)
 		{
 			Stopped?.Invoke(obj);
@@ -197,9 +175,14 @@ namespace Engine.Lifecycle
 			StateChanged?.Invoke(EngineState);
 		}
 
-		protected virtual void OnTick()
+		protected virtual void OnTick(Tick tick)
 		{
-			Tick?.Invoke();
+			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
+			uint crc;
+			ECSRoot.GetEntityState(out crc);
+			tick.Crc32 = crc;
+
+			Tick?.Invoke(tick);
 		}
 
 		public void Dispose()
@@ -213,6 +196,11 @@ namespace Engine.Lifecycle
 		protected virtual void OnException(Exception obj)
 		{
 			Exception?.Invoke(obj);
+		}
+
+		public void EnqueueCommand(ICommand command)
+		{
+			_runner?.EnqueueCommand(command);
 		}
 	}
 }

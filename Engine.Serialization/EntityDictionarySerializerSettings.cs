@@ -18,7 +18,7 @@ namespace Engine.Serialization
 		{
 			TypeNameHandling = TypeNameHandling.Auto;
 			TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
-			Converters.Add(new StringEnumConverter());
+			//Converters.Add(new StringEnumConverter());
 			
 			// this shouldn't need to be very deep now that we have just the lightweight entites being copied
 			MaxDepth = 64;

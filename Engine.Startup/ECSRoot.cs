@@ -26,10 +26,14 @@ namespace Engine.Startup
 			EntityStateSerializer = entityStateSerializer;
 		}
 
-		/// <returns></returns>
 		public string GetEntityState()
 		{
 			return EntityStateSerializer.SerializeEntities(ECS);
+		}
+
+		public string GetEntityState(out uint crc)
+		{
+			return EntityStateSerializer.SerializeEntities(ECS, out crc);
 		}
 
 		/// <summary>
