@@ -11,7 +11,5 @@ namespace Engine.Lifecycle
 		public int CurrentTick { get; set; }
 
 		public ICommand[] CommandQueue { get; set; }
-
-		public uint Crc32 { get; set; }
 	}
 }

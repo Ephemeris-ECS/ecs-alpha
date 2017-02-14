@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Engine.Commands;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
+using Engine.Lifecycle;
 using Engine.Systems;
 
 namespace Engine
@@ -15,9 +17,11 @@ namespace Engine
 
 		int CurrentTick { get; }
 
-		void Tick();
+		Tick Tick();
 
 		IMatcherProvider MatcherProvider { get; }
+
+		void EnqueueCommand(ICommand command);
 	}
 
 	// ReSharper disable once InconsistentNaming

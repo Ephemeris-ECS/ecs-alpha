@@ -12,6 +12,9 @@ using Zenject;
 
 namespace Engine.Lifecycle
 {
+	public delegate void LifecycleTick(Tick tick, uint crc);
+
+
 	// TODO: this class is a good candidate for merging with ECS runner because there are so many methods on there that do nothing but proxy to the runner
 	public abstract class LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot> : ILifecycleManager, IDisposable
 		where TECS : ECS<TConfiguration>
@@ -25,7 +28,7 @@ namespace Engine.Lifecycle
 
 		public event Action<ExitCode> Stopped;
 
-		public event ECSTick Tick;
+		public event LifecycleTick Tick;
 
 		public event Action<Exception> Exception;
 
@@ -91,7 +94,13 @@ namespace Engine.Lifecycle
 				_runner = new ECSRunner<TECS, TConfiguration>(ECSRoot.Configuration.LifeCycleConfiguration.TickInterval, Sequencer, ECSRoot.ECS, ECSRoot.Configuration);
 				_runner.Tick += OnTick;
 				_runner.Exception += RunnerOnException;
+				_runner.Complete += RunnerOnComplete;
 			}
+		}
+
+		private void RunnerOnComplete()
+		{
+			StopInternal(ExitCode.Complete);
 		}
 
 		private void RunnerOnException(Exception exception)
@@ -141,7 +150,7 @@ namespace Engine.Lifecycle
 					return false;
 			}
 		}
-		private void StopInternal(ExitCode exitCode = ExitCode.Success)
+		private void StopInternal(ExitCode exitCode = ExitCode.Abort)
 		{
 			_runner?.Stop();
 			SetState(EngineState.Stopped);
@@ -180,9 +189,9 @@ namespace Engine.Lifecycle
 			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
 			uint crc;
 			ECSRoot.GetEntityState(out crc);
-			tick.Crc32 = crc;
+			//System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
 
-			Tick?.Invoke(tick);
+			Tick?.Invoke(tick, crc);
 		}
 
 		public void Dispose()
@@ -200,7 +209,7 @@ namespace Engine.Lifecycle
 
 		public void EnqueueCommand(ICommand command)
 		{
-			_runner?.EnqueueCommand(command);
+			ECSRoot.ECS.EnqueueCommand(command);
 		}
 	}
 }

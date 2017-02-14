@@ -3,9 +3,8 @@
 	public enum ExitCode
 	{
 		Undefined = 0,
-		Success,
-		Failure,
-
+		Complete,
+		Abort,
 		Error,
 	}
 }

@@ -25,6 +25,8 @@ namespace Engine.Serialization
 			_configSerializer = JsonSerializer.CreateDefault(configurationSerializerSettings);
 		}
 
+		#region config serializer
+
 		public static string SerializeConfiguration(ECSConfiguration configuration)
 		{
 			return SerializeObjectInternal(configuration, configuration.GetType(), _configSerializer);
@@ -36,6 +38,10 @@ namespace Engine.Serialization
 			return DeserializeObject<TConfiguration>(json, _configSerializer);
 		}
 
+		#endregion
+
+		#region scenario
+		
 		public static string SerializeScenario<TScenario>(TScenario scenario)
 		{
 			return SerializeObjectInternal(scenario, scenario.GetType(), _configSerializer);
@@ -47,5 +53,21 @@ namespace Engine.Serialization
 			return DeserializeObject<TScenario>(json, _configSerializer);
 		}
 
+		#endregion
+
+		#region general purpose
+
+		public static string Serialize(object obj)
+		{
+			return SerializeObjectInternal(obj, obj.GetType(), _configSerializer);
+		}
+
+		public static T Deserialize<T>(string json)
+			where T : class
+		{
+			return DeserializeObject<T>(json, _configSerializer);
+		}
+
+		#endregion
 	}
 }

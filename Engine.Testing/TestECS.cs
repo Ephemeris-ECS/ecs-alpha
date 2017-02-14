@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Engine.Commands;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
@@ -14,12 +15,14 @@ namespace Engine.Testing
 			IEntityRegistry entityRegistry, 
 			IMatcherProvider matcherProvider, 
 			ISystemRegistry systemRegistry,
-			EntityFactoryProvider entityFactoryProvider)
+			EntityFactoryProvider entityFactoryProvider,
+			CommandQueue commandQueue)
 			: base(configuration, 
 				entityRegistry, 
 				matcherProvider, 
 				systemRegistry,
-				entityFactoryProvider)
+				entityFactoryProvider,
+				commandQueue)
 		{
 		}
 

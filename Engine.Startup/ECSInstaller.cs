@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Engine.Archetypes;
+using Engine.Commands;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
@@ -49,12 +50,15 @@ namespace Engine.Startup
 				.To<SystemRegistry>()
 				.AsSingle();
 
+
 			Container.Bind<IEntityFactoryProvider>().To<EntityFactoryProvider>().AsSingle();
 			
 			foreach (var systemConfiguration in Configuration.Systems)
 			{
 				InstallSystemBinding(systemConfiguration);
 			}
+
+			Container.Bind<CommandQueue>().AsSingle();
 
 			foreach (var archetypeConfiguration in Configuration.Archetypes)
 			{

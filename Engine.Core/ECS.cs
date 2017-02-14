@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Engine.Archetypes;
+using Engine.Commands;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
+using Engine.Lifecycle;
 using Engine.Systems;
 using Zenject;
 
@@ -45,11 +47,14 @@ namespace Engine
 
 		protected IEntityFactoryProvider EntityFactoryProvider { get; }
 
+		protected CommandQueue CommandQueue { get; }
+
 		protected ECS(TConfiguration configuration,
 			IEntityRegistry entityRegistry,
 			IMatcherProvider matcherProvider,
 			ISystemRegistry systemRegistry,
-			IEntityFactoryProvider entityFactoryProvider)
+			IEntityFactoryProvider entityFactoryProvider,
+			CommandQueue commandQueue)
 		{
 			Configuration = configuration;
 			EntityRegistry = entityRegistry;
@@ -57,6 +62,7 @@ namespace Engine
 			SystemRegistry = systemRegistry;
 			// signal the component registry that a new entity has been populated
 			EntityFactoryProvider = entityFactoryProvider;
+			CommandQueue = commandQueue;
 		}
 
 		/// <summary>
@@ -87,6 +93,12 @@ namespace Engine
 			return EntityFactoryProvider.TryCreateEntityFromArchetype(archetype, out entity);
 		}
 
+		// TODO: I dont think this should be a permanent member of the ECS class as it forces you into using the command system and a specific tick behaviour
+		public void EnqueueCommand(ICommand command)
+		{
+			CommandQueue.EnqueueCommand(command);
+		}
+
 		#endregion
 
 		public void Dispose()
@@ -97,9 +109,16 @@ namespace Engine
 			}
 		}
 
-		public void Tick()
+		public Tick Tick()
 		{
+			var commands = CommandQueue.Flush();
 			SystemRegistry.Tick(++_currentTick);
+
+			return new Tick()
+			{
+				CommandQueue = commands,
+				CurrentTick = _currentTick
+			};
 		}
 
 	}

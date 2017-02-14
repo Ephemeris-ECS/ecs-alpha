@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using Engine.Commands;
@@ -12,6 +11,7 @@ namespace Engine.Lifecycle
 {
 	public delegate void ECSTick(Tick tick);
 
+
 	// TODO: there should be a more configuration based approach to what happens in the loop
 	// we may not want to process commands, serialize, sequence etc and these should be enabled in an extensible manner
 
@@ -22,6 +22,9 @@ namespace Engine.Lifecycle
 		public event ECSTick Tick;
 
 		public event Action<Exception> Exception;
+
+		public event Action Complete;
+
 
 		private readonly int _tickInterval;
 
@@ -35,9 +38,7 @@ namespace Engine.Lifecycle
 
 		private Thread _ecsLoopThread;
 
-		private Queue<ICommand> _commandQueue;
-
-		private readonly object _commandQueueLock = new	object();
+		private bool _disposed;
 
 		#region constructors
 
@@ -48,7 +49,6 @@ namespace Engine.Lifecycle
 			_ecs = ecs;
 			_configuration = configuration;
 			// TODO: determine initial command queue size based on something other than guesswork
-			_commandQueue = new Queue<ICommand>(100);
 		}
 
 		#endregion
@@ -70,7 +70,10 @@ namespace Engine.Lifecycle
 		public void Stop()
 		{
 			_abortSignal.Set();
-			_ecsLoopThread.Join(10000);
+			if (Thread.CurrentThread != _ecsLoopThread)
+			{
+				_ecsLoopThread.Join(10000);
+			}
 		}
 
 		#endregion
@@ -85,6 +88,7 @@ namespace Engine.Lifecycle
 					if (_sequencer?.IsComplete ?? false)
 					{
 						Stop();
+						OnComplete();
 					}
 					else
 					{
@@ -92,37 +96,9 @@ namespace Engine.Lifecycle
 						// ecs tick first necessitates startup actions in the sequence as the first frame OnEnter wont happen until adter the tick has completed
 						_sequencer?.Tick(_ecs, _configuration);
 
-						#region command handling
-						// TODO: this probably shouldbnt be here
+						var tick = _ecs.Tick();
+						OnTick(tick);
 
-						ICommandSystem commandSystem;
-						if (_ecs.TryGetSystem(out commandSystem) == false)
-						{
-							throw new LifecycleException($"Could not locate command processing system");
-						}
-						var commandQueue = new List<ICommand>();
-
-						foreach (var command in DequeueCommands())
-						{
-							if (commandSystem.TryHandleCommand(command))
-							{
-								commandQueue.Add(command);
-							}
-							// TODO: log failed command, but dont exception
-							//throw new SimulationException($"Unhandled Simulation Command: ${message}");
-						}
-						// TODO: infer player entity id from photon player, rather than command parameter
-
-						#endregion
-
-						_ecs.Tick();
-
-						OnTick(new Tick()
-						{
-							CurrentTick = _ecs.CurrentTick,
-							CommandQueue = commandQueue.ToArray(),
-
-						});
 						WaitHandle.WaitAny(new WaitHandle[] {_continueSignal, _abortSignal});
 					}
 				}
@@ -141,28 +117,6 @@ namespace Engine.Lifecycle
 			}
 		}
 
-		#region command queue
-
-		public void EnqueueCommand(ICommand command)
-		{
-			lock (_commandQueueLock)
-			{
-				_commandQueue.Enqueue(command);
-			}
-		}
-
-		private ICommand[] DequeueCommands()
-		{
-			lock (_commandQueueLock)
-			{
-				var commands = new ICommand[_commandQueue.Count];
-				_commandQueue.CopyTo(commands, 0);
-				_commandQueue.Clear();
-				return commands;
-			}
-		}
-
-		#endregion
 
 		protected virtual void OnTick(Tick tick)
 		{
@@ -172,14 +126,23 @@ namespace Engine.Lifecycle
 
 		public void Dispose()
 		{
-			Stop();
-			((IDisposable) _abortSignal)?.Dispose();
-			((IDisposable) _continueSignal)?.Dispose();
+			if (_disposed == false)
+			{
+				_disposed = true;
+				Stop();
+				((IDisposable) _abortSignal)?.Dispose();
+				((IDisposable) _continueSignal)?.Dispose();
+			}
 		}
 
 		protected virtual void OnException(Exception obj)
 		{
 			Exception?.Invoke(obj);
+		}
+
+		protected virtual void OnComplete()
+		{
+			Complete?.Invoke();
 		}
 	}
 }

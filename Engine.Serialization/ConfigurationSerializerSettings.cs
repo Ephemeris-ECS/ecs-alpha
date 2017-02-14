@@ -22,8 +22,9 @@ namespace Engine.Serialization
 			DefaultValueHandling = DefaultValueHandling.Include;
 			NullValueHandling = NullValueHandling.Include;
 			Formatting = Formatting.None;
-			PreserveReferencesHandling = PreserveReferencesHandling.All;
-			ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+			// TODO: I enabled these without testing the consequences! they are probably useful for the scenarios but apparently not for the configuration
+			//PreserveReferencesHandling = PreserveReferencesHandling.All;
+			//ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
 		}
 	}
 }
