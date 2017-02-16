@@ -25,8 +25,6 @@ namespace Engine.Sequencing
 
 		public bool IsComplete { get; private set; }
 
-		public event Action Complete;
-
 		public Sequencer(Scenario<TECS, TConfiguration> scenario)
 		{
 			Assert.IsNotNull(scenario);
@@ -56,7 +54,8 @@ namespace Engine.Sequencing
 
 		protected virtual void OnComplete()
 		{
-			Complete?.Invoke();
+			IsComplete = true;
+
 		}
 	}
 }

@@ -12,14 +12,22 @@ namespace Engine.Evaluators
 			where TECS : class, IECS
 			where TConfiguration : ECSConfiguration
 		{
-			return new CompoundEvaluator<TECS, TConfiguration>(Operand.And, new [] { evaluator, and });
+			return new LogicalOperationEvaluator<TECS, TConfiguration>(Operation.And, evaluator, and);
 		}
 
 		public static IEvaluator<TECS, TConfiguration> Or<TECS, TConfiguration>(this IEvaluator<TECS, TConfiguration> evaluator, IEvaluator<TECS, TConfiguration> or)
 			where TECS : class, IECS
 			where TConfiguration : ECSConfiguration
 		{
-			return new CompoundEvaluator<TECS, TConfiguration>(Operand.Or, new[] { evaluator, or });
+			return new LogicalOperationEvaluator<TECS, TConfiguration>(Operation.Or, evaluator, or);
 		}
+		public static IEvaluator<TECS, TConfiguration> Not<TECS, TConfiguration>(IEvaluator<TECS, TConfiguration> evaluator)
+
+			where TECS : class, IECS
+			where TConfiguration : ECSConfiguration
+		{
+			return new LogicalOperationEvaluator<TECS, TConfiguration>(Operation.Not, evaluator);
+		}
+
 	}
 }
