@@ -119,7 +119,7 @@ namespace Engine.Startup
 		{
 			container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
 			container.BindInstance(archetypeConfiguration).AsSingle();
-			foreach (var componentBinding in archetypeConfiguration.Components)
+			foreach (var componentBinding in archetypeConfiguration.Components.Values)
 			{
 				container.Bind(componentBinding.ComponentType);
 			}
@@ -152,7 +152,11 @@ namespace Engine.Startup
 
 			container = container ?? new DiContainer();
 
+			// bind as super type
+			container.Bind<ECSConfiguration>().FromInstance(configuration);
+			// bind as sub type
 			container.BindInstance(configuration);
+
 			Install(container);
 
 			return container.Instantiate<TECSRoot>();

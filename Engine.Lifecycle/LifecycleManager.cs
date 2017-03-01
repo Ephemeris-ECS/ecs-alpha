@@ -51,6 +51,8 @@ namespace Engine.Lifecycle
 			where TLifecycleManager : LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot>
 			where TScenario : Scenario<TECS, TConfiguration>
 		{
+			//TODO: too much of this method body is duplicated in the overload
+
 			var container = new DiContainer();
 
 			var sequencer = new Sequencer<TECS, TConfiguration>(scenario);
@@ -59,6 +61,7 @@ namespace Engine.Lifecycle
 			container.Bind<ILifecycleManager>().To<TLifecycleManager>().AsSingle();
 			var lifecycleManager = container.Instantiate<TLifecycleManager>();
 
+			container.Bind<ECSConfiguration>().FromInstance(scenario.Configuration);
 			container.BindInstance(scenario.Configuration);
 			container.Instantiate<TInstaller>().InstallBindings();
 			var ecsRoot = container.Instantiate<TECSRoot>();
@@ -76,6 +79,7 @@ namespace Engine.Lifecycle
 			container.Bind<ILifecycleManager>().To<TLifecycleManager>().AsSingle();
 			var lifecycleManager = container.Instantiate<TLifecycleManager>();
 
+			container.Bind<ECSConfiguration>().FromInstance(configuration);
 			container.BindInstance(configuration);
 			container.Instantiate<TInstaller>().InstallBindings();
 			var ecsRoot = container.Instantiate<TECSRoot>();

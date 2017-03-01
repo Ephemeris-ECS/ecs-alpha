@@ -15,6 +15,9 @@ namespace Engine.Configuration
 
 		public LifeCycleConfiguration LifeCycleConfiguration { get; set; }
 
+		// ReSharper disable once InconsistentNaming
+		public int RNGSeed { get; set; }
+
 		public ECSConfiguration(List<Archetype> archetypes,
 			List<SystemConfiguration> systems,
 			LifeCycleConfiguration lifeCycleConfiguration)

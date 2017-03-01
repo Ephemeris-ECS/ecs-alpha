@@ -12,14 +12,14 @@ namespace Engine.Archetypes
 
 		public string Name { get; }
 
-		public List<ComponentBinding> Components { get; }
+		public Dictionary<Type, ComponentBinding> Components { get; }
 
 		#region Constrcutors
 
 		public Archetype(string name)
 		{
 			Name = name;
-			Components = new List<ComponentBinding>();
+			Components = new Dictionary<Type, ComponentBinding>();
 		}
 
 		#endregion
@@ -32,20 +32,23 @@ namespace Engine.Archetypes
 	{
 		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding)
 		{
-			archetype.Components.Add(componentBinding);
+			archetype.Components[componentBinding.GetType()] = componentBinding;
 			return archetype;
 		}
 
 		public static Archetype HasComponents(this Archetype archetype, IEnumerable<ComponentBinding> componentBindings)
 		{
-			archetype.Components.AddRange(componentBindings);
+			foreach (var componentBinding in componentBindings)
+			{
+				archetype.HasComponent(componentBinding);
+			}
 			return archetype;
 		}
 
 		// TODO: make this return the new archetpye object and copy props from parent
 		public static Archetype Extends(this Archetype archetype, Archetype otherArchetype)
 		{
-			return archetype.HasComponents(otherArchetype.Components);
+			return archetype.HasComponents(otherArchetype.Components.Values);
 		}
 	}
 }

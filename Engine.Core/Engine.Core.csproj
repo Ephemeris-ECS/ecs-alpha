@@ -118,6 +118,7 @@
     <Compile Include="Systems\ISystem.cs" />
     <Compile Include="Systems\ISystemExtension.cs" />
     <Compile Include="Systems\ISystemRegistry.cs" />
+    <Compile Include="Systems\RNGSystem.cs" />
     <Compile Include="Systems\SystemRegistry.cs" />
     <Compile Include="Util\AttributeHelper.cs" />
     <Compile Include="Util\DefaultValueHelper.cs" />

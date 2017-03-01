@@ -22,7 +22,7 @@ namespace Engine.Testing.Components
 				{
 					Components =
 					{
-						new ComponentBinding<TComponent>(),
+						{  typeof(ComponentBinding<TComponent>), new ComponentBinding<TComponent>() },
 					}
 				},
 			};

@@ -23,14 +23,14 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentA>(),
+						{ typeof(ComponentBinding<TestComponentA>), new ComponentBinding<TestComponentA>() },
 					}
 				},
 				new Archetype("TestB")
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentB>(),
+						{ typeof(ComponentBinding<TestComponentB>),  new ComponentBinding<TestComponentB>() },
 					}
 				},
 			};
@@ -62,9 +62,12 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentA>()
 						{
-							ComponentTemplateSerialized = "{ \"StringValuePublic\": \"Woo\", \"_stringValuePrivate\": \"yay\", \"IntValuePublic\": \"1\", \"_intValuePrivate\": \"2\" }"
+							typeof(ComponentBinding<TestComponentA>),
+							new ComponentBinding<TestComponentA>()
+							{
+								ComponentTemplateSerialized = "{ \"StringValuePublic\": \"Woo\", \"_stringValuePrivate\": \"yay\", \"IntValuePublic\": \"1\", \"_intValuePrivate\": \"2\" }"
+							}
 						},
 					}
 				},
@@ -72,9 +75,12 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentB>()
 						{
-							ComponentTemplateSerialized = "{ \"IntDictionaryValuePublic\": { \"1\": \"1\", \"2\": \"2\" } }"
+							typeof(ComponentBinding<TestComponentB>),
+							new ComponentBinding<TestComponentB>()
+							{
+								ComponentTemplateSerialized = "{ \"IntDictionaryValuePublic\": { \"1\": \"1\", \"2\": \"2\" } }"
+							}
 						},
 					}
 				},
@@ -116,12 +122,15 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentA>()
 						{
-							ComponentTemplate = new TestComponentA()
+							typeof(ComponentBinding<TestComponentA>),
+							new ComponentBinding<TestComponentA>()
 							{
-								StringValuePublic = "Woo",
-								IntValuePublic = 1,
+								ComponentTemplate = new TestComponentA()
+								{
+									StringValuePublic = "Woo",
+									IntValuePublic = 1,
+								}
 							}
 						},
 					}
@@ -130,14 +139,17 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentB>()
 						{
-							ComponentTemplate = new TestComponentB()
+							typeof(ComponentBinding<TestComponentB>),
+							new ComponentBinding<TestComponentB>()
 							{
-								IntDictionaryValuePublic = new Dictionary<int, int>()
+								ComponentTemplate = new TestComponentB()
 								{
-									{ 1, 1 },
-									{ 2, 2 }
+									IntDictionaryValuePublic = new Dictionary<int, int>()
+									{
+										{ 1, 1 },
+										{ 2, 2 }
+									}
 								}
 							}
 						},
@@ -179,9 +191,12 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentA>()
 						{
-							ComponentTemplateSerialized = "{ \"StringValuePublic\": \"Woo\", \"_stringValuePrivate\": \"yay\", \"IntValuePublic\": \"1\", \"_intValuePrivate\": \"2\" }"
+							typeof(ComponentBinding<TestComponentA>),
+							new ComponentBinding<TestComponentA>()
+							{
+								ComponentTemplateSerialized = "{ \"StringValuePublic\": \"Woo\", \"_stringValuePrivate\": \"yay\", \"IntValuePublic\": \"1\", \"_intValuePrivate\": \"2\" }"
+							}
 						},
 					}
 				},
@@ -189,9 +204,12 @@ namespace Engine.Core.Tests
 				{
 					Components =
 					{
-						new ComponentBinding<TestComponentB>()
 						{
-							ComponentTemplateSerialized = "{ \"IntDictionaryValuePublic\": { \"1\": \"1\", \"2\": \"2\" } }"
+							typeof(ComponentBinding<TestComponentB>),
+							new ComponentBinding<TestComponentB>()
+							{
+								ComponentTemplateSerialized = "{ \"IntDictionaryValuePublic\": { \"1\": \"1\", \"2\": \"2\" } }"
+							}
 						},
 					}
 				},

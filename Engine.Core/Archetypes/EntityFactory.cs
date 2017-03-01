@@ -34,7 +34,7 @@ namespace Engine.Archetypes
 
 		private void InitialiseTemplates()
 		{
-			foreach (var componentBinding in Archetype.Components)
+			foreach (var componentBinding in Archetype.Components.Values)
 			{
 				try
 				{
@@ -54,7 +54,7 @@ namespace Engine.Archetypes
 			{
 				entity = _entityRegistry.CreateEntity();
 
-				foreach (var componentBinding in Archetype.Components)
+				foreach (var componentBinding in Archetype.Components.Values)
 				{
 					try
 					{
