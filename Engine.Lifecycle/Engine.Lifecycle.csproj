@@ -45,15 +45,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\TickCommand.cs" />
     <Compile Include="ECSRunner.cs" />
     <Compile Include="EngineState.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="LifecycleException.cs" />
     <Compile Include="LifecycleManager.cs" />
-    <Compile Include="Commands\PauseCommand.cs" />
-    <Compile Include="Commands\StartCommand.cs" />
-    <Compile Include="Commands\StopCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

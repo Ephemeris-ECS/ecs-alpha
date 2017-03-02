@@ -9,6 +9,37 @@ namespace Engine.Commands
 	public class EndGameCommand : ICommand
 	{
 		public EndGameState EndGameState { get; set; }
+
+		#region Equality members
+
+		protected bool Equals(EndGameCommand other)
+		{
+			return EndGameState == other.EndGameState;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((EndGameCommand) obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return (int) EndGameState;
+		}
+
+		#region Implementation of IEquatable<ICommand>
+
+		public bool Equals(ICommand other)
+		{
+			return Equals(other as EndGameCommand);
+		}
+
+		#endregion
+
+		#endregion
 	}
 
 	public class EndGameCommandHandler : CommandHandler<EndGameCommand>
