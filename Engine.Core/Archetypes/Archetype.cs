@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Engine.Components;
+using Engine.Exceptions;
 
 namespace Engine.Archetypes
 {
@@ -30,9 +31,23 @@ namespace Engine.Archetypes
 	/// </summary>
 	public static class ArchetypeExtensions
 	{
-		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding)
+		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding, bool overwrite = true)
 		{
-			archetype.Components[componentBinding.GetType()] = componentBinding;
+			if (overwrite)
+			{
+				archetype.Components[componentBinding.GetType()] = componentBinding;
+			}
+			else
+			{
+				try
+				{
+					archetype.Components.Add(componentBinding.GetType(), componentBinding);
+				}
+				catch (InvalidOperationException ioex)
+				{
+					throw new ConfigurationException($"Archetype '{archetype.Name}' already ahs component binding for type {componentBinding.GetType()}", ioex);
+				}
+			}
 			return archetype;
 		}
 
