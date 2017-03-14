@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Engine.Commands;
 using Engine.Configuration;
 using Engine.Sequencing;
 using Engine.Startup;
-using Engine.Systems;
 using Zenject;
-// ReSharper disable InconsistentNaming
+
 
 namespace Engine.Lifecycle
 {
 	public delegate void LifecycleTick(Tick tick, uint crc);
-
-
+	
+	// ReSharper disable InconsistentNaming
 	// TODO: this class is a good candidate for merging with ECS runner because there are so many methods on there that do nothing but proxy to the runner
 	public abstract class LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot> : ILifecycleManager, IDisposable
 		where TECS : ECS<TConfiguration>
@@ -22,7 +22,7 @@ namespace Engine.Lifecycle
 		where TInstaller : ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot>
 		where TECSRoot : ECSRoot<TECS, TConfiguration>
 	{
-		public EngineState EngineState { get; protected set; }
+		#region events
 
 		public event Action<EngineState> StateChanged;
 
@@ -31,18 +31,32 @@ namespace Engine.Lifecycle
 		public event LifecycleTick Tick;
 
 		public event Action<Exception> Exception;
+		
+		//private event ECSTick ECSTick;
+		
+		#endregion
+		public EngineState EngineState { get; protected set; }
 
 		public TECSRoot ECSRoot { get; private set; }
 
-		protected Sequencer<TECS, TConfiguration> Sequencer { get; set; }
+		private readonly Sequencer<TECS, TConfiguration> _sequencer;
 
-		private ECSRunner<TECS, TConfiguration> _runner;
+		private bool _disposed;
 
-		private bool _disposed = false;
+		#region thread members
+		
+		
+		private readonly ManualResetEvent _abortSignal = new ManualResetEvent(false);
+		private readonly AutoResetEvent _continueSignal = new AutoResetEvent(false);
+
+		private Thread _ecsLoopThread;
+
+
+		#endregion
 
 		protected LifecycleManager([InjectOptional] Sequencer<TECS, TConfiguration> sequencer)
 		{
-			Sequencer = sequencer;
+			_sequencer = sequencer;
 		}
 
 		#region static initializers
@@ -64,8 +78,8 @@ namespace Engine.Lifecycle
 			container.Bind<ECSConfiguration>().FromInstance(scenario.Configuration);
 			container.BindInstance(scenario.Configuration);
 			container.Instantiate<TInstaller>().InstallBindings();
-			var ecsRoot = container.Instantiate<TECSRoot>();
 
+			var ecsRoot = container.Instantiate<TECSRoot>();
 			lifecycleManager.ECSRoot = ecsRoot;
 
 			return lifecycleManager;
@@ -91,27 +105,94 @@ namespace Engine.Lifecycle
 
 		#endregion
 
-		private void InitializeRunner()
+		public void EnqueueCommand(ICommand command)
 		{
-			if (_runner == null)
+			ECSRoot.ECS.EnqueueCommand(command);
+		}
+
+
+		#region thread management
+
+		public void StartThread()
+		{
+			if (_ecsLoopThread == null)
 			{
-				_runner = new ECSRunner<TECS, TConfiguration>(ECSRoot.Configuration.LifeCycleConfiguration.TickInterval, Sequencer, ECSRoot.ECS, ECSRoot.Configuration);
-				_runner.Tick += OnTick;
-				_runner.Exception += RunnerOnException;
-				_runner.Complete += RunnerOnComplete;
+				_ecsLoopThread = new Thread(ECSLoop)
+				{
+					IsBackground = true,
+				};
+				_ecsLoopThread.Start();
 			}
 		}
 
-		private void RunnerOnComplete()
+		public void StopThread()
+		{
+			_abortSignal.Set();
+			if (Thread.CurrentThread != _ecsLoopThread)
+			{
+				_ecsLoopThread.Join(10000);
+			}
+		}
+
+		private void ECSLoop(object state)
+		{
+			while (true)
+			{
+				var lastLoop = DateTime.Now;
+				try
+				{
+					if (_sequencer?.IsComplete ?? false)
+					{
+						StopThread();
+						OnSequenceComplete();
+					}
+					else
+					{
+						// TODO: decide whether the sequence tick or the ecs tick comes first
+						// ecs tick first necessitates startup actions in the sequence as the first frame OnEnter wont happen until adter the tick has completed
+						_sequencer?.Tick(ECSRoot.ECS, ECSRoot.Configuration);
+
+						var tick = ECSRoot.ECS.Tick();
+						OnTick(tick);
+
+						WaitHandle.WaitAny(new WaitHandle[] { _continueSignal, _abortSignal });
+					}
+				}
+				catch (Exception ex)
+				{
+					// throw new LifecycleException("Error in ECS runner loop", ex);
+					_abortSignal.Set();
+					OnException(ex);
+					break;
+				}
+				var sleep = Math.Max(0, ECSRoot.Configuration.LifeCycleConfiguration.TickInterval - (int)DateTime.Now.Subtract(lastLoop).TotalMilliseconds);
+				if (_abortSignal.WaitOne(sleep))
+				{
+					break;
+				}
+			}
+		}
+
+		protected virtual void OnTick(Tick tick)
+		{
+			_continueSignal.Set();
+
+			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
+			uint crc;
+			ECSRoot.GetEntityState(out crc);
+			//System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
+
+			Tick?.Invoke(tick, crc);
+		}
+
+		protected virtual void OnSequenceComplete()
 		{
 			StopInternal(ExitCode.Complete);
 		}
 
-		private void RunnerOnException(Exception exception)
-		{
-			StopInternal(ExitCode.Error);
-			OnException(exception);
-		}
+		#endregion
+
+		#region external management
 
 		private void SetState(EngineState state)
 		{
@@ -137,8 +218,8 @@ namespace Engine.Lifecycle
 
 		private void Start()
 		{
-			InitializeRunner();
-			_runner.Start();
+			// TODO: verify not already running
+			StartThread();
 			SetState(EngineState.Started);
 		}
 
@@ -156,7 +237,7 @@ namespace Engine.Lifecycle
 		}
 		private void StopInternal(ExitCode exitCode = ExitCode.Abort)
 		{
-			_runner?.Stop();
+			StopThread();
 			SetState(EngineState.Stopped);
 			OnStopped(exitCode);
 		}
@@ -183,37 +264,34 @@ namespace Engine.Lifecycle
 			Stopped?.Invoke(obj);
 		}
 
+		#endregion
+
+		#region public event invocation
+
 		protected virtual void OnStateChanged()
 		{
 			StateChanged?.Invoke(EngineState);
 		}
 
-		protected virtual void OnTick(Tick tick)
-		{
-			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
-			uint crc;
-			ECSRoot.GetEntityState(out crc);
-			//System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
-
-			Tick?.Invoke(tick, crc);
-		}
-
-		public void Dispose()
-		{
-			if (!_disposed)
-			{
-				_runner?.Dispose();
-			}
-		}
 
 		protected virtual void OnException(Exception obj)
 		{
+			StopInternal(ExitCode.Error);
+
 			Exception?.Invoke(obj);
 		}
 
-		public void EnqueueCommand(ICommand command)
+		#endregion
+
+		public void Dispose()
 		{
-			ECSRoot.ECS.EnqueueCommand(command);
+			if (_disposed == false)
+			{
+				_disposed = true;
+				StopThread();
+				((IDisposable)_abortSignal)?.Dispose();
+				((IDisposable)_continueSignal)?.Dispose();
+			}
 		}
 	}
 }

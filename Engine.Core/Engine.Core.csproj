@@ -46,8 +46,11 @@
     <Compile Include="Archetypes\ComponentBinding.cs" />
     <Compile Include="Archetypes\EntityFactoryException.cs" />
     <Compile Include="Commands\CommandCapability.cs" />
+    <Compile Include="Commands\CommandEqualityComparer.cs" />
     <Compile Include="Commands\CommandHandler.cs" />
     <Compile Include="Commands\CommandQueue.cs" />
+    <Compile Include="Commands\DeduplicateAttribute.cs" />
+    <Compile Include="Commands\DeduplicationPolicy.cs" />
     <Compile Include="Commands\EndGameCommand.cs" />
     <Compile Include="Commands\HaltAndCatchFireCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="Util\ModuleLoader.cs" />
     <Compile Include="Util\NotNullHelper.cs" />
     <Compile Include="Util\RangeHelper.cs" />
+    <Compile Include="Util\MutableQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messaging\" />

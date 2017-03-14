@@ -34,7 +34,7 @@ namespace Engine.Commands
 			return false;
 		}
 
-		private bool TryGetHandler(Type commandType, out ICommandHandler commandHandler)
+		public bool TryGetHandler(Type commandType, out ICommandHandler commandHandler)
 		{
 			return _commandHandlers.TryGetValue(commandType, out commandHandler);
 		}
@@ -47,9 +47,8 @@ namespace Engine.Commands
 
 		private bool TryGetCapabiliity(Type commandType, out ICommandHandler commandHandler)
 		{
-			ICommandCapability[] capabilities;
 			return TryGetHandler(commandType, out commandHandler)
-				&& (_commandCapabilities.TryGetValue(commandType, out capabilities) == false || capabilities.All(cc => cc.Evalutate()));
+				&& (_commandCapabilities.TryGetValue(commandType, out var capabilities) == false || capabilities.All(cc => cc.Evalutate()));
 
 		}
 

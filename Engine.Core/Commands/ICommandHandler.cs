@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Engine.Systems;
 
 namespace Engine.Commands
@@ -12,5 +13,7 @@ namespace Engine.Commands
 		bool Enabled { get; }
 
 		void SetEnabled(bool enabled);
+
+		IEqualityComparer<ICommand> Deduplicator { get; }
 	}
 }

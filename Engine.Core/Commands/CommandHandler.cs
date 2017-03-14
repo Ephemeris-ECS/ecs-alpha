@@ -25,5 +25,11 @@ namespace Engine.Commands
 		{
 			Enabled = enabled;
 		}
+
+		#region Implementation of ICommandHandler
+
+		public virtual IEqualityComparer<ICommand> Deduplicator => CommandEqualityComparer.Default;
+
+		#endregion
 	}
 }
