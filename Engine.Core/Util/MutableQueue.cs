@@ -231,7 +231,7 @@ namespace Engine.Util
 			return IndexOf(_array, item, _head, _array.Length - _head, comparer) >= 0 || IndexOf(_array, item, 0, _tail, comparer) >= 0;
 		}
 
-		public bool TryGetItem(T item, ref T match, IEqualityComparer<T> comparer)
+		public bool TryGetItem(T item, out T match, IEqualityComparer<T> comparer)
 		{
 			var index = IndexOf(_array, item, _head, _array.Length - _head, comparer);
 			index = index >= 0 ? index : IndexOf(_array, item, 0, _tail, comparer);
@@ -241,9 +241,23 @@ namespace Engine.Util
 				match = _array[index];
 				return true;
 			}
+			match = default(T);
 			return false;
 		}
 
+		public bool TryReplaceItem(T item, IEqualityComparer<T> comparer)
+		{
+			var index = IndexOf(_array, item, _head, _array.Length - _head, comparer);
+			index = index >= 0 ? index : IndexOf(_array, item, 0, _tail, comparer);
+
+			if (index >= 0)
+			{
+				_array[index] = item;
+				return true;
+			}
+			return false;
+		}
+		
 		// Returns the index of the first occurrence of a given value in a range of
 		// an array. The array is searched forwards, starting at index
 		// startIndex and upto count elements. The

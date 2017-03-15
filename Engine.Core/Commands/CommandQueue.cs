@@ -66,20 +66,23 @@ namespace Engine.Commands
 
 			lock (_commandQueueLock)
 			{
-				ICommand match = null;
-				if (_commandQueue.TryGetItem(command, ref match, comparer))
+				switch (policy)
 				{
-					switch (policy)
-					{
-						case DeduplicationPolicy.Discard:
-							break;
-						case DeduplicationPolicy.Replace:
-							match = command;
-							break;
-						default:
+					case DeduplicationPolicy.Discard:
+						if (_commandQueue.TryGetItem(command, out var match, comparer) == false)
+						{
 							_commandQueue.Enqueue(command);
-							break;
-					}
+						}
+						break;
+					case DeduplicationPolicy.Replace:
+						if (_commandQueue.TryReplaceItem(command, comparer) == false)
+						{
+							_commandQueue.Enqueue(command);
+						}
+						break;
+					default:
+						_commandQueue.Enqueue(command);
+						break;
 				}
 			}
 		}
