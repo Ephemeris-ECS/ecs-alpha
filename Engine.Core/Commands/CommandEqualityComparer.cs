@@ -20,7 +20,12 @@ namespace Engine.Commands
 
 		public override bool Equals(ICommand x, ICommand y)
 		{
-			return IsDuplicate(x as TCommand, y as TCommand);
+			return Equals(x as TCommand, y as TCommand);
+		}
+
+		private bool Equals(TCommand x, TCommand y)
+		{
+			return x != null && y != null && IsDuplicate(x, y);
 		}
 
 		#endregion

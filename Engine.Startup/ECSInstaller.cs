@@ -76,11 +76,7 @@ namespace Engine.Startup
 
 		public void InstallSystemBinding(SystemConfiguration systemConfiguration)
 		{
-			Container.Bind(systemConfiguration.Type).AsSingle();
-			Container.BindAllInterfaces(systemConfiguration.Type).To(systemConfiguration.Type)
-				//.FromSubContainerResolve().ByMethod(container => InstallSystem(container, systemConfiguration))
-				//// TODO: perhaps decide if it should be a singleton in configuration
-				.AsSingle();
+			Container.BindInterfacesAndSelfTo(systemConfiguration.Type).AsSingle();
 			InstallSystem(Container, systemConfiguration);
 		}
 
@@ -93,13 +89,13 @@ namespace Engine.Startup
 				{
 					if (extensionConfiguration.AllOfType)
 					{
-						container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type));
+						container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type)).AsTransient();
 					}
 					else
 					{
 						foreach (var extensionImplementation in extensionConfiguration.Implementations)
 						{
-							container.Bind(extensionConfiguration.Type).To(extensionImplementation.Type);
+							container.Bind(extensionConfiguration.Type).To(extensionImplementation.Type).AsTransient();
 						}
 					}
 				}
@@ -121,7 +117,7 @@ namespace Engine.Startup
 			container.BindInstance(archetypeConfiguration).AsSingle();
 			foreach (var componentBinding in archetypeConfiguration.Components.Values)
 			{
-				container.Bind(componentBinding.ComponentType);
+				container.Bind(componentBinding.ComponentType).AsTransient();
 			}
 		}
 	}
