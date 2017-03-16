@@ -44,13 +44,7 @@ namespace Engine.Commands
 				_deduplicationPolicies.Add(commandType, deduplicationPolicy);
 			}
 
-			switch (deduplicationPolicy)
-			{
-				case DeduplicationPolicy.Discard:
-				case DeduplicationPolicy.Replace:
-					Deduplicate(command, deduplicationPolicy);
-					break;
-			}
+			Deduplicate(command, deduplicationPolicy);
 		}
 
 		private void Deduplicate(ICommand command, DeduplicationPolicy policy)
