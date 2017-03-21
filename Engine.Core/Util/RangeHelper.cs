@@ -11,5 +11,10 @@ namespace Engine.Util
 		{
 			return Math.Max(min, Math.Min(value, max));
 		}
+
+		public static decimal AssignWithinBounds(decimal value, decimal min, decimal max)
+		{
+			return Math.Max(min, Math.Min(value, max));
+		}
 	}
 }
