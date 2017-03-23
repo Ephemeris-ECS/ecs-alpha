@@ -69,8 +69,7 @@ namespace Engine.Archetypes
 					}
 				}
 				_matcherProvider.UpdateMatchersForEntity(entity);
-
-
+				
 				return entity;
 			}
 			catch (Exception ex)

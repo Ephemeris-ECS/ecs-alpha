@@ -128,6 +128,7 @@
     <Compile Include="Util\DynamicMethodHelper.cs" />
     <Compile Include="Util\ModuleLoader.cs" />
     <Compile Include="Util\NotNullHelper.cs" />
+    <Compile Include="Util\Random.cs" />
     <Compile Include="Util\RangeHelper.cs" />
     <Compile Include="Util\MutableQueue.cs" />
   </ItemGroup>
