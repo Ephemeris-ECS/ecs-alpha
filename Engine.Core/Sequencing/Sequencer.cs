@@ -50,6 +50,10 @@ namespace Engine.Sequencing
 					OnComplete();
 				}
 			}
+			else
+			{
+				_currentFrame?.Tick(ecs, configuration);
+			}
 		}
 
 		protected virtual void OnComplete()

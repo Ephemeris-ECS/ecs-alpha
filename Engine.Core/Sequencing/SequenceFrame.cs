@@ -23,6 +23,11 @@ namespace Engine.Sequencing
 		public List<ECSAction<TECS, TConfiguration>> OnEnterActions { get; set; }
 
 		/// <summary>
+		/// Actions performed every time the frame is ticked
+		/// </summary>
+		public List<ECSAction<TECS, TConfiguration>> OnTickActions { get; set; }
+
+		/// <summary>
 		/// Actions performed when the frame is exited
 		/// </summary>
 		public List<ECSAction<TECS, TConfiguration>> OnExitActions { get; set; }
@@ -39,7 +44,7 @@ namespace Engine.Sequencing
 			{
 				try
 				{
-					action.Action(ecs, configuration);
+					action.Execute(ecs, configuration);
 				}
 				catch (Exception ex)
 				{
@@ -54,7 +59,6 @@ namespace Engine.Sequencing
 			{
 				ExecuteActions(OnEnterActions, ecs, configuration);
 			}
-			Evaluator?.Activate();
 		}
 
 		public void Exit(TECS ecs, TConfiguration configuration)
@@ -62,6 +66,14 @@ namespace Engine.Sequencing
 			if (OnExitActions != null)
 			{
 				ExecuteActions(OnExitActions, ecs, configuration);
+			}
+		}
+
+		public void Tick(TECS ecs, TConfiguration configuration)
+		{
+			if (OnTickActions != null)
+			{
+				ExecuteActions(OnTickActions, ecs, configuration);
 			}
 		}
 	}

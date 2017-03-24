@@ -15,6 +15,5 @@ namespace Engine.Evaluators
 	{
 		bool Evaluate(TECS ecs, TConfiguration configuration);
 
-		void Activate();
 	}
 }

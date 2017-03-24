@@ -180,7 +180,7 @@ namespace Engine.Lifecycle
 
 			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
 			uint crc = 0;
-			//var state = ECSRoot.GetEntityState(out crc);
+			var state = ECSRoot.GetEntityState(out crc);
 			//System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
 
 			Tick?.Invoke(tick, crc);

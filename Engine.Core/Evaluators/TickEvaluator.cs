@@ -15,14 +15,14 @@ namespace Engine.Evaluators
 
 		private int _value;
 
-		public void Activate()
-		{
-			_value = 0;
-		}
-
 		public bool Evaluate(TECS ecs, TConfiguration configuration)
 		{
-			return _value++ >= Threshold;
+			var success = _value++ >= Threshold;
+			if (success)
+			{
+				_value = 0;
+			}
+			return success;
 		}
 	}
 }

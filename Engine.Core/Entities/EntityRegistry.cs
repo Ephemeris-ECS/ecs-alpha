@@ -22,6 +22,8 @@ namespace Engine.Entities
 		private readonly object _entityPoolLock = new object();
 		private readonly object _entityLock = new object();
 
+		public event Action<int> EntityDestroyed;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -53,6 +55,7 @@ namespace Engine.Entities
 			{
 				Entities.Remove(entity.Id);
 				EntityPool.Enqueue(entity);
+				OnEntityDestroyed(entity.Id);
 			}
 		}
 
@@ -74,6 +77,11 @@ namespace Engine.Entities
 			var found = Entities.TryGetValue(id, out gameEntity);
 			entity = gameEntity;
 			return found;
+		}
+
+		protected virtual void OnEntityDestroyed(int entityId)
+		{
+			EntityDestroyed?.Invoke(entityId);
 		}
 	}
 }

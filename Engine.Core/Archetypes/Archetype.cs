@@ -65,5 +65,19 @@ namespace Engine.Archetypes
 		{
 			return archetype.HasComponents(otherArchetype.Components.Values);
 		}
+
+		public static Archetype RemoveComponent<TComponent>(this Archetype archetype)
+			where TComponent : IComponent
+		{
+			return archetype.RemoveComponent(typeof(TComponent));
+		}
+
+		public static Archetype RemoveComponent(this Archetype archetype, Type componentType)
+		{
+			archetype.Components.Remove(componentType);
+			return archetype;
+		}
+
 	}
+
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Engine.Entities
 {
@@ -9,5 +10,7 @@ namespace Engine.Entities
 
 		Entity CreateEntity();
 		bool TryGetEntityById(int id, out Entity entity);
+
+		event Action<int> EntityDestroyed;
 	}
 }

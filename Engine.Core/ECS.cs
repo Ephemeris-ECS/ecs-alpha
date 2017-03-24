@@ -30,7 +30,7 @@ namespace Engine
 		/// <summary>
 		/// This is where the entity pool lives and new entities are created
 		/// </summary>
-		protected IEntityRegistry EntityRegistry { get; private set; }
+		public IEntityRegistry EntityRegistry { get; private set; }
 
 		public EntityDictionary Entities => EntityRegistry.Entities;
 

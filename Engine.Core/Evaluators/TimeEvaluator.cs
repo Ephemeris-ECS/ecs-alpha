@@ -13,16 +13,21 @@ namespace Engine.Evaluators
 	{
 		public int Threshold { get; set; }
 
-		private DateTime _value;
-
-		public void Activate()
-		{
-			_value = DateTime.Now;
-		}
+		private DateTime _value = DateTime.MinValue;
 
 		public bool Evaluate(TECS ecs, TConfiguration configuration)
 		{
-			return DateTime.Now.Subtract(_value).TotalMilliseconds >= Threshold;
+			if (_value == DateTime.MinValue)
+			{
+				_value = DateTime.Now;
+			}
+
+			var success = DateTime.Now.Subtract(_value).TotalMilliseconds >= Threshold;
+			if (success)
+			{
+				_value = DateTime.MinValue;
+			}
+			return success;
 		}
 	}
 }
