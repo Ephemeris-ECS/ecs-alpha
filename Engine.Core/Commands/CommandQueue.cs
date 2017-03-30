@@ -27,11 +27,23 @@ namespace Engine.Commands
 			_deduplicationComparers = new Dictionary<Type, IEqualityComparer<ICommand>>();
 		}
 
-		public void EnqueueCommand(ICommand command)
+		/// <summary>
+		/// Enqueue a command for processing
+		/// </summary>
+		/// <param name="command">Command to enqueue</param>
+		/// <param name="preempt">Defaults to false. Skip deduplication and enqueue at the head of the queue. This is only intended for internal use.</param>
+		public void EnqueueCommand(ICommand command, bool preempt = false)
 		{
 			lock (_commandQueueLock)
 			{
-				Deduplicate(command);
+				if (preempt)
+				{
+					_commandQueue.Enqueue(command, true);
+				}
+				else
+				{
+					Deduplicate(command);
+				}
 			}
 		}
 

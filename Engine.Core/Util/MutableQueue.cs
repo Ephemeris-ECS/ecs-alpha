@@ -117,8 +117,13 @@ namespace Engine.Util
 			}
 		}
 
-		// Adds item to the tail of the queue.
-		public void Enqueue(T item)
+		/// <summary>
+		/// Adds item to the queue.
+		/// Default behaviour is to enqueue at the tail. 
+		/// </summary>
+		/// <param name="item"></param>
+		/// <param name="atHead">Enqueue the item at the head</param>
+		public void Enqueue(T item, bool atHead = false)
 		{
 			if (_size == _array.Length)
 			{
@@ -130,8 +135,16 @@ namespace Engine.Util
 				SetCapacity(newcapacity);
 			}
 
-			_array[_tail] = item;
-			MoveNext(ref _tail);
+			if (atHead)
+			{
+				MovePrev(ref _head);
+				_array[_head] = item;
+			}
+			else
+			{
+				_array[_tail] = item;
+				MoveNext(ref _tail);
+			}
 			_size++;
 			_version++;
 		}
@@ -357,6 +370,14 @@ namespace Engine.Util
 			// than a simple comparison and a rarely taken branch.   
 			int tmp = index + 1;
 			index = (tmp == _array.Length) ? 0 : tmp;
+		}
+
+		private void MovePrev(ref int index)
+		{
+			// It is tempting to use the remainder operator here but it is actually much slower 
+			// than a simple comparison and a rarely taken branch.   
+			int tmp = index - 1;
+			index = (tmp == -1) ? _array.Length - 1 : tmp;
 		}
 
 		private void ThrowForEmptyQueue()
