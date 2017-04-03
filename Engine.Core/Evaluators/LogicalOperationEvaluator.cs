@@ -20,8 +20,12 @@ namespace Engine.Evaluators
 			_evaluators = evaluators;
 		}
 
-		public void Activate()
+		public void Initialize(TECS ecs, TConfiguration configuration)
 		{
+			foreach (var evaluator in _evaluators)
+			{
+				evaluator.Initialize(ecs, configuration);
+			}
 		}
 
 		public bool Evaluate(TECS ecs, TConfiguration configuration)
@@ -37,5 +41,14 @@ namespace Engine.Evaluators
 			}
 			return false;
 		}
+
+		public void Dispose()
+		{
+			foreach (var evaluator in _evaluators)
+			{
+				evaluator.Dispose();
+			}
+		}
+
 	}
 }

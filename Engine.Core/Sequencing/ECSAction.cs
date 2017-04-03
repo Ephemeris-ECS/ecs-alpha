@@ -13,19 +13,25 @@ namespace Engine.Sequencing
 		where TECS : class, IECS
 		where TConfiguration : ECSConfiguration
 	{
-		public Action<TECS, TConfiguration> Action { get; private set; }
+		public Action<TECS, TConfiguration> Action { get; protected set; }
 
-		public string Name { get; private set; }
+		public string Name { get; protected set; }
 
 		[Inject]
 		public ECSAction()
 		{
+			Name = this.GetType().Name;
+		}
+
+		public ECSAction(string name)
+		{
+			Name = name;
 		}
 
 		public ECSAction(Action<TECS, TConfiguration> action, string name)
+			: this(name)
 		{
 			Action = action;
-			Name = name;
 		}
 
 		public virtual void Execute(TECS ecs, TConfiguration configuration)

@@ -24,5 +24,19 @@ namespace Engine.Evaluators
 			}
 			return success;
 		}
+
+		#region Implementation of IEvaluator<in TECS,in TConfiguration>
+
+		public void Initialize(TECS ecs, TConfiguration configuration)
+		{
+			// do nothing
+		}
+
+		public void Dispose()
+		{
+			// do nothing
+		}
+
+		#endregion
 	}
 }

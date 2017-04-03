@@ -21,14 +21,20 @@ namespace Engine.Evaluators
 		{
 			Evaluator = evaluator;
 		}
+		public void Initialize(TECS ecs, TConfiguration configuration)
+		{
+			
+		}
 
 		public bool Evaluate(TECS ecs, TConfiguration configuration)
 		{
 			return Evaluator(ecs, configuration);
 		}
 
-		public void Activate()
+		public void Dispose()
 		{
+			throw new NotImplementedException();
 		}
+
 	}
 }

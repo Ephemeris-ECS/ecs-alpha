@@ -55,6 +55,7 @@ namespace Engine.Sequencing
 
 		public void Enter(TECS ecs, TConfiguration configuration)
 		{
+			Evaluator.Initialize(ecs, configuration);
 			if (OnEnterActions != null)
 			{
 				ExecuteActions(OnEnterActions, ecs, configuration);
@@ -63,6 +64,7 @@ namespace Engine.Sequencing
 
 		public void Exit(TECS ecs, TConfiguration configuration)
 		{
+			Evaluator.Dispose();
 			if (OnExitActions != null)
 			{
 				ExecuteActions(OnExitActions, ecs, configuration);

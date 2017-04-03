@@ -1,10 +1,11 @@
 ﻿// ReSharper disable InconsistentNaming
 
+using System;
 using Engine.Configuration;
 
 namespace Engine.Evaluators
 {
-	public interface IEvaluator
+	public interface IEvaluator : IDisposable
 	{
 		
 	}
@@ -13,7 +14,7 @@ namespace Engine.Evaluators
 		where TECS : class, IECS
 		where TConfiguration : ECSConfiguration
 	{
+		void Initialize(TECS ecs, TConfiguration configuration);
 		bool Evaluate(TECS ecs, TConfiguration configuration);
-
 	}
 }

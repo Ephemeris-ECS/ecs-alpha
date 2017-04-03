@@ -8,8 +8,10 @@ using Engine.Exceptions;
 
 namespace Engine.Components
 {
-	public abstract class ComponentMatcher
+	public abstract class ComponentMatcher : IDisposable
 	{
+		public event Action Disposed;
+		
 		protected int[][] ComponentTypeIds { get; }
 
 		/// <summary>
@@ -45,5 +47,28 @@ namespace Engine.Components
 			// TODO: this can probably be much more efficient when being called by the generic subtypes
 			return ComponentTypeIds.All(type => type.Any(impl => entity.Components[impl] != null));
 		}
+
+		protected virtual void OnDisposed()
+		{
+			Disposed?.Invoke();
+		}
+
+		#region IDisposable
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				OnDisposed();
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		#endregion
 	}
 }

@@ -35,7 +35,7 @@ namespace Engine.Sequencing
 
 		public void Tick(TECS ecs, TConfiguration configuration)
 		{
-			if (_currentFrame == null && _frameIndex < _scenario.Sequence.Length)
+			if (_currentFrame == null && _frameIndex < _scenario.Sequence.Count)
 			{
 				_currentFrame = _scenario.Sequence[_frameIndex];
 				_currentFrame.Enter(ecs, configuration);
@@ -45,7 +45,7 @@ namespace Engine.Sequencing
 				_currentFrame.Exit(ecs, configuration);
 				_currentFrame = null;
 
-				if (++_frameIndex >= _scenario.Sequence.Length)
+				if (++_frameIndex >= _scenario.Sequence.Count)
 				{
 					OnComplete();
 				}

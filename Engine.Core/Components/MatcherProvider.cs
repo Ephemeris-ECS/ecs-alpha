@@ -62,13 +62,19 @@ namespace Engine.Components
 		/// TODO: support removing matchers and matchers that track component changes to living entities
 		/// </summary>
 		/// <param name="matcher"></param>
-		private void RegisterMatcher(ComponentMatcherGroup matcher)
+		private void AddMatcher(ComponentMatcherGroup matcher)
 		{
 			_matcherGroups.Add(matcher);
+			matcher.Disposed += () => RemoveMatcher(matcher);
 			foreach (var entity in _entityRegistry.Entities.Values)
 			{
 				matcher.TryAddEntity(entity);
 			}
+		}
+
+		private void RemoveMatcher(ComponentMatcherGroup matcher)
+		{
+			_matcherGroups.Remove(matcher);
 		}
 
 		/// <summary>
@@ -98,7 +104,7 @@ namespace Engine.Components
 			where TComponent1 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1>(entityFilter);
-			RegisterMatcher(matcher);
+			AddMatcher(matcher);
 			return matcher;
 		}
 
@@ -108,7 +114,7 @@ namespace Engine.Components
 			where TComponent2 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2>(entityFilter);
-			RegisterMatcher(matcher);
+			AddMatcher(matcher);
 			return matcher;
 		}
 
@@ -119,7 +125,7 @@ namespace Engine.Components
 			where TComponent3 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3>(entityFilter);
-			RegisterMatcher(matcher);
+			AddMatcher(matcher);
 			return matcher;
 		}
 
@@ -131,7 +137,7 @@ namespace Engine.Components
 			where TComponent4 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4>(entityFilter);
-			RegisterMatcher(matcher);
+			AddMatcher(matcher);
 			return matcher;
 		}
 
@@ -144,7 +150,7 @@ namespace Engine.Components
 			where TComponent5 : class, IComponent
 		{
 			var matcher = new ComponentMatcherGroup<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5>(entityFilter);
-			RegisterMatcher(matcher);
+			AddMatcher(matcher);
 			return matcher;
 		}
 

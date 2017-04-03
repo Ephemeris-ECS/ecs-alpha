@@ -14,6 +14,10 @@ namespace Engine.Evaluators
 		public int Threshold { get; set; }
 
 		private DateTime _value = DateTime.MinValue;
+		public void Initialize(TECS ecs, TConfiguration configuration)
+		{
+			// do nothing
+		}
 
 		public bool Evaluate(TECS ecs, TConfiguration configuration)
 		{
@@ -29,5 +33,12 @@ namespace Engine.Evaluators
 			}
 			return success;
 		}
+
+		public void Dispose()
+		{
+			// do nothing
+
+		}
+
 	}
 }

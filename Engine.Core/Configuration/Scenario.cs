@@ -1,4 +1,5 @@
-﻿using Engine.Sequencing;
+﻿using System.Collections.Generic;
+using Engine.Sequencing;
 // ReSharper disable InconsistentNaming
 
 namespace Engine.Configuration
@@ -17,6 +18,6 @@ namespace Engine.Configuration
 
 		public TConfiguration Configuration { get; set; }
 
-		public SequenceFrame<TECS, TConfiguration>[] Sequence { get; set; }
+		public List<SequenceFrame<TECS, TConfiguration>> Sequence { get; set; }
 	}
 }

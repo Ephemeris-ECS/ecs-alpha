@@ -14,6 +14,7 @@ namespace Engine.Components
 
 		public event Action<Entity> MatchingEntityRemoved;
 
+
 		protected readonly Dictionary<int, Entity> MatchingEntityDictionary;
 
 		public Entity[] MatchingEntities => MatchingEntityDictionary.Values.ToArray();
