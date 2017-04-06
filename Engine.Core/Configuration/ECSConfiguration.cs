@@ -18,13 +18,17 @@ namespace Engine.Configuration
 		// ReSharper disable once InconsistentNaming
 		public int RNGSeed { get; set; }
 
+		public Guid? InstanceId { get; set; }
+		
 		public ECSConfiguration(List<Archetype> archetypes,
 			List<SystemConfiguration> systems,
-			LifeCycleConfiguration lifeCycleConfiguration)
+			LifeCycleConfiguration lifeCycleConfiguration,
+			Guid? instanceId = null)
 		{
 			Archetypes = archetypes ?? new List<Archetype>();
 			Systems = systems ?? new List<SystemConfiguration>();
 			LifeCycleConfiguration = lifeCycleConfiguration ?? new LifeCycleConfiguration();
+			instanceId = instanceId ?? Guid.NewGuid();
 		}
 	}
 }

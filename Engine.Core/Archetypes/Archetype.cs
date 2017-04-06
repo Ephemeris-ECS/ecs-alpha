@@ -24,6 +24,11 @@ namespace Engine.Archetypes
 		}
 
 		#endregion
+
+		public static implicit operator string(Archetype archetype)
+		{
+			return archetype.Name;
+		}
 	}
 
 	/// <summary>
@@ -31,22 +36,27 @@ namespace Engine.Archetypes
 	/// </summary>
 	public static class ArchetypeExtensions
 	{
-		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding, bool overwrite = true)
+		public static void HasComponent(this Dictionary<Type, ComponentBinding> components, ComponentBinding componentBinding, bool overwrite = true)
 		{
 			if (overwrite)
 			{
-				archetype.Components[componentBinding.GetType()] = componentBinding;
+				components[componentBinding.GetType()] = componentBinding;
 			}
 			else
 			{
-				try
-				{
-					archetype.Components.Add(componentBinding.GetType(), componentBinding);
-				}
-				catch (InvalidOperationException ioex)
-				{
-					throw new ConfigurationException($"Archetype '{archetype.Name}' already ahs component binding for type {componentBinding.GetType()}", ioex);
-				}
+				components.Add(componentBinding.GetType(), componentBinding);
+			}
+		}
+
+		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding, bool overwrite = true)
+		{
+			try
+			{
+				archetype.Components.HasComponent(componentBinding, overwrite);
+			}
+			catch (InvalidOperationException ioex)
+			{
+				throw new ConfigurationException($"Archetype '{archetype.Name}' already ahs component binding for type {componentBinding.GetType()}", ioex);
 			}
 			return archetype;
 		}
