@@ -45,7 +45,6 @@ namespace Engine.Configuration
 	}
 
 	public sealed class SystemExtensionConfiguration<TExtension> : SystemExtensionConfiguration
-		where TExtension : ISystemExtension
 	{
 
 		public sealed class SystemExtensionImplementation<TImplmentation> : SystemExtensionImplementation
