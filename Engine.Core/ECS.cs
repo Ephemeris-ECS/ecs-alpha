@@ -19,11 +19,14 @@ namespace Engine
 	public abstract class ECS<TConfiguration> : IDisposable, IECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
 	{
+		public event Action<IEnumerable<ICommand>, int> CommandsProcessed;
+
 		private bool _disposed;
 
 		private int _currentTick;
 
 		public int CurrentTick => _currentTick;
+
 
 		public TConfiguration Configuration { get; }
 
@@ -112,6 +115,8 @@ namespace Engine
 		public Tick Tick()
 		{
 			var commands = CommandQueue.Flush();
+
+			OnCommandsProcessed(commands);
 			SystemRegistry.Tick(++_currentTick);
 
 			return new Tick()
@@ -121,5 +126,9 @@ namespace Engine
 			};
 		}
 
+		protected virtual void OnCommandsProcessed(IEnumerable<ICommand> commands)
+		{
+			CommandsProcessed?.Invoke(commands, _currentTick);
+		}
 	}
 }

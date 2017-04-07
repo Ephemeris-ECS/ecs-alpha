@@ -40,6 +40,8 @@ namespace Engine.Lifecycle
 
 		public TECSRoot ECSRoot { get; private set; }
 
+		public Scenario<TECS, TConfiguration> Scenario { get; protected set; }
+
 		private readonly Sequencer<TECS, TConfiguration> _sequencer;
 
 		private bool _disposed;
@@ -55,8 +57,11 @@ namespace Engine.Lifecycle
 
 		#endregion
 
-		protected LifecycleManager([InjectOptional] Sequencer<TECS, TConfiguration> sequencer)
+		protected LifecycleManager(
+			[InjectOptional] Scenario<TECS, TConfiguration> scenario,
+			[InjectOptional] Sequencer<TECS, TConfiguration> sequencer)
 		{
+			Scenario = scenario;
 			_sequencer = sequencer;
 		}
 
@@ -110,7 +115,6 @@ namespace Engine.Lifecycle
 		{
 			ECSRoot.ECS.EnqueueCommand(command);
 		}
-
 
 		#region thread management
 

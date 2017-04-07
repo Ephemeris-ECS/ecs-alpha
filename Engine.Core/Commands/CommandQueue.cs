@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using Engine.Common.Logging;
 using Engine.Util;
+using Zenject;
 
 namespace Engine.Commands
 {
 	public class CommandQueue
 	{
+		[Inject]
+		public ILogger Logger { get; set; }
+
 		private readonly MutableQueue<ICommand> _commandQueue;
 
 		private readonly object _commandQueueLock = new object();
@@ -39,6 +44,7 @@ namespace Engine.Commands
 				if (preempt)
 				{
 					_commandQueue.Enqueue(command, true);
+					Logger.Debug($"Command enqueued with preempt: {command.GetType()}");
 				}
 				else
 				{
@@ -75,19 +81,30 @@ namespace Engine.Commands
 				switch (policy)
 				{
 					case DeduplicationPolicy.Discard:
-						if (_commandQueue.TryGetItem(command, out var match, comparer) == false)
+						if (_commandQueue.TryGetItem(command, out var match, comparer))
+						{
+							Logger.Debug($"Command discarded due to deduplication policy: {command.GetType()}");
+						}
+						else
 						{
 							_commandQueue.Enqueue(command);
+							Logger.Debug($"Command enqueued: {command.GetType()}");
 						}
 						break;
 					case DeduplicationPolicy.Replace:
-						if (_commandQueue.TryReplaceItem(command, comparer) == false)
+						if (_commandQueue.TryReplaceItem(command, comparer))
+						{
+							Logger.Debug($"Command replaced existing duplicate: {command.GetType()}");
+						}
+						else
 						{
 							_commandQueue.Enqueue(command);
+							Logger.Debug($"Command enqueued: {command.GetType()}");
 						}
 						break;
 					default:
 						_commandQueue.Enqueue(command);
+						Logger.Debug($"Command enqueued: {command.GetType()}");
 						break;
 				}
 			}
