@@ -29,7 +29,14 @@ namespace Engine.Commands
 			ICommandHandler commandHandler;
 			if (TryGetCapabiliity(command.GetType(), out commandHandler))
 			{
-				return commandHandler.Enabled && commandHandler.TryProcessCommand(command);
+				try
+				{
+					return commandHandler.Enabled && commandHandler.TryProcessCommand(command);
+				}
+				catch (Exception ex)
+				{
+					// TODO: log failed command handler
+				}
 			}
 			return false;
 		}

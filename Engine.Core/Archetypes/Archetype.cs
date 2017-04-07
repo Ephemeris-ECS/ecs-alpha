@@ -48,6 +48,20 @@ namespace Engine.Archetypes
 			}
 		}
 
+		public static Archetype HasComponent<TComponent>(this Archetype archetype, bool overwrite = true)
+			where TComponent : IComponent
+		{
+			try
+			{
+				archetype.Components.HasComponent(new ComponentBinding<TComponent>(), overwrite);
+			}
+			catch (InvalidOperationException ioex)
+			{
+				throw new ConfigurationException($"Archetype '{archetype.Name}' already ahs component binding for type {typeof(TComponent)}", ioex);
+			}
+			return archetype;
+		}
+
 		public static Archetype HasComponent(this Archetype archetype, ComponentBinding componentBinding, bool overwrite = true)
 		{
 			try

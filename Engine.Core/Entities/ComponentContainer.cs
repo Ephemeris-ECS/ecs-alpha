@@ -77,6 +77,12 @@ namespace Engine.Entities
 			return component != null;
 		}
 
+		public bool TryGetComponent(Type componentType, out IComponent component)
+		{
+			component = GetComponentsInternal(componentType).SingleOrDefault();
+			return component != null;
+		}
+
 		public IEnumerable<TComponentInterface> GetComponents<TComponentInterface>()
 			where TComponentInterface : class, IComponent
 		{
@@ -131,8 +137,7 @@ namespace Engine.Entities
 		{
 			var components = new List<TComponentInterface>();
 
-			TComponentInterface component;
-			if (TryGetConcreteComponent(out component))
+			if (TryGetConcreteComponent<TComponentInterface>(out var component))
 			{
 				components.Add(component);
 			}
@@ -147,6 +152,31 @@ namespace Engine.Entities
 					if (TryGetConcreteComponent(concreteComponentTypeId, out concreteComponent))
 					{
 						components.Add(concreteComponent as TComponentInterface);
+					}
+				}
+			}
+			return components;
+		}
+
+		private IEnumerable<IComponent> GetComponentsInternal(Type componentType)
+		{
+			var components = new List<IComponent>();
+
+			if (TryGetConcreteComponent(componentType, out var component))
+			{
+				components.Add(component);
+			}
+
+			//TODO: this looks like a m * n problem
+			HashSet<int> componentTypeIds;
+			if (MatcherProvider.ComponentTypesByImplementation.TryGetValue(componentType, out componentTypeIds))
+			{
+				foreach (var concreteComponentTypeId in componentTypeIds)
+				{
+					IComponent concreteComponent;
+					if (TryGetConcreteComponent(concreteComponentTypeId, out concreteComponent))
+					{
+						components.Add(concreteComponent);
 					}
 				}
 			}
