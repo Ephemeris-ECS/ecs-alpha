@@ -22,19 +22,22 @@ namespace Engine.Components
 		{
 			// TODO: this should probably not use the app domain but the DiContainer to see what has been bound as we dont care about anything 
 			// else until components and/or archetypes can be added at runtime
-
 			try
 			{
 				ComponentTypeMap = ModuleLoader.GetTypesImplementing<IComponent>()
-				.Select((t, i) => new {Type = t, Index = i})
-				.ToDictionary(k => k.Type, v => v.Index);
+					// the ordering here is necessary as unity (mono) seems to reflect types in a different order than the clr when they are in different assemblies
+					// TODO: see if this can be more deterministic - do not use moduleloader
+					.OrderBy(t => t.FullName)
+					.Select((t, i) => new {Type = t, Index = i})
+					.ToDictionary(k => k.Type, v => v.Index);
 
 				// build a dictionary of components by the interfaces they implement
 				// this can be static since new components aren't added to the app domain at runtime
 				ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
 					.SelectMany(componentType => componentType.GetInterfaces()
-						.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
+					.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
 					.GroupBy(componentTuple => componentTuple.Interface)
+					.OrderBy(ci => ci.Key.FullName)
 					.ToDictionary(k => k.Key, v => new HashSet<int>(v.Select(componentTuple => ComponentTypeMap[componentTuple.ComponentType])));
 			}
 			catch (Exception ex)

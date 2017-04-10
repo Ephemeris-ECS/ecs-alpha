@@ -12,6 +12,9 @@ namespace Engine.Configuration
 
 		public SystemExtensionConfiguration[] ExtensionConfiguration { get; set; }
 
+		// TODO: there is probably a better way to do this
+		public Action BindingInitialize { get; set; }
+
 		protected SystemConfiguration()
 			: this (null)
 		{
@@ -21,6 +24,11 @@ namespace Engine.Configuration
 		protected SystemConfiguration(SystemExtensionConfiguration[] extensionConfiguration)
 		{
 			ExtensionConfiguration = extensionConfiguration ?? new SystemExtensionConfiguration[0];
+		}
+
+		public void OnBindingInitialize()
+		{
+			BindingInitialize?.Invoke();
 		}
 	}
 

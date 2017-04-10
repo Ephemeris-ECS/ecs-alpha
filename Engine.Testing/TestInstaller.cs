@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Engine.Testing
 {
-	public class TestInstaller : ECSInstaller<TestECS, ECSConfiguration, TestInstaller, ECSRoot<TestECS, ECSConfiguration>>
+	public class TestInstaller : ECSInstaller<TestECS, ECSConfiguration, TestInstaller, ECSRoot<TestECS, ECSConfiguration>, TestScenario>
 	{
 		public DiContainer PublicContainer => Container;
 
@@ -15,9 +15,9 @@ namespace Engine.Testing
 		{
 		}
 
-		public static ECSRoot<TestECS, ECSConfiguration> CreatTestRoot(ECSConfiguration configuration)
+		public static ECSRoot<TestECS, ECSConfiguration> CreatTestRoot(TestScenario scenario)
 		{
-			return CreateECSRoot(configuration, null);
+			return CreateECSRoot(scenario, null);
 		}
 	}
 }

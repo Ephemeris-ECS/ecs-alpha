@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Engine.Archetypes;
 using Engine.Commands;
+using Engine.Common.Logging;
 using Engine.Components;
 using Engine.Configuration;
 using Engine.Entities;
+using Engine.Logging;
 using Engine.Serialization;
 using Engine.Systems;
 using ModestTree;
@@ -32,7 +34,8 @@ namespace Engine.Startup
 
 		public override void InstallBindings()
 		{
-			// TODO: perhaps these shouldnt be here
+			// TODO: llogger shouldnt be injected like this!
+			Container.BindInstance<ILogger>(new DummyLogger());
 
 			Container.BindFactory<Entity, Entity.Factory>();
 
@@ -77,6 +80,7 @@ namespace Engine.Startup
 		public void InstallSystemBinding(SystemConfiguration systemConfiguration)
 		{
 			Container.BindInterfacesAndSelfTo(systemConfiguration.Type).AsSingle();
+			systemConfiguration.OnBindingInitialize();
 			InstallSystem(Container, systemConfiguration);
 		}
 
@@ -111,11 +115,11 @@ namespace Engine.Startup
 				.NonLazy();
 		}
 
-		private static void InstallArchetypeFactory(DiContainer container, Archetype archetypeConfiguration)
+		private static void InstallArchetypeFactory(DiContainer container, Archetype archetype)
 		{
 			container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
-			container.BindInstance(archetypeConfiguration).AsSingle();
-			foreach (var componentBinding in archetypeConfiguration.Components.Values)
+			container.BindInstance(archetype).AsSingle();
+			foreach (var componentBinding in archetype.Components.Values)
 			{
 				container.Bind(componentBinding.ComponentType).AsTransient();
 			}
@@ -123,11 +127,12 @@ namespace Engine.Startup
 	}
 
 	// ReSharper disable InconsistentNaming
-	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot> : ECSInstaller<TInstaller>
+	public abstract class ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot, TScenario> : ECSInstaller<TInstaller>
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
 		where TInstaller : ECSInstaller<TInstaller>
 		where TECSRoot : ECSRoot<TECS, TConfiguration>
+		where TScenario : Scenario<TECS, TConfiguration>
 		// ReSharper restore InconsistentNaming
 	{
 		protected ECSInstaller(ECSConfiguration configuration)
@@ -142,16 +147,22 @@ namespace Engine.Startup
 		}
 
 		// ReSharper disable once InconsistentNaming
-		protected static TECSRoot CreateECSRoot(TConfiguration configuration, DiContainer container)
+		protected static TECSRoot CreateECSRoot(TScenario scenario, DiContainer container)
 		{
-			Assert.IsNotNull(configuration, nameof(configuration));
+			Assert.IsNotNull(scenario, nameof(scenario));
+			Assert.IsNotNull(scenario.Configuration, nameof(scenario.Configuration));
 
 			container = container ?? new DiContainer();
 
-			// bind as super type
-			container.Bind<ECSConfiguration>().FromInstance(configuration);
-			// bind as sub type
-			container.BindInstance(configuration);
+			// TODO: there must be an easier way to bind something polymorphically
+			// ie. I want both the concrete and base types resolving to the same instance
+			container.Bind<Scenario<TECS, TConfiguration>>().FromInstance(scenario);
+			container.BindInstance<TScenario>(scenario);
+
+			// TODO: there must be an easier way to bind something polymorphically
+			// ie. I want both the concrete and base types resolving to the same instance
+			container.Bind<ECSConfiguration>().FromInstance(scenario.Configuration);
+			container.BindInstance(scenario.Configuration);
 
 			Install(container);
 

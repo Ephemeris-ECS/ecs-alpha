@@ -13,19 +13,20 @@ namespace Engine.Sequencing
 	/// in the long term this will become a graph with multiple routes and cyclic states and transitions
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public class Sequencer<TECS, TConfiguration>
+	public class Sequencer<TECS, TConfiguration, TScenario>
 		where TECS : class, IECS
 		where TConfiguration : ECSConfiguration
+		where TScenario : Scenario<TECS, TConfiguration>
 	{
 		private SequenceFrame<TECS, TConfiguration> _currentFrame;
 
-		private readonly Scenario<TECS, TConfiguration> _scenario;
+		private readonly TScenario _scenario;
 
 		private int _frameIndex = 0;
 
 		public bool IsComplete { get; private set; }
 
-		public Sequencer(Scenario<TECS, TConfiguration> scenario)
+		public Sequencer(TScenario scenario)
 		{
 			Assert.IsNotNull(scenario);
 			_scenario = scenario;

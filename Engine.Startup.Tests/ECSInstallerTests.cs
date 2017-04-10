@@ -143,8 +143,8 @@ namespace Engine.Startup.Tests
 			};
 
 			var configuration = new ECSConfiguration(null, systemConfigurations, null);
-
-			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+			var scenario = new TestScenario() {Configuration = configuration};
+			var ecs = TestInstaller.CreatTestRoot(scenario).ECS;
 
 			Assert.That(ecs, Is.Not.Null);
 			Assert.That(ecs.GetSystems<ISystemA>(), Is.Not.Null);

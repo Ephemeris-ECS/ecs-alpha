@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archetypes\Archetype.cs" />
+    <Compile Include="Archetypes\ArchetypeFactory.cs" />
     <Compile Include="Archetypes\ComponentBinding.cs" />
     <Compile Include="Archetypes\EntityFactoryException.cs" />
     <Compile Include="Commands\CommandCapability.cs" />
@@ -73,7 +74,6 @@
     <Compile Include="Components\IFlagComponent.cs" />
     <Compile Include="Configuration\LifeCycleConfiguration.cs" />
     <Compile Include="Configuration\Scenario.cs" />
-    <Compile Include="Configuration\ScenarioInfo.cs" />
     <Compile Include="Entities\ComponentArray.cs" />
     <Compile Include="Entities\EntityFactoryProvider.cs" />
     <Compile Include="Entities\IEntityFactoryProvider.cs" />

@@ -28,7 +28,7 @@ namespace Engine.Configuration
 			Archetypes = archetypes ?? new List<Archetype>();
 			Systems = systems ?? new List<SystemConfiguration>();
 			LifeCycleConfiguration = lifeCycleConfiguration ?? new LifeCycleConfiguration();
-			instanceId = instanceId ?? Guid.NewGuid();
+			InstanceId = instanceId ?? Guid.NewGuid();
 		}
 	}
 }

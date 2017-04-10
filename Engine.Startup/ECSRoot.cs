@@ -17,6 +17,7 @@ namespace Engine.Startup
 		public TConfiguration Configuration { get; }
 
 		public EntityStateSerializer EntityStateSerializer { get; }
+		public Guid InstanceId => Configuration.InstanceId.Value;
 
 		public ECSRoot(TECS ecs, TConfiguration configuration, EntityStateSerializer entityStateSerializer)
 		{

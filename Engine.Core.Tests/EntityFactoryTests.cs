@@ -36,8 +36,8 @@ namespace Engine.Core.Tests
 			};
 			
 			var configuration = new ECSConfiguration(archetypes, null, null);
-
-			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+			var scenario = new TestScenario() {Configuration = configuration};
+			var ecs = TestInstaller.CreatTestRoot(scenario).ECS;
 
 			Entity entity;
 			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
@@ -88,8 +88,8 @@ namespace Engine.Core.Tests
 
 
 			var configuration = new ECSConfiguration(archetypes, null, null);
-
-			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+			var scenario = new TestScenario() { Configuration = configuration };
+			var ecs = TestInstaller.CreatTestRoot(scenario).ECS;
 
 			Entity entity;
 			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
@@ -159,8 +159,8 @@ namespace Engine.Core.Tests
 
 
 			var configuration = new ECSConfiguration(archetypes, null, null);
-
-			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+			var scenario = new TestScenario() { Configuration = configuration };
+			var ecs = TestInstaller.CreatTestRoot(scenario).ECS;
 
 			Entity entity;
 			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));
@@ -216,8 +216,8 @@ namespace Engine.Core.Tests
 			};
 
 			var configuration = new ECSConfiguration(archetypes, null, null);
-
-			var ecs = TestInstaller.CreatTestRoot(configuration).ECS;
+			var scenario = new TestScenario() { Configuration = configuration };
+			var ecs = TestInstaller.CreatTestRoot(scenario).ECS;
 
 			Entity entity;
 			Assert.That(ecs.TryCreateEntityFromArchetype("TestA", out entity));

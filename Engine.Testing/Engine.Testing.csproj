@@ -51,6 +51,7 @@
     <Compile Include="TestComponentA.cs" />
     <Compile Include="TestECS.cs" />
     <Compile Include="TestInstaller.cs" />
+    <Compile Include="TestScenario.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine.Core\Engine.Core.csproj">

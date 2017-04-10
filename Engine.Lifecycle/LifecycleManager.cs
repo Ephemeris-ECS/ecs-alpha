@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Engine.Commands;
+using Engine.Common.Logging;
 using Engine.Configuration;
+using Engine.Logging;
 using Engine.Sequencing;
 using Engine.Startup;
 using Engine.Systems;
@@ -17,11 +19,12 @@ namespace Engine.Lifecycle
 	
 	// ReSharper disable InconsistentNaming
 	// TODO: this class is a good candidate for merging with ECS runner because there are so many methods on there that do nothing but proxy to the runner
-	public abstract class LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot> : ILifecycleManager, IDisposable
+	public abstract class LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot, TScenario> : ILifecycleManager, IDisposable
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
-		where TInstaller : ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot>
+		where TInstaller : ECSInstaller<TECS, TConfiguration, TInstaller, TECSRoot, TScenario>
 		where TECSRoot : ECSRoot<TECS, TConfiguration>
+		where TScenario : Scenario<TECS, TConfiguration>
 	{
 		#region events
 
@@ -40,9 +43,9 @@ namespace Engine.Lifecycle
 
 		public TECSRoot ECSRoot { get; private set; }
 
-		public Scenario<TECS, TConfiguration> Scenario { get; protected set; }
+		private readonly TScenario _scenario;
 
-		private readonly Sequencer<TECS, TConfiguration> _sequencer;
+		private readonly Sequencer<TECS, TConfiguration, TScenario> _sequencer;
 
 		private bool _disposed;
 
@@ -58,56 +61,80 @@ namespace Engine.Lifecycle
 		#endregion
 
 		protected LifecycleManager(
-			[InjectOptional] Scenario<TECS, TConfiguration> scenario,
-			[InjectOptional] Sequencer<TECS, TConfiguration> sequencer)
+			[InjectOptional] TScenario scenario,
+			[InjectOptional] Sequencer<TECS, TConfiguration, TScenario> sequencer)
 		{
-			Scenario = scenario;
+			_scenario = scenario;
 			_sequencer = sequencer;
 		}
 
 		#region static initializers
 
-		public static TLifecycleManager Initialize<TLifecycleManager, TScenario>(TScenario scenario)
-			where TLifecycleManager : LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot>
-			where TScenario : Scenario<TECS, TConfiguration>
+		// TODO: these can probable be merged and simplified.
+
+		/// <summary>
+		/// Initialize the simulation from a scenario
+		/// </summary>
+		/// <typeparam name="TLifecycleManager"></typeparam>
+		/// <typeparam name="TScenario"></typeparam>
+		/// <param name="scenario"></param>
+		/// <returns></returns>
+		public static TLifecycleManager Initialize<TLifecycleManager>(TScenario scenario)
+			where TLifecycleManager : LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot, TScenario>
 		{
 			//TODO: too much of this method body is duplicated in the overload
 
 			var container = new DiContainer();
 
-			var sequencer = new Sequencer<TECS, TConfiguration>(scenario);
+			// TODO: there must be an easier way to bind something polymorphically
+			// ie. I want both the concrete and base types resolving to the same instance
+			container.Bind<Scenario<TECS, TConfiguration>>().FromInstance(scenario);
+			container.BindInstance<TScenario>(scenario);
+
+			// TODO: this can probably be instantiated automatically by the contaienr now that we have the scenario bound
+			var sequencer = new Sequencer<TECS, TConfiguration, TScenario>(scenario);
 			container.BindInstance(sequencer);
 
 			container.Bind<ILifecycleManager>().To<TLifecycleManager>().AsSingle();
-			var lifecycleManager = container.Instantiate<TLifecycleManager>();
 
+			// TODO: there must be an easier way to bind something polymorphically
+			// ie. I want both the concrete and base types resolving to the same instance
 			container.Bind<ECSConfiguration>().FromInstance(scenario.Configuration);
 			container.BindInstance(scenario.Configuration);
+
 			container.Instantiate<TInstaller>().InstallBindings();
 
 			var ecsRoot = container.Instantiate<TECSRoot>();
+
+			var lifecycleManager = container.Instantiate<TLifecycleManager>();
 			lifecycleManager.ECSRoot = ecsRoot;
 
 			return lifecycleManager;
 		}
 		
-		public static TLifecycleManager Initialize<TLifecycleManager>(TConfiguration configuration)
-			where TLifecycleManager : LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot>
-		{
-			var container = new DiContainer();
+		///// <summary>
+		///// Initialize the simulation fromconfiguration only
+		///// </summary>
+		///// <typeparam name="TLifecycleManager"></typeparam>
+		///// <param name="configuration"></param>
+		///// <returns></returns>
+		//public static TLifecycleManager Initialize<TLifecycleManager>(TConfiguration configuration)
+		//	where TLifecycleManager : LifecycleManager<TECS, TConfiguration, TInstaller, TECSRoot>
+		//{
+		//	var container = new DiContainer();
 
-			container.Bind<ILifecycleManager>().To<TLifecycleManager>().AsSingle();
-			var lifecycleManager = container.Instantiate<TLifecycleManager>();
+		//	container.Bind<ILifecycleManager>().To<TLifecycleManager>().AsSingle();
+		//	var lifecycleManager = container.Instantiate<TLifecycleManager>();
 
-			container.Bind<ECSConfiguration>().FromInstance(configuration);
-			container.BindInstance(configuration);
-			container.Instantiate<TInstaller>().InstallBindings();
-			var ecsRoot = container.Instantiate<TECSRoot>();
+		//	container.Bind<ECSConfiguration>().FromInstance(configuration);
+		//	container.BindInstance(configuration);
+		//	container.Instantiate<TInstaller>().InstallBindings();
+		//	var ecsRoot = container.Instantiate<TECSRoot>();
 
-			lifecycleManager.ECSRoot = ecsRoot;
+		//	lifecycleManager.ECSRoot = ecsRoot;
 
-			return lifecycleManager;
-		}
+		//	return lifecycleManager;
+		//}
 
 		#endregion
 

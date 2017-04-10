@@ -60,6 +60,10 @@
       <Project>{dc88053b-f802-47e1-9be4-a7e9f795858d}</Project>
       <Name>Engine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Engine.Logging\Engine.Logging.csproj">
+      <Project>{ec75b1ac-5bc4-469a-a19e-7a33ffeb6126}</Project>
+      <Name>Engine.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Engine.Startup\Engine.Startup.csproj">
       <Project>{92dac07e-8a7a-466b-b778-daf781a993f4}</Project>
       <Name>Engine.Startup</Name>
