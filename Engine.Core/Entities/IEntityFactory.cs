@@ -7,5 +7,7 @@ namespace Engine.Entities
 		Archetype Archetype { get; }
 
 		Entity CreateEntityFromArchetype();
+
+		void Initialize();
 	}
 }

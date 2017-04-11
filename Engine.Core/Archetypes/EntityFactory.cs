@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Engine.Common;
 using Engine.Components;
 using Engine.Entities;
 using Newtonsoft.Json;
@@ -19,6 +20,8 @@ namespace Engine.Archetypes
 
 		public Archetype Archetype { get; }
 
+		private readonly Dictionary<Type, CreateComponentBinding> _components;
+
 		public EntityFactory(DiContainer factoryContainer,
 			Archetype archetype, 
 			IEntityRegistry entityRegistry,
@@ -28,13 +31,49 @@ namespace Engine.Archetypes
 			Archetype = archetype;
 			_entityRegistry = entityRegistry;
 			_matcherProvider = matcherProvider;
+			_components = new Dictionary<Type, CreateComponentBinding>();
+		}
+
+		public void Initialize()
+		{
+			var inheritance = new SimpleStack<Archetype>();
+			var archetype = Archetype;
+			inheritance.Push(archetype);
+			while (archetype.Ancestor != null)
+			{
+				archetype = archetype.Ancestor;
+				inheritance.Push(archetype);
+			}
+
+			while (inheritance.TryPeek(out archetype))
+			{
+				foreach (var componentBinding in archetype.Components.Values)
+				{
+					switch (componentBinding)
+					{
+
+						case RemoveComponentBinding r:
+							_components.Remove(r.ComponentType);
+							break;
+						case CreateComponentBinding c:
+							_components[componentBinding.GetType()] = c;
+							break;
+						default:
+							break;
+
+					}
+					
+				}
+
+				inheritance.Pop();
+			}
 
 			InitialiseTemplates();
 		}
 
 		private void InitialiseTemplates()
 		{
-			foreach (var componentBinding in Archetype.Components.Values)
+			foreach (var componentBinding in _components.Values)
 			{
 				try
 				{
@@ -54,7 +93,7 @@ namespace Engine.Archetypes
 			{
 				entity = _entityRegistry.CreateEntity();
 
-				foreach (var componentBinding in Archetype.Components.Values)
+				foreach (var componentBinding in _components.Values)
 				{
 					try
 					{

@@ -15,9 +15,14 @@ namespace Engine.Archetypes
 {
 	public abstract class ComponentBinding
 	{
+		public abstract Type ComponentType { get; }
+	}
+
+	public abstract class CreateComponentBinding : ComponentBinding
+	{
 		protected static readonly JsonSerializer ComponentTemplateSerializer;
 
-		static ComponentBinding()
+		static CreateComponentBinding()
 		{
 			// TODO: extract this all to the serialization assembly
 			var serializerSettings = new JsonSerializerSettings()
@@ -31,33 +36,31 @@ namespace Engine.Archetypes
 			ComponentTemplateSerializer = JsonSerializer.CreateDefault(serializerSettings);
 		}
 
-		public abstract Type ComponentType { get; }
-
 		/// <summary>
 		/// represents the minimal set of property overrides to initialize the component in the required initial state.
 		/// </summary>
 		public string ComponentTemplateSerialized { get; set; }
 
+		public abstract void InitialiseTemplate();
+
+		public abstract void PopulateComponent(IComponent component);
+
 		#region constrcutors
 
-		protected ComponentBinding()
+		protected CreateComponentBinding()
 		{
 			ComponentTemplateSerialized = "{}";
 		}
 
-		protected ComponentBinding(string componentTemplateSerialized)
+		protected CreateComponentBinding(string componentTemplateSerialized)
 		{
 			ComponentTemplateSerialized = componentTemplateSerialized;
 		}
 
 		#endregion
-
-		public abstract void InitialiseTemplate();
-
-		public abstract void PopulateComponent(IComponent component);
 	}
 
-	public class ComponentBinding<TComponent> : ComponentBinding
+	public class ComponentBinding<TComponent> : CreateComponentBinding
 		where TComponent : IComponent
 	{
 		private class TemplateValueProxy
@@ -155,5 +158,17 @@ namespace Engine.Archetypes
 				templateValueProxy.CopyValue(ComponentTemplate, component);
 			}
 		}
+	}
+
+	public abstract class RemoveComponentBinding : ComponentBinding
+	{
+		
+	}
+
+	public class RemoveComponentBinding<TComponent> : RemoveComponentBinding
+		where TComponent : IComponent
+	{
+		public override Type ComponentType => typeof(TComponent);
+
 	}
 }

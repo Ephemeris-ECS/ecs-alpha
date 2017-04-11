@@ -74,6 +74,7 @@ namespace Engine
 		/// </summary>
 		public virtual void Initialize()
 		{
+			EntityFactoryProvider.InitializeFactories();
 			SystemRegistry.Initialize();
 		}
 
