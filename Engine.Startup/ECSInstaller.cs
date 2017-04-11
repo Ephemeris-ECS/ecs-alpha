@@ -119,10 +119,6 @@ namespace Engine.Startup
 		{
 			container.Bind<IEntityFactory>().To<EntityFactory>().AsSingle();
 			container.BindInstance(archetype).AsSingle();
-			foreach (var componentBinding in archetype.Components.Values)
-			{
-				container.Bind(componentBinding.ComponentType).AsTransient();
-			}
 		}
 	}
 

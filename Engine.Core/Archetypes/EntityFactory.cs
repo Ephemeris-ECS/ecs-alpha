@@ -56,7 +56,7 @@ namespace Engine.Archetypes
 							_components.Remove(r.ComponentType);
 							break;
 						case CreateComponentBinding c:
-							_components[componentBinding.GetType()] = c;
+							_components[c.ComponentType] = c;
 							break;
 						default:
 							break;
@@ -66,6 +66,11 @@ namespace Engine.Archetypes
 				}
 
 				inheritance.Pop();
+			}
+
+			foreach (var componentBinding in _components.Values)
+			{
+				_factoryContainer.Bind(componentBinding.ComponentType).AsTransient();
 			}
 
 			InitialiseTemplates();

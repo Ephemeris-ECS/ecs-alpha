@@ -35,14 +35,14 @@ namespace Engine.Components
 				// this can be static since new components aren't added to the app domain at runtime
 				ComponentTypesByImplementation = ModuleLoader.GetTypesImplementing<IComponent>()
 					.SelectMany(componentType => componentType.GetInterfaces()
-					.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
+						.Select(componentInterface => new { ComponentType = componentType, Interface = componentInterface }))
 					.GroupBy(componentTuple => componentTuple.Interface)
 					.OrderBy(ci => ci.Key.FullName)
 					.ToDictionary(k => k.Key, v => new HashSet<int>(v.Select(componentTuple => ComponentTypeMap[componentTuple.ComponentType])));
 			}
 			catch (Exception ex)
 			{
-				throw new EngineException($"Error initializing component type map", ex);
+				throw new EngineException($"Error initializing component type map: {ex}");
 			}
 		}
 

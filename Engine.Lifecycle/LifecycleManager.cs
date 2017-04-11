@@ -212,8 +212,9 @@ namespace Engine.Lifecycle
 			// TODO: this shopuld be pushed down into the runner but currently it doesnt have a reference to the root with its serializers so it can remain here on the event handler for now
 			uint crc = 0;
 			var state = ECSRoot.GetEntityState(out crc);
-			//System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
-
+#if LOG_ENTITYSTATE
+			System.IO.File.WriteAllText($"d:\\temp\\{ECSRoot.ECS.CurrentTick}.server.json", state);
+#endif
 			Tick?.Invoke(tick, crc);
 		}
 
@@ -222,9 +223,9 @@ namespace Engine.Lifecycle
 			StopInternal(ExitCode.Complete);
 		}
 
-		#endregion
+#endregion
 
-		#region external management
+#region external management
 
 		private void SetState(EngineState state)
 		{
@@ -296,9 +297,9 @@ namespace Engine.Lifecycle
 			Stopped?.Invoke(obj);
 		}
 
-		#endregion
+#endregion
 
-		#region public event invocation
+#region public event invocation
 
 		protected virtual void OnStateChanged()
 		{
@@ -313,7 +314,7 @@ namespace Engine.Lifecycle
 			Exception?.Invoke(obj);
 		}
 
-		#endregion
+#endregion
 
 		public void Dispose()
 		{
