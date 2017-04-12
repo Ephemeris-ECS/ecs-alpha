@@ -49,16 +49,16 @@ namespace Engine.Components
 			MatchingEntityDictionary.Clear();
 		}
 
-		private void EntityOnEntityDestroyed(Entity entity)
+		private void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(Entity entity)
 		{
-			entity.EntityDestroyed += EntityOnEntityDestroyed;
+			entity.EntityDisposed += EntityOnEntityDisposed;
 
 			MatchingEntityAdded?.Invoke(entity);
 		}
@@ -116,16 +116,16 @@ namespace Engine.Components
 			return false;
 		}
 
-		protected void EntityOnEntityDestroyed(Entity entity)
+		protected void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1> tuple)
 		{
-			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			tuple.Entity.EntityDisposed += EntityOnEntityDisposed;
 			MatchingEntityAdded?.Invoke(tuple);
 		}
 	}
@@ -183,16 +183,16 @@ namespace Engine.Components
 			}
 			return false;
 		}
-		protected void EntityOnEntityDestroyed(Entity entity)
+		protected void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2> tuple)
 		{
-			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			tuple.Entity.EntityDisposed += EntityOnEntityDisposed;
 			MatchingEntityAdded?.Invoke(tuple);
 		}
 	}
@@ -252,16 +252,16 @@ namespace Engine.Components
 			return false;
 		}
 
-		protected void EntityOnEntityDestroyed(Entity entity)
+		protected void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3> tuple)
 		{
-			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			tuple.Entity.EntityDisposed += EntityOnEntityDisposed;
 			MatchingEntityAdded?.Invoke(tuple);
 		}
 
@@ -324,16 +324,16 @@ namespace Engine.Components
 			return false;
 		}
 
-		protected void EntityOnEntityDestroyed(Entity entity)
+		protected void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4> tuple)
 		{
-			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			tuple.Entity.EntityDisposed += EntityOnEntityDisposed;
 			MatchingEntityAdded?.Invoke(tuple);
 		}
 
@@ -398,16 +398,16 @@ namespace Engine.Components
 			return false;
 		}
 
-		protected void EntityOnEntityDestroyed(Entity entity)
+		protected void EntityOnEntityDisposed(Entity entity)
 		{
 			MatchingEntityDictionary.Remove(entity.Id);
-			entity.EntityDestroyed -= EntityOnEntityDestroyed;
+			entity.EntityDisposed -= EntityOnEntityDisposed;
 			OnMatchingEntityRemoved(entity);
 		}
 
 		protected virtual void OnMatchingEntityAdded(ComponentEntityTuple<TComponent1, TComponent2, TComponent3, TComponent4, TComponent5> tuple)
 		{
-			tuple.Entity.EntityDestroyed += EntityOnEntityDestroyed;
+			tuple.Entity.EntityDisposed += EntityOnEntityDisposed;
 			MatchingEntityAdded?.Invoke(tuple);
 		}
 

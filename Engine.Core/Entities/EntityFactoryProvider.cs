@@ -38,8 +38,7 @@ namespace Engine.Entities
 
 		public bool TryCreateEntityFromArchetype(string archetypeName, out Entity entity)
 		{
-			IEntityFactory entityFactory;
-			if (_entityFactories.TryGetValue(archetypeName, out entityFactory))
+			if (_entityFactories.TryGetValue(archetypeName, out var entityFactory))
 			{
 				entity = entityFactory.CreateEntityFromArchetype();
 				return true;

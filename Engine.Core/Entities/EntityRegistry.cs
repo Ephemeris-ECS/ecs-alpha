@@ -43,13 +43,13 @@ namespace Engine.Entities
 				//var entity = EntityPool.Count > 0 ? EntityPool.Dequeue() : _entityFactory.Create();
 				var entity = _entityFactory.Create();
 				entity.Initialize(NextEntityId);
-				entity.EntityDestroyed += EntityOnEntityDestroyed;
+				entity.EntityDisposed += EntityOnEntityDisposed;
 				AddEntity(entity);
 				return entity;
 			}
 		}
 
-		private void EntityOnEntityDestroyed(Entity entity)
+		private void EntityOnEntityDisposed(Entity entity)
 		{
 			lock (_entityPoolLock)
 			{

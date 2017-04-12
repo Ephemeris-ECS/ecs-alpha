@@ -15,13 +15,15 @@ namespace Engine.Entities
 
 		protected bool Disposed;
 
-		public event EntityDelegate EntityDestroyed;
+		public event EntityDelegate EntityDisposing;
+
+		public event EntityDelegate EntityDisposed;
 
 		public void Initialize(int id)
 		{
 			Id = id;
 			Disposed = false;
-			EntityDestroyed = null;
+			EntityDisposed = null;
 			for (var i = 0; i < Components.Length; i++)
 			{
 				Components[i] = null;
@@ -32,10 +34,10 @@ namespace Engine.Entities
 
 		private void RaiseEntityDestroyed()
 		{
-			// TODO: reconsider using the event for the entity container
-			EntityDestroyed?.Invoke(this);
-			//OnNext(new EntityDestroyedMessage(MessageScope.External, this));
-			EntityDestroyed = null;
+			EntityDisposing?.Invoke(this);
+			EntityDisposing = null;
+			EntityDisposed?.Invoke(this);
+			EntityDisposed = null;
 		}
 
 		public override void Dispose()
