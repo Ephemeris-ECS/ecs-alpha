@@ -13,12 +13,14 @@ namespace Engine.Entities
 	{
 		public int Id { get; protected set; }
 
+		public string CreatedFromArchetype { get; set; }
+
 		protected bool Disposed;
 
 		public event EntityDelegate EntityDisposing;
 
 		public event EntityDelegate EntityDisposed;
-
+		
 		public void Initialize(int id)
 		{
 			Id = id;

@@ -97,6 +97,7 @@ namespace Engine.Archetypes
 			try
 			{
 				entity = _entityRegistry.CreateEntity();
+				entity.CreatedFromArchetype = Archetype.Name;
 
 				foreach (var componentBinding in _components.Values)
 				{

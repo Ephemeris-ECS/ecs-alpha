@@ -41,7 +41,7 @@ namespace Engine.Sequencing
 				_currentFrame = _scenario.Sequence[_frameIndex];
 				_currentFrame.Enter(ecs, configuration);
 			}
-			else if (_currentFrame?.Evaluator.Evaluate(ecs, configuration) ?? false)
+			else if (_currentFrame?.ExitCondition.Evaluate(ecs, configuration) ?? false)
 			{
 				_currentFrame.Exit(ecs, configuration);
 				_currentFrame = null;

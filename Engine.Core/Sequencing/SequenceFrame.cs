@@ -36,7 +36,7 @@ namespace Engine.Sequencing
 		/// Condition to satisfy before proceeding to the next frame
 		/// TODO: this could be a collection, or an expression tree with logic implied by aggregate nodes
 		/// </summary>
-		public IEvaluator<TECS, TConfiguration> Evaluator { get; set; }
+		public IEvaluator<TECS, TConfiguration> ExitCondition { get; set; }
 
 		private void ExecuteActions(IEnumerable<ECSAction<TECS, TConfiguration>> actions, TECS ecs, TConfiguration configuration)
 		{
@@ -55,7 +55,7 @@ namespace Engine.Sequencing
 
 		public void Enter(TECS ecs, TConfiguration configuration)
 		{
-			Evaluator.Initialize(ecs, configuration);
+			ExitCondition.Initialize(ecs, configuration);
 			if (OnEnterActions != null)
 			{
 				ExecuteActions(OnEnterActions, ecs, configuration);
@@ -64,7 +64,7 @@ namespace Engine.Sequencing
 
 		public void Exit(TECS ecs, TConfiguration configuration)
 		{
-			Evaluator.Dispose();
+			ExitCondition.Dispose();
 			if (OnExitActions != null)
 			{
 				ExecuteActions(OnExitActions, ecs, configuration);

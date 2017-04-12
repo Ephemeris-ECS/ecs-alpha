@@ -10,6 +10,7 @@ namespace Engine.Lifecycle
 	{
 		Undefined = 0,
 		Success,
+		Neutral,
 		Failure,
 	}
 }
