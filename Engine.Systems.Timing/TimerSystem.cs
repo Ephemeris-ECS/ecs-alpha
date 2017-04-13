@@ -12,6 +12,8 @@ namespace Engine.Systems.Timing
 	{
 		private int? _tickLimit;
 
+		public bool Enabled { get; private set; }
+
 		public TimeSpan Current { get; private set; }
 
 		private readonly ECSConfiguration _configuration;
@@ -63,6 +65,7 @@ namespace Engine.Systems.Timing
 
 		public void SetLimit(int seconds)
 		{
+			Enabled = true;
 			_tickLimit = (seconds * 1000) / _configuration.LifeCycleConfiguration.TickInterval;
 			Current = TimeSpan.Zero;
 		}
