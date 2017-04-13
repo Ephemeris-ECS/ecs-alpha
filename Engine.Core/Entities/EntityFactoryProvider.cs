@@ -38,10 +38,19 @@ namespace Engine.Entities
 
 		public bool TryCreateEntityFromArchetype(string archetypeName, out Entity entity)
 		{
+			if (string.IsNullOrEmpty(archetypeName))
+			{
+				throw new EngineException("Null archetype creation requested.");
+			}
+
 			if (_entityFactories.TryGetValue(archetypeName, out var entityFactory))
 			{
 				entity = entityFactory.CreateEntityFromArchetype();
 				return true;
+			}
+			else
+			{
+				throw new EngineException($"Archetype not registered: {archetypeName}");
 			}
 			entity = null;
 			return false;
