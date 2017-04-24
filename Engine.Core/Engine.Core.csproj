@@ -85,6 +85,11 @@
     <Compile Include="Evaluators\Operation.cs" />
     <Compile Include="Evaluators\TickEvaluator.cs" />
     <Compile Include="Evaluators\TimeEvaluator.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\EventHandler.cs" />
+    <Compile Include="Events\EventSystem.cs" />
+    <Compile Include="Events\IEvent.cs" />
+    <Compile Include="Events\Subscriber.cs" />
     <Compile Include="Exceptions\ConfigurationException.cs" />
     <Compile Include="Exceptions\SystemException.cs" />
     <Compile Include="Lifecycle\EndGameState.cs" />

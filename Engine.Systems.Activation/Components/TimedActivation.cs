@@ -10,5 +10,7 @@ namespace Engine.Systems.Activation.Components
 		public decimal ActivationTicksRemaining { get; set; }
 
 		public int ActivationDuration { get; set; }
+
+		public bool Synchronized { get; set; }
 	}
 }
