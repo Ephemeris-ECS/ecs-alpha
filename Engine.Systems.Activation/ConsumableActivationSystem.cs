@@ -35,5 +35,10 @@ namespace Engine.Systems.Activation
 				entityTuple.Entity.Dispose();
 			}
 		}
+
+		public void Dispose()
+		{
+			_consumableMatcherGroup?.Dispose();
+		}
 	}
 }

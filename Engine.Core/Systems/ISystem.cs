@@ -10,7 +10,7 @@ namespace Engine.Systems
 	/// Systems implement the majority of the game logic by colelcting groups of entities that have certain component 
 	/// types associated with them and manipulating the state of those components
 	/// </summary>
-	public interface ISystem
+	public interface ISystem : IDisposable
 	{
 	}
 

@@ -38,7 +38,7 @@ namespace Engine.Commands
 
 	public class HaltAndCatchFireCommandHandler : CommandHandler<HaltAndCatchFireCommand>
 	{
-		protected override bool TryProcessCommand(HaltAndCatchFireCommand command)
+		protected override bool TryProcessCommand(HaltAndCatchFireCommand command, int currentTick)
 		{
 			throw new HaltAndCatchFireException();
 		}

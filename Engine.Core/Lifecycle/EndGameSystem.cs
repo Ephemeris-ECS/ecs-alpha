@@ -20,5 +20,11 @@ namespace Engine.Lifecycle
 			}
 			return false;
 		}
+
+		public void Dispose()
+		{
+			// nothing to dispose
+		}
+
 	}
 }

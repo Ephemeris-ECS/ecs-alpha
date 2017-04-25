@@ -121,9 +121,9 @@ namespace Engine.Commands
 			}
 		}
 
-		public ICommand[] Flush()
+		public ICommand[] Flush(int currentTick)
 		{
-			return DequeueCommands().Where(command => _commandSystem.TryHandleCommand(command)).ToArray();
+			return DequeueCommands().Where(command => _commandSystem.TryHandleCommand(command, currentTick)).ToArray();
 		}
 
 	}

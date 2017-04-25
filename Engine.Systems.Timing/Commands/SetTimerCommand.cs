@@ -20,7 +20,7 @@ namespace Engine.Systems.Timing.Commands
 			_timerSystem = timerSystem;
 		}
 
-		protected override bool TryProcessCommand(SetTimerCommand command)
+		protected override bool TryProcessCommand(SetTimerCommand command, int currentTick)
 		{
 			_timerSystem.SetLimit(command.Seconds);
 			return true;

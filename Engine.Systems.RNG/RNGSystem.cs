@@ -56,5 +56,9 @@ namespace Engine.Systems.RNG
 		//	_counter++;
 		//	return _random.NextDouble();
 		//}
+		public void Dispose()
+		{
+			// nothing to dispose
+		}
 	}
 }

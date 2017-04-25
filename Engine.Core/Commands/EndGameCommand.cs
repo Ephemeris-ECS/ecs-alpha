@@ -51,7 +51,7 @@ namespace Engine.Commands
 			_endGameSystem = endGameSystem;
 		}
 
-		protected override bool TryProcessCommand(EndGameCommand command)
+		protected override bool TryProcessCommand(EndGameCommand command, int currentTick)
 		{
 			return _endGameSystem.TrySetEndGameState(command.EndGameState);
 		}

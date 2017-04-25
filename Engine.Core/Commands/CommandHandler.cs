@@ -10,13 +10,13 @@ namespace Engine.Commands
 	{
 		public Type HandlesType => typeof(TCommand);
 
-		public bool TryProcessCommand(ICommand command)
+		public bool TryProcessCommand(ICommand command, int currentTick)
 		{
 			var typedCommand = command as TCommand;
-			return typedCommand == null || TryProcessCommand(typedCommand);
+			return typedCommand == null || TryProcessCommand(typedCommand, currentTick);
 		}
 
-		protected abstract bool TryProcessCommand(TCommand command);
+		protected abstract bool TryProcessCommand(TCommand command, int currentTick);
 
 		// TODO: this should be stored on an entity, or transferred to the slave client somehow
 		public bool Enabled { get; protected set; } = true;

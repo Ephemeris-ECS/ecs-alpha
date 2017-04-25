@@ -8,7 +8,7 @@ namespace Engine.Commands
 	{
 		Type HandlesType { get; }
 
-		bool TryProcessCommand(ICommand command);
+		bool TryProcessCommand(ICommand command, int currentTick);
 
 		bool Enabled { get; }
 

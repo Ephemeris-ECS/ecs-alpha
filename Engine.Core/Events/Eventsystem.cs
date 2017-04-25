@@ -11,6 +11,8 @@ namespace Engine.Events
 	{
 		private readonly Dictionary<Type, List<Subscriber>> _subscribersByType;
 
+		private readonly List<Subscriber> _wildcardSubscribers;
+
 		private int _currentTick;
 
 		private int _eventId;
@@ -42,6 +44,7 @@ namespace Engine.Events
 		public EventSystem()
 		{
 			_subscribersByType = new Dictionary<Type, List<Subscriber>>();
+			_wildcardSubscribers = new List<Subscriber>();
 		}
 
 		public void Publish(IEvent @event)
@@ -54,6 +57,10 @@ namespace Engine.Events
 				{
 					subscriber.OnNext(@event);
 				}
+			}
+			foreach (var subscriber in _wildcardSubscribers)
+			{
+				subscriber.OnNext(@event);
 			}
 		}
 
@@ -92,9 +99,22 @@ namespace Engine.Events
 			return disposable;
 		}
 
+		public IDisposable Subscribe(Action<IEvent> handler)
+		{
+			var subscriber = new Subscriber<IEvent>(handler);
+			_wildcardSubscribers.Add(subscriber);
+
+			var disposable = new DisposableSubscription(subscriber, DisposeSubscriber);
+			return disposable;
+		}
+
 		private void DisposeSubscriber(Subscriber subscriber)
 		{
-			if (_subscribersByType.TryGetValue(subscriber.HandlesType, out var typedSubscribers))
+			if (subscriber.HandlesType == typeof(IEvent))
+			{
+				_wildcardSubscribers.Remove(subscriber);
+			}
+			else if (_subscribersByType.TryGetValue(subscriber.HandlesType, out var typedSubscribers))
 			{
 				typedSubscribers.Remove(subscriber);
 			}
@@ -104,6 +124,11 @@ namespace Engine.Events
 		public void Tick(int currentTick)
 		{
 			_currentTick = currentTick;
+		}
+
+		public void Dispose()
+		{
+			// nothing to dispose
 		}
 	}
 }

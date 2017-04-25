@@ -20,31 +20,36 @@ namespace Engine.Systems.Activation
 				switch (activation.ActivationState)
 				{
 					case ActivationState.Activating:
-						OnActivating(match);
+						OnActivating(match, currentTick);
 						break;
 					case ActivationState.Active:
-						OnActive(match);
+						OnActive(match, currentTick);
 						break;
 				}
 			}
 		}
 
-		private void OnActivating(ComponentEntityTuple<Components.Activation, TimedActivation> entityTuple)
+		private void OnActivating(ComponentEntityTuple<Components.Activation, TimedActivation> entityTuple, int currentTick)
 		{
 			entityTuple.Component2.ActivationTicksRemaining = entityTuple.Component2.ActivationDuration;
 		}
 
-		private void OnActive(ComponentEntityTuple<Components.Activation, TimedActivation> entityTuple)
+		private void OnActive(ComponentEntityTuple<Components.Activation, TimedActivation> entityTuple, int currentTick)
 		{
 			if (entityTuple.Component2.Synchronized == false)
 			{
 				entityTuple.Component2.ActivationTicksRemaining -= entityTuple.Component2.ActivationTickModifier;
 				if (entityTuple.Component2.ActivationTicksRemaining <= 0)
 				{
-					entityTuple.Component1.SetState(ActivationState.Deactivating);
+					entityTuple.Component1.SetState(ActivationState.Deactivating, currentTick);
 					entityTuple.Component2.ActivationTicksRemaining = 0;
 				}
 			}
+		}
+
+		public void Dispose()
+		{
+			_timedActivationMatcherGroup?.Dispose();
 		}
 	}
 }

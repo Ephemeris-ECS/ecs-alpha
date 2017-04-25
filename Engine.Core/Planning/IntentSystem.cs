@@ -45,5 +45,10 @@ namespace Engine.Planning
 				}
 			}
 		}
+
+		public void Dispose()
+		{
+			// nothing to dispose
+		}
 	}
 }

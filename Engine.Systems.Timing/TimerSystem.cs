@@ -69,5 +69,10 @@ namespace Engine.Systems.Timing
 			_tickLimit = (seconds * 1000) / _configuration.LifeCycleConfiguration.TickInterval;
 			Current = TimeSpan.Zero;
 		}
+
+		public void Dispose()
+		{
+			// nothing to dispose
+		}
 	}
 }

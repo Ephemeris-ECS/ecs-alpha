@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Logging", "Engine.Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Systems.Scoring", "Engine.Systems.Scoring\Engine.Systems.Scoring.csproj", "{1CF978CD-C529-4B6B-A294-5C12B1FB87C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine.Logging.Database", "Engine.Logging.Database\Engine.Logging.Database.csproj", "{C959B20D-9E87-4808-98AA-E9359D73C9AD}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Newtonsoft.Json\Src\Newtonsoft.Json\Newtonsoft.Json.Shared.projitems*{1ac37270-0adc-43f6-9fc8-6feb96686356}*SharedItemsImports = 13
@@ -159,6 +161,12 @@ Global
 		{1CF978CD-C529-4B6B-A294-5C12B1FB87C1}.Debug+Docs|Any CPU.Build.0 = Debug|Any CPU
 		{1CF978CD-C529-4B6B-A294-5C12B1FB87C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CF978CD-C529-4B6B-A294-5C12B1FB87C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Debug+Docs|Any CPU.ActiveCfg = Debug|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Debug+Docs|Any CPU.Build.0 = Debug|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C959B20D-9E87-4808-98AA-E9359D73C9AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

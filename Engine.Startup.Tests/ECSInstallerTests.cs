@@ -40,6 +40,9 @@ namespace Engine.Startup.Tests
 				Extensions = extensions;
 			}
 
+			public void Dispose()
+			{
+			}
 		}
 
 		public interface ISystemAExtension : ISystemExtension
@@ -76,6 +79,10 @@ namespace Engine.Startup.Tests
 			}
 
 			public string Value { get; set; }
+
+			public void Dispose()
+			{
+			}
 		}
 
 		public interface ISystemBExtension : ISystemExtension
@@ -101,6 +108,9 @@ namespace Engine.Startup.Tests
 				SystemB = systemB;
 			}
 
+			public void Dispose()
+			{
+			}
 		}
 
 

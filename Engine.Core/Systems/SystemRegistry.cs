@@ -90,6 +90,22 @@ namespace Engine.Systems
 				system.Tick(currentTick);
 			}
 		}
+
+		public void Dispose()
+		{
+			foreach (var system in _systems)
+			{
+				try
+				{
+					system.Dispose();
+				}
+				catch (Exception ex)
+				{
+					// suppress
+				}
+			}
+
+		}
 	}
 
 

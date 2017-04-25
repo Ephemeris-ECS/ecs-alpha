@@ -28,14 +28,19 @@ namespace Engine.Systems.Activation
 						continue;
 
 					case ActivationState.Activating:
-						activation.SetState(ActivationState.Active);
+						activation.SetState(ActivationState.Active, currentTick);
 						break;
 
 					case ActivationState.Deactivating:
-						activation.SetState(ActivationState.NotActive);
+						activation.SetState(ActivationState.NotActive, currentTick);
 						break;
 				}
 			}
+		}
+
+		public void Dispose()
+		{
+			_activationMatcherGroup?.Dispose();
 		}
 	}
 }

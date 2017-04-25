@@ -109,16 +109,17 @@ namespace Engine
 		{
 			if (_disposed == false)
 			{
-				
+				SystemRegistry?.Dispose();
 			}
 		}
 
 		public Tick Tick()
 		{
-			var commands = CommandQueue.Flush();
+			++_currentTick;
 
+			var commands = CommandQueue.Flush(_currentTick);
 			OnCommandsProcessed(commands);
-			SystemRegistry.Tick(++_currentTick);
+			SystemRegistry.Tick(_currentTick);
 
 			return new Tick()
 			{

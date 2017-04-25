@@ -24,14 +24,14 @@ namespace Engine.Commands
 		/// </summary>
 		/// <param name="command">Command object</param>
 		/// <returns>true if the command capability evaluators are successful and there is a valida handler registered and the command is successfully applied by the handler</returns>
-		public bool TryHandleCommand(ICommand command)
+		public bool TryHandleCommand(ICommand command, int currentTick)
 		{
 			ICommandHandler commandHandler;
 			if (TryGetCapabiliity(command.GetType(), out commandHandler))
 			{
 				try
 				{
-					return commandHandler.Enabled && commandHandler.TryProcessCommand(command);
+					return commandHandler.Enabled && commandHandler.TryProcessCommand(command, currentTick);
 				}
 				catch (Exception ex)
 				{
@@ -70,6 +70,11 @@ namespace Engine.Commands
 			ICommandHandler commandHandler;
 			return TryGetCapabiliity(typeof(TCommand), out commandHandler);
 
+		}
+
+		public void Dispose()
+		{
+			// nothing to dispose
 		}
 	}
 }
