@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="EventLogContext.cs" />
     <Compile Include="Model\Event.cs" />
-    <Compile Include="Model\EventData.cs" />
     <Compile Include="Model\GameInstance.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

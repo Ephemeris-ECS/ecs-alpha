@@ -159,10 +159,13 @@ namespace Engine.Lifecycle
 
 		public void StopThread()
 		{
-			_abortSignal.Set();
-			if (Thread.CurrentThread != _ecsLoopThread)
+			if (_ecsLoopThread.IsAlive)
 			{
-				_ecsLoopThread.Join(10000);
+				_abortSignal.Set();
+				if (Thread.CurrentThread != _ecsLoopThread)
+				{
+					_ecsLoopThread.Join(10000);
+				}
 			}
 		}
 
@@ -324,6 +327,7 @@ namespace Engine.Lifecycle
 				StopThread();
 				((IDisposable)_abortSignal)?.Dispose();
 				((IDisposable)_continueSignal)?.Dispose();
+				ECSRoot?.Dispose();
 			}
 		}
 	}

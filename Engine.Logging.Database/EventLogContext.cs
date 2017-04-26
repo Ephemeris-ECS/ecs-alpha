@@ -66,13 +66,6 @@ namespace Engine.Logging.Database
 					ev.EventId,
 				});
 
-			//builder.Entity<EventData>()
-			//	.HasKey(ed => new
-			//	{
-			//		ed.Event,
-			//		ed.Key
-			//	});
-
 			#endregion
 
 			#region foreign keys
@@ -88,11 +81,6 @@ namespace Engine.Logging.Database
 			builder.Entity<Event>()
 				.HasOptional(ev => ev.Player)
 				.WithMany(p => p.Events);
-
-			//builder.Entity<EventData>()
-			//	.HasRequired(ed => ed.Event)
-			//	.WithMany(ev => ev.Data)
-			//	.HasForeignKey(ev => new { ev.GameId, ev.EventId });
 
 			#endregion
 

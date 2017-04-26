@@ -5,7 +5,6 @@ using System.Linq;
 using Engine.Common;
 using Engine.Components;
 using Engine.Entities;
-using Newtonsoft.Json;
 using Zenject;
 
 namespace Engine.Archetypes

@@ -20,10 +20,14 @@ namespace Engine.Systems.Timing.Commands
 			_timerSystem = timerSystem;
 		}
 
-		protected override bool TryProcessCommand(SetTimerCommand command, int currentTick)
+		protected override bool TryHandleCommand(SetTimerCommand command, int currentTick, bool handlerEnabled)
 		{
-			_timerSystem.SetLimit(command.Seconds);
-			return true;
+			if (handlerEnabled)
+			{
+				_timerSystem.SetLimit(command.Seconds);
+				return true;
+			}
+			return false;
 		}
 	}
 }

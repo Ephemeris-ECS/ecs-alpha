@@ -31,7 +31,7 @@ namespace Engine.Commands
 			{
 				try
 				{
-					return commandHandler.Enabled && commandHandler.TryProcessCommand(command, currentTick);
+					return commandHandler.TryHandleCommand(command, currentTick);
 				}
 				catch (Exception ex)
 				{

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Engine.Systems.Scoring
 {
-	public interface IScoringExtension
+	public interface IScoringExtension : ISystemExtension, IDisposable
 	{
 	}
 }

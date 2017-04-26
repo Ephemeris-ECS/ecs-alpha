@@ -8,12 +8,11 @@ using Engine.Serialization;
 
 namespace Engine.Startup
 {
-	public class ECSRoot<TECS, TConfiguration>
+	public class ECSRoot<TECS, TConfiguration> : IDisposable
 		where TECS : ECS<TConfiguration>
 		where TConfiguration : ECSConfiguration
 	{
 		public TECS ECS { get; }
-
 		public TConfiguration Configuration { get; }
 
 		public EntityStateSerializer EntityStateSerializer { get; }
@@ -53,6 +52,11 @@ namespace Engine.Startup
 		public string GetConfiguration()
 		{
 			return ConfigurationSerializer.SerializeConfiguration(Configuration);
+		}
+
+		public void Dispose()
+		{
+			ECS?.Dispose();
 		}
 	}
 }

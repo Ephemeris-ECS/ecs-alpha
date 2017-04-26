@@ -15,8 +15,7 @@ namespace Engine.Logging.Database.Model
 			
 		public virtual Player Player { get; set; }
 
-		//public virtual IList<EventData> Data { get; set; }
-
+		public string Data { get; set; }
 
 		public int EventId { get; set; }
 

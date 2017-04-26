@@ -44,14 +44,14 @@ namespace Engine.Commands
 
 	public class EndGameCommandHandler : CommandHandler<EndGameCommand>
 	{
-		private EndGameSystem _endGameSystem;
+		private readonly EndGameSystem _endGameSystem;
 
 		public EndGameCommandHandler(EndGameSystem endGameSystem)
 		{
 			_endGameSystem = endGameSystem;
 		}
 
-		protected override bool TryProcessCommand(EndGameCommand command, int currentTick)
+		protected override bool TryHandleCommand(EndGameCommand command, int currentTick, bool handlerEnabled)
 		{
 			return _endGameSystem.TrySetEndGameState(command.EndGameState);
 		}

@@ -22,7 +22,7 @@ namespace Engine.Events
 
 		protected abstract void HandleEvent(TEvent @event);
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			_eventSubscription.Dispose();
 		}

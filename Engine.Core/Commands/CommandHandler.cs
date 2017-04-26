@@ -10,13 +10,15 @@ namespace Engine.Commands
 	{
 		public Type HandlesType => typeof(TCommand);
 
-		public bool TryProcessCommand(ICommand command, int currentTick)
+		public bool TryHandleCommand(ICommand command, int currentTick)
 		{
 			var typedCommand = command as TCommand;
-			return typedCommand == null || TryProcessCommand(typedCommand, currentTick);
+			return typedCommand == null || TryHandleCommand(typedCommand, currentTick, Enabled);
 		}
 
-		protected abstract bool TryProcessCommand(TCommand command, int currentTick);
+		// TODO: I dont like passing the enabled flag through this for the purpose of the events
+		// perhaps creata base CommandEvent and take a TEvent type parameter in this class with a default Disabled Result Status
+		protected abstract bool TryHandleCommand(TCommand command, int currentTick, bool handlerEnabled);
 
 		// TODO: this should be stored on an entity, or transferred to the slave client somehow
 		public bool Enabled { get; protected set; } = true;
