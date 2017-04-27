@@ -52,12 +52,16 @@ namespace Engine.Startup.Tests
 
 		public class ConcreteAExtensionA : ISystemAExtension
 		{
-			
+			public void Dispose()
+			{
+			}
 		}
 
 		public class ConcreteAExtensionB : ISystemAExtension
 		{
-
+			public void Dispose()
+			{
+			}
 		}
 
 		#endregion

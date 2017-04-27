@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Engine.Systems.Scoring
+namespace Engine
 {
-	public interface IScoringExtension : ISystemExtension, IDisposable
+	public interface ITickable
 	{
+		void Tick(int currentTick);
 	}
 }

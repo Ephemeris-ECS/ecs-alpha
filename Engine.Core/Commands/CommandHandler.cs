@@ -33,5 +33,9 @@ namespace Engine.Commands
 		public virtual IEqualityComparer<ICommand> Deduplicator => CommandEqualityComparer.Default;
 
 		#endregion
+
+		public virtual void Dispose()
+		{
+		}
 	}
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Engine.Components;
 using Engine.Entities;
 using Engine.Systems.Activation.Components;
-using Zenject;
 
 namespace Engine.Systems.Activation
 {

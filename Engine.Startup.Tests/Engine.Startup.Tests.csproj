@@ -36,10 +36,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="Zenject">
       <HintPath>..\lib\Zenject\Zenject.dll</HintPath>
     </Reference>
@@ -52,10 +48,6 @@
     <ProjectReference Include="..\Engine.Core\Engine.Core.csproj">
       <Project>{dc88053b-f802-47e1-9be4-a7e9f795858d}</Project>
       <Name>Engine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine.Serialization\Engine.Serialization.csproj">
-      <Project>{6719ceee-ea1d-48cc-a301-89a0e47bc3ad}</Project>
-      <Name>Engine.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine.Startup\Engine.Startup.csproj">
       <Project>{92dac07e-8a7a-466b-b778-daf781a993f4}</Project>

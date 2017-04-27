@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
-namespace Engine.Newtonsoft.Json.Tests
+namespace Engine.Serialization.Tests
 {
 	[TestFixture()]
 	public class DictionaryContractResolverTests

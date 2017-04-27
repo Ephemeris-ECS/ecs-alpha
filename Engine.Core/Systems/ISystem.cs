@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Zenject;
 
 namespace Engine.Systems
 {
@@ -25,9 +22,8 @@ namespace Engine.Systems
 	/// <summary>
 	/// This is the base interface for systems that perform a specific behaviour every cycle
 	/// </summary>
-	public interface ITickableSystem : ISystem
+	public interface ITickableSystem : ISystem, ITickable
 	{
-		void Tick(int currentTick);
 	}
 
 	/// <summary>

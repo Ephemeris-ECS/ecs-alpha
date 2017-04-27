@@ -30,12 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="Zenject">
       <HintPath>..\lib\Zenject\Zenject.dll</HintPath>
     </Reference>
@@ -56,10 +51,6 @@
     <ProjectReference Include="..\Engine.Core\Engine.Core.csproj">
       <Project>{dc88053b-f802-47e1-9be4-a7e9f795858d}</Project>
       <Name>Engine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine.Systems\Engine.Systems.csproj">
-      <Project>{c0a56319-4423-4722-b068-e9165e2c4246}</Project>
-      <Name>Engine.Systems</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

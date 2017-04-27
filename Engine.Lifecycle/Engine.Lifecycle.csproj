@@ -33,12 +33,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="Zenject, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Zenject\Zenject.dll</HintPath>
@@ -52,17 +47,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Engine.Common\Engine.Common.csproj">
-      <Project>{c3e9dd6e-3807-4290-a857-a4e9d47cf7e1}</Project>
-      <Name>Engine.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Engine.Core\Engine.Core.csproj">
       <Project>{dc88053b-f802-47e1-9be4-a7e9f795858d}</Project>
       <Name>Engine.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Engine.Logging\Engine.Logging.csproj">
-      <Project>{ec75b1ac-5bc4-469a-a19e-7a33ffeb6126}</Project>
-      <Name>Engine.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Engine.Startup\Engine.Startup.csproj">
       <Project>{92dac07e-8a7a-466b-b778-daf781a993f4}</Project>

@@ -93,7 +93,14 @@ namespace Engine.Startup
 				{
 					if (extensionConfiguration.AllOfType)
 					{
-						container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type)).AsTransient();
+						try
+						{
+							container.Bind(extensionConfiguration.Type).To(t => t.AllNonAbstractClasses().DerivingFrom(extensionConfiguration.Type)).AsTransient();
+						}
+						catch (Exception ex)
+						{
+							throw;
+						}
 					}
 					else
 					{
