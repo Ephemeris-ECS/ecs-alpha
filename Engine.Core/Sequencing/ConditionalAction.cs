@@ -37,6 +37,12 @@ namespace Engine.Sequencing
 			}
 		}
 
+		public override void Initialize(TECS ecs, TConfiguration configuration)
+		{
+			base.Initialize(ecs, configuration);
+			Evaluator.Initialize(ecs, configuration);
+		}
+
 		#endregion
 	}
 }

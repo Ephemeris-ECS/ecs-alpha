@@ -38,5 +38,11 @@ namespace Engine.Sequencing
 		{
 			Action(ecs, configuration);
 		}
+
+		public virtual void Initialize(TECS ecs, TConfiguration configuration)
+		{
+			
+		}
+
 	}
 }

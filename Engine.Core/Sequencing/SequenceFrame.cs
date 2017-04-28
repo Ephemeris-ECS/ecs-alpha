@@ -53,8 +53,26 @@ namespace Engine.Sequencing
 			}
 		}
 
+		private void InitializeActions(TECS ecs, TConfiguration configuration)
+		{
+			foreach (var action in (OnEnterActions ?? new List<ECSAction<TECS, TConfiguration>>())
+				.Concat(OnTickActions ?? new List<ECSAction<TECS, TConfiguration>>())
+				.Concat(OnExitActions ?? new List<ECSAction<TECS, TConfiguration>>()))
+			{
+				try
+				{
+					action.Initialize(ecs, configuration);
+				}
+				catch (Exception ex)
+				{
+					throw new SequenceException($"Error initializing action '{action.Name}' on frame '{Name}'", ex);
+				}
+			}
+		}
+
 		public void Enter(TECS ecs, TConfiguration configuration)
 		{
+			InitializeActions(ecs, configuration);
 			ExitCondition.Initialize(ecs, configuration);
 			if (OnEnterActions != null)
 			{
