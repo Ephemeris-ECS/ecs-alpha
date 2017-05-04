@@ -54,9 +54,9 @@ namespace Engine.Logging.Database
 				.HasKey(p => new
 				{
 					p.GameId,
-					p.PlayerId
+					p.Id
 				})
-				.Property(p => p.PlayerId)
+				.Property(p => p.Id)
 				.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
 			builder.Entity<Event>()

@@ -9,8 +9,7 @@ namespace Engine.Logging.Database.Model
 	{
 		public Guid GameId { get; set; }
 		public virtual GameInstance Game { get; set; }
-
-
+		
 		public int? PlayerId { get; set; }
 			
 		public virtual Player Player { get; set; }

@@ -8,11 +8,9 @@ namespace Engine.Logging.Database.Model
 	public class Player
 	{
 		public Guid GameId { get; set; }
-
-		public int PlayerId { get; set; }
-
-
 		public virtual GameInstance Game { get; set; }
+
+		public int Id { get; set; }
 		
 		public virtual IList<Event> Events { get; set; }
 
